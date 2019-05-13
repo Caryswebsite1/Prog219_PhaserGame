@@ -77,7 +77,7 @@ scoreText = "";
         game.kineticScrolling.start(); */
 
         // Camera: set bounds to whole world size.
-        this.cameras.main.setBounds(0, 0, 3200, 3200);
+        this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
         this.cameras.main.setSize(800, 600);
@@ -97,9 +97,9 @@ scoreText = "";
         //  A sand everywhere.
         let i = 0;
         let j = 0;
-        for (i = 0; i < 3200; i += 16) {
+        for (i = 0; i < 1000; i += 16) {
             console.log("in first i loop for sand");
-            for (j = 0; j < 3200; j += 16) {
+            for (j = 0; j < 1000; j += 16) {
                 this.ground.create(i, j, "sand");
             }// end for j
         }// end for i
@@ -114,7 +114,7 @@ scoreText = "";
         // just a couple tiles wide down the left for now.
         for (i = 0; i < 65; i += 16) {
             console.log("in first i loop for ocean");
-            for (j = 0; j < 3200; j += 16) {
+            for (j = 0; j < 1000; j += 16) {
                 this.BigOcean.create(i, j, "ocean");
             }// end for j
         }// end for i
