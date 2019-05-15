@@ -5,8 +5,8 @@
 // they don't have to be the "world" sizes.  See setBounds..
 let config = {
   type: Phaser.AUTO,
-  width: 3200,
-  height: 3200,
+  width: 1000,
+  height: 1000,
   physics: {
     default: 'arcade',
     arcade: {
@@ -15,11 +15,18 @@ let config = {
     }
   },
  
-  scene: [Shipwrecked]
+    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4,]
 };
 
 console.log("in game.js");
 let myItem = "this is my item";
+let playerStartX = 500;
+let playerStartY = 500;
+let sleep1 = false;
+let sleep2 = false;
+let sleep3 = false;
+let sleep4 = false;
+
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);

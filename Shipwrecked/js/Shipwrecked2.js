@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 
-class Shipwrecked extends Phaser.Scene {
+class Shipwrecked2 extends Phaser.Scene {
     constructor() {
-        super({ key: "Shipwrecked" });
+        super({ key: "Shipwrecked2" });
 
         this.gold = 0;
         this.wood = 0;
@@ -12,8 +12,8 @@ class Shipwrecked extends Phaser.Scene {
         this.playerLife = 10;
         this.gameOver = false;
         this.score = 0;
-        this.startX = 240;
-        this.startY = 400;
+        this.startX = 500;
+        this.startY = 500;
     } // end constructor
 
 
@@ -37,10 +37,10 @@ class Shipwrecked extends Phaser.Scene {
         this.load.spritesheet("dude", "assets/universal-lpc-sprite_male_01_32pix.png", { frameWidth: 32, frameHeight: 32 });
     }// end preload
 
-    // NOTE:  Our dude sprite sheet is 0 - 12 sprites wide over all. so
-    //        that means row 1 is 0 -12 for a total of 13 POSSIBLE slots.
-    //        However, we only have 7 in row 1 so slots 7-12 are empty.
-    //        row 2 starts on slot 13, etc. 
+// NOTE:  Our dude sprite sheet is 0 - 12 sprites wide over all. so
+//        that means row 1 is 0 -12 for a total of 13 POSSIBLE slots.
+//        However, we only have 7 in row 1 so slots 7-12 are empty.
+//        row 2 starts on slot 13, etc. 
 
 
     // ---------------------------------------------------------
@@ -51,7 +51,6 @@ class Shipwrecked extends Phaser.Scene {
     // Sets interaction types etc.
     // -----------------------------------------------------------
     create() {
-
         this.events.on('wake', this.onWake, this);
 
         // Camera: set bounds to whole world size.
@@ -102,46 +101,48 @@ class Shipwrecked extends Phaser.Scene {
             }// end for j
         }// end for i
 
-        for (i = 1000; i > 0; i -= 16) {
+        // top
+        for (i = 0; i < 1000; i += 16) {
             console.log("in second i loop for ocean");
-            for (j = 1000; j > 935; j -= 16) {
+            for (j = 0; j < 65; j += 16) {
                 this.BigOcean.create(i, j, "ocean");
             }// end for j
         }// end for i
+
 
         // **********************************************************************************
         // NOTE: this method sucks.  would be better to custom up some images of the bay then drop them in as an object.
         // ***********************************************************************************
         // create a bay
-        let bayX = 80;
-        let bayY = 300;
-        let xMax = 0;
-        // do top halve..
-        for (bayY = 320; bayY <= 480; bayY += 16) {
-            for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16) {
-                this.BigOcean.create(bayX, bayY, "ocean");
+        //let bayX = 80;
+        //let bayY = 300;
+        //let xMax = 0;
+        //// do top halve..
+        //for (bayY = 320; bayY <= 480; bayY += 16) {
+        //    for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16) {
+        //        this.BigOcean.create(bayX, bayY, "ocean");
+                
+        //    }
+        //    xMax += 1;
+        //}
 
-            }
-            xMax += 1;
-        }
-
-        // do middle:
-        for (bayY = 496; bayY <= 560; bayY += 16) {
-            for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16) {
-                this.BigOcean.create(bayX, bayY, "ocean");
-            }
-
-        }
+        //// do middle:
+        //for (bayY = 496; bayY <= 560; bayY += 16) {
+        //    for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16 ) {
+        //        this.BigOcean.create(bayX, bayY, "ocean");
+        //    }
+            
+        //}
 
 
-        // do bottom halve
-        xMax -= 1;
-        for (bayY = 576; bayY <= 736; bayY += 16) {
-            for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16) {
-                this.BigOcean.create(bayX, bayY, "ocean");
-            }
-            xMax -= 1;
-        }
+        //// do bottom halve
+        //xMax -= 1;
+        //for (bayY = 576; bayY <= 736; bayY += 16) {
+        //    for (bayX = 80; bayX < (80 + (xMax * 16)); bayX += 16) {
+        //        this.BigOcean.create(bayX, bayY, "ocean");
+        //    }
+        //    xMax -= 1;
+        //}
 
         console.log("out of ocean creation");
 
@@ -167,7 +168,7 @@ class Shipwrecked extends Phaser.Scene {
         // However, we only have 7 in row 1 so slots 7-12 are empty.
         // row 2 starts on slot 13, etc. 
         // ##########################################
-
+/*
         // Our player animations, turning, walking up, down, left and right.
         // start and end are the frame numbers for the starting picture through 
         // the end picture of the animation.
@@ -205,7 +206,7 @@ class Shipwrecked extends Phaser.Scene {
             frameRate: 16,
             repeat: -1
         });
-
+*/
         //  Input Events
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -217,7 +218,7 @@ class Shipwrecked extends Phaser.Scene {
             setXY: { x: 550, y: 0, stepY: 150 }
         });
 
-
+        
         this.boars.children.iterate(function (child) {
             //  Give each boar a speed to the left and bounded by world and an id number.
             child.setVelocityX(-10);
@@ -238,47 +239,6 @@ class Shipwrecked extends Phaser.Scene {
         //  Checks to see if the player overlaps with any of the boars, if he does call the boarCombat function
         this.physics.add.overlap(this.player, this.boars, this.boarPlayerCombat, null, this);
 
-        // launch the other shipwrecked scenes so they are able to get the registry data when needed.
-        this.scene.launch("Shipwrecked2");
-        this.scene.launch("Shipwrecked3");
-        this.scene.launch("Shipwrecked4");
-
-
-        /********************************************************
-         * ******  Current Status... *****************************
-         * *****  Can put the scenes to sleep here, but they get set to awake
-         * by the system somehow.  Thus their updates keep happening.  
-         * The isSleeping call I put into the update functions is NOT triggering.
-         * put in a global to short circuit the update and it seems to work.
-         * **************************************************************** */
-        // note, data shows sleeping is not stopping update... neither is pause....
-        // put them to sleep.
-        this.scene.sleep("Shipwrecked2");
-        this.scene.sleep("Shipwrecked3");
-        this.scene.sleep("Shipwrecked4");
-
-        sleep2 = true;
-        sleep3 = true;
-        sleep4 = true;
-
-
-        // and not visible
-        this.scene.setVisible(false, "Shipwrecked2");
-        this.scene.setVisible(false, "Shipwrecked3");
-        this.scene.setVisible(false, "Shipwrecked4");
-
-
-        // bring our first one up for input and display.
-        this.scene.bringToTop("Shipwrecked");
-        this.scene.setActive(true, "Shipwrecked");
-        this.scene.setVisible(true, "Shipwrecked");
-
-        console.log("checking sleep status");
-        console.log("2: " + this.scene.isSleeping("Shipwrecked2"));
-        console.log("3: " + this.scene.isSleeping("Shipwrecked2"));
-        console.log("4: " + this.scene.isSleeping("Shipwrecked2"));
-
-
     }// end create
 
 
@@ -290,22 +250,22 @@ class Shipwrecked extends Phaser.Scene {
     // Std functionality handles most everything else.
     // -----------------------------------------------------------
     update() {
-        //console.log("in update");
+        //console.log("in update 2");
         if (this.gameOver) {
             console.log("game is over??");
             return;
         }
 
-        //if (this.scene.isSleeping("Shipwrecked")) {
+        //if (this.scene.isSleeping("Shipwrecked2")) {
         //    return;
         //}
 
-        if (sleep1) {
+        if (sleep2) {
             return;
         }
 
-
-
+        console.log("Doing update 2");
+        
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-100);
             this.player.anims.play("left", true);
@@ -320,7 +280,7 @@ class Shipwrecked extends Phaser.Scene {
         else if (this.cursors.down.isDown) {
             this.player.setVelocityY(100);
             this.player.anims.play("front", true);
-        } else {
+        }else {
             this.player.setVelocityX(0);
             this.player.setVelocityY(0);
             this.player.anims.play("turn");
@@ -336,47 +296,39 @@ class Shipwrecked extends Phaser.Scene {
 
         /* ***************************************************
          * check for edge of map to switch maps!
-         * 
-         * Be sure to place player on new map OUTSIDE of check zone.
          * *************************************************** */
-        // top 
-        if (this.player.y <= 17) {
+        // bottom 
+        if (this.player.y >= 983) {
             playerStartX = this.player.x;
-            playerStartY = 975;
-            console.log("in transition from 1 to 2. x and y set to: " + playerStartX + ", " + playerStartY);
+            playerStartY = 25;
+            console.log("in transition from 2 to 1. x and y set to: " + playerStartX + ", " + playerStartY);
+            this.scene.wake("Shipwrecked");
+            this.scene.bringToTop("Shipwrecked");
+            this.scene.setActive(true, "Shipwrecked");
+            this.scene.setVisible(true, "Shipwrecked");
+            sleep1 = false;
 
-            this.scene.wake("Shipwrecked2");
-            this.scene.bringToTop("Shipwrecked2");
-            this.scene.setActive(true, "Shipwrecked2");
-            this.scene.setVisible(true, "Shipwrecked2");
-            sleep2 = false;
-
-            this.scene.setActive(false, "Shipwrecked");
-            this.scene.setVisible(false, "Shipwrecked");
-            this.scene.sleep("Shipwrecked");
-            sleep1 = true;
+            this.scene.setActive(false, "Shipwrecked2");
+            this.scene.setVisible(false, "Shipwrecked2");
+            this.scene.sleep("Shipwrecked2");
+            sleep2 = true;
         } // now Right side:
         else if (this.player.x >= 983) {
             playerStartX = 25;
             playerStartY = this.player.y;
-            console.log("in transition from 1 to 4. x and y set to: " + playerStartX + ", " + playerStartY);
-            this.scene.wake("Shipwrecked4");
-            this.scene.bringToTop("Shipwrecked4");
-            this.scene.setActive(true, "Shipwrecked4");
-            this.scene.setVisible(true, "Shipwrecked4");
-            sleep4 = false;
+            console.log("in transition from 2 to 3. x and y set to: " + playerStartX + ", " + playerStartY);
+            this.scene.wake("Shipwrecked3");
+            this.scene.bringToTop("Shipwrecked3");
+            this.scene.setActive(true, "Shipwrecked3");
+            this.scene.setVisible(true, "Shipwrecked3");
+            sleep3 = false;
 
-            //this.scene.wake("Shipwrecked4", { y: this.player.y, x: 25 });
-            //this.registry.set('playerStartX', 25);
-            //this.registry.set('playerStartY', this.player.y);
-            
-            this.scene.setActive(false, "Shipwrecked");
-            this.scene.setVisible(false, "Shipwrecked");
-            this.scene.sleep("Shipwrecked");
-            sleep1 = true;
-
+            this.scene.setActive(false, "Shipwrecked2");
+            this.scene.setVisible(false, "Shipwrecked2");
+            this.scene.sleep("Shipwrecked2");
+            sleep2 = true;
         }
-        // left is ocean, bottom is ocean so don't need them.
+        // left is ocean, top is ocean so don't need them.
 
     }// end update
 
@@ -411,17 +363,14 @@ class Shipwrecked extends Phaser.Scene {
 
         if (this.playerLife <= 0) {
 
-            // stop movement on screen
             this.physics.pause();
 
-            // turn player bloody red
             player.setTint(0xff0000);
 
-            // force facing
             player.anims.play("turn");
 
             this.gameOver = true;
-
+            
         }// end if playerLife
 
     }// end boarPlayerCombat
@@ -435,7 +384,7 @@ class Shipwrecked extends Phaser.Scene {
     // to provide consistency.  Std handler does everything else.
     // -----------------------------------------------------------
     onWake() {
-        console.log("in Shipwrecked onWake");
+        console.log("in Shipwrecked 2 onWake");
         this.player.x = playerStartX;
         this.player.y = playerStartY;
         console.log("Set player position to " + playerStartX + ", " + playerStartY);
@@ -443,10 +392,3 @@ class Shipwrecked extends Phaser.Scene {
 
 
 } // end class
-
-
-
-
-
-
-
