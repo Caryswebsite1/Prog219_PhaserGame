@@ -19,13 +19,13 @@ let config = {
 };
 
 console.log("in game.js");
-let myItem = "this is my item";
 let playerStartX = 500;
 let playerStartY = 500;
 let sleep1 = false;
 let sleep2 = false;
 let sleep3 = false;
 let sleep4 = false;
+let playerLife = 10;
 
 
 // create the game, and pass it the configuration

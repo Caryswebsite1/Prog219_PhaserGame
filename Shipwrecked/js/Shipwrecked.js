@@ -9,7 +9,6 @@ class Shipwrecked extends Phaser.Scene {
         this.rope = 0;
         this.sails = 0;
         this.food = 0;
-        this.playerLife = 10;
         this.gameOver = false;
         this.score = 0;
         this.startX = 240;
@@ -27,7 +26,6 @@ class Shipwrecked extends Phaser.Scene {
     // when they are loaded. Provides variable names for each image
     // or sprite loaded in.
     // -----------------------------------------------------------
-
     preload() {
         this.load.image("bigSand", "assets/island_sand_d.jpg");
         this.load.image("ocean", "assets/ocean16.jpg");
@@ -35,7 +33,15 @@ class Shipwrecked extends Phaser.Scene {
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
         this.load.image("boar", "assets/boarhit.png");
         this.load.spritesheet("dude", "assets/universal-lpc-sprite_male_01_32pix.png", { frameWidth: 32, frameHeight: 32 });
+
+
+        // status icons will be on top of anything else.
+        this.load.image("heart2", "assets/heartshealth2.png");
+        this.load.image("heart1", "assets/heartshealth1.png");
+        this.load.image("noHealth", "assets/noHealth.png");
     }// end preload
+
+
 
     // NOTE:  Our dude sprite sheet is 0 - 12 sprites wide over all. so
     //        that means row 1 is 0 -12 for a total of 13 POSSIBLE slots.
@@ -147,10 +153,11 @@ class Shipwrecked extends Phaser.Scene {
 
 
         /* *********************************************************************
-         * ********** Set Up Player ******************************************* */
+         * *********** Set Up Player ******************************************* 
+         * *********************************************************************/
 
         // get player start position data from data manager:
-        this.registry.events.on('changedata', this.getStartPosition, this);
+        //this.registry.events.on('changedata', this.getStartPosition, this);
 
         // The player and its settings
         this.player = this.physics.add.sprite(this.startX, this.startY, "dude");
@@ -184,7 +191,6 @@ class Shipwrecked extends Phaser.Scene {
             frameRate: 16,
             repeate: -1
         });
-
 
         this.anims.create({
             key: "left",
@@ -226,7 +232,28 @@ class Shipwrecked extends Phaser.Scene {
 
 
         //  The score
-        this.scoreText = this.add.text(16, 16, myItem, { fontSize: "32px", fill: "#000" });
+        //this.scoreText = this.add.text(16, 16, myItem, { fontSize: "32px", fill: "#000" });
+
+        // adds header
+        this.goldText = this.add.text(20, 10, "Gold: 0", { fontsize: "32px", fill: "#000", align: "center" });
+        this.goldText.setScrollFactor(0);
+
+        this.woodText = this.add.text(100, 10, "Wood: 0", { fontsize: "32px", fill: "#000", align: "center" });
+        this.woodText.setScrollFactor(0);
+
+        this.ropeText = this.add.text(180, 10, "Rope: 0", { fontsize: "32px", fill: "#000", align: "center" });
+        this.ropeText.setScrollFactor(0);
+
+        this.foodText = this.add.text(260, 10, "Food: 0", { fontsize: "32px", fill: "#000", align: "center" });
+        this.foodText.setScrollFactor(0);
+
+        //adds 2 hearts to display
+        this.playerLifeImg = this.add.image(500, 50, "heart2")
+        this.playerLifeImg.setScrollFactor(0);
+
+        /* ************************************************************
+         * ************** Colliders Section ***************************
+         * ************************************************************ */
 
         //  Collide the player and the boars with the ocean
         this.physics.add.collider(this.player, this.BigOcean);
@@ -237,6 +264,11 @@ class Shipwrecked extends Phaser.Scene {
 
         //  Checks to see if the player overlaps with any of the boars, if he does call the boarCombat function
         this.physics.add.overlap(this.player, this.boars, this.boarPlayerCombat, null, this);
+
+
+        /* ************************************************************
+         * ***************** Launch Section ***************************
+         * ************************************************************ */
 
         // launch the other shipwrecked scenes so they are able to get the registry data when needed.
         this.scene.launch("Shipwrecked2");
@@ -277,7 +309,6 @@ class Shipwrecked extends Phaser.Scene {
         console.log("2: " + this.scene.isSleeping("Shipwrecked2"));
         console.log("3: " + this.scene.isSleeping("Shipwrecked2"));
         console.log("4: " + this.scene.isSleeping("Shipwrecked2"));
-
 
     }// end create
 
@@ -327,6 +358,13 @@ class Shipwrecked extends Phaser.Scene {
         }
 
 
+        // Health Heart display update:
+        //checks if 50% health
+        if (playerLife === 5) {
+            this.playerLifeImg.setTexture("heart1");
+        }
+
+
         //  Position the center of the camera on the player
         //  We -400 because the camera width is 800px and
         //  we want the center of the camera on the player, not the left-hand side of it
@@ -335,7 +373,7 @@ class Shipwrecked extends Phaser.Scene {
 
 
         /* ***************************************************
-         * check for edge of map to switch maps!
+         * Check for edge of map to switch maps!
          * 
          * Be sure to place player on new map OUTSIDE of check zone.
          * *************************************************** */
@@ -369,13 +407,12 @@ class Shipwrecked extends Phaser.Scene {
             //this.scene.wake("Shipwrecked4", { y: this.player.y, x: 25 });
             //this.registry.set('playerStartX', 25);
             //this.registry.set('playerStartY', this.player.y);
-            
+
             this.scene.setActive(false, "Shipwrecked");
             this.scene.setVisible(false, "Shipwrecked");
             this.scene.sleep("Shipwrecked");
             sleep1 = true;
-
-        }
+        }// end else if
         // left is ocean, bottom is ocean so don't need them.
 
     }// end update
@@ -388,37 +425,37 @@ class Shipwrecked extends Phaser.Scene {
     // Description:  changedata handler: gets start position from registry.
     // data is set by previous scene on scene transition.
     // --------------------------------------------------------------
-    getStartPosition(parent, key, data) {
-        if (key == 'playerStartX') {
-            this.startX = data;
-        }
-        else if (key == 'playerStartY') {
-            this.startY = data;
-        }
-    }// end getStartPosition
+    //getStartPosition(parent, key, data) {
+    //    if (key == 'playerStartX') {
+    //        this.startX = data;
+    //    }
+    //    else if (key == 'playerStartY') {
+    //        this.startY = data;
+    //    }
+    //}// end getStartPosition
 
 
     // ---------------------------------------------------------
-    // boarPlayerCombat(player, boar)
+    // boarPlayerCombat(thePlayer, boar)
     //
     // Description: Handler for when player and boar connect.
     // currently just decrements players hitpoints and if player
     // reaches 0, ends the game.
     // -----------------------------------------------------------
-    boarPlayerCombat(player, boar) {
-        this.playerLife -= 5;
+    boarPlayerCombat(thePlayer, boar) {
+        playerLife -= 5;
         boar.disableBody(true, true);
 
-        if (this.playerLife <= 0) {
+        if (playerLife <= 0) {
 
             // stop movement on screen
             this.physics.pause();
 
             // turn player bloody red
-            player.setTint(0xff0000);
+            thePlayer.setTint(0xff0000);
 
             // force facing
-            player.anims.play("turn");
+            thePlayer.anims.play("turn");
 
             this.gameOver = true;
 
