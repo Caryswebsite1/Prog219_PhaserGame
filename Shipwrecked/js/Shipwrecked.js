@@ -11,8 +11,10 @@ class Shipwrecked extends Phaser.Scene {
         this.food = 0;
         this.gameOver = false;
         this.score = 0;
-        this.startX = 240;
+        this.startX = 390;
         this.startY = 400;
+        this.boarRunTime = 0;
+        this.maxBoarRun = 150;
     } // end constructor
 
 
@@ -28,8 +30,10 @@ class Shipwrecked extends Phaser.Scene {
     // -----------------------------------------------------------
     preload() {
         this.load.image("bigSand", "assets/island_sand_d.jpg");
-        this.load.image("ocean", "assets/ocean16.jpg");
-        this.load.image("jungle", "assets/jungle_mntn2_d16.jpg");
+        this.load.image("portLake", "assets/portLake.png");
+        this.load.image("ocean2", "assets/ocean2.png");
+        this.load.image("greenGround", "assets/greenGround.png");
+        this.load.image("jungleTrees", "assets/JungleOK64.png");
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
         this.load.image("boar", "assets/boarhit.png");
         this.load.spritesheet("dude", "assets/universal-lpc-sprite_male_01_32pix.png", { frameWidth: 32, frameHeight: 32 });
@@ -96,11 +100,16 @@ class Shipwrecked extends Phaser.Scene {
 
         // to only add an image someplace, you would say:
         this.add.image(500, 500, "bigSand");
-
+        this.add.image(615, 370, "greenGround");
 
         //  add ocean as a static but we will set it up as a collider later.
         this.BigOcean = this.physics.add.staticGroup();
+        this.BigOcean.create(500, 970, "ocean2");
+        this.BigOcean.create(125, 500, "portLake");
+
         // just a couple tiles wide down the left for now.
+
+        /*
         for (i = 0; i < 65; i += 16) {
             console.log("in first i loop for ocean");
             for (j = 0; j < 1000; j += 16) {
@@ -114,7 +123,7 @@ class Shipwrecked extends Phaser.Scene {
                 this.BigOcean.create(i, j, "ocean");
             }// end for j
         }// end for i
-
+        
         // **********************************************************************************
         // NOTE: this method sucks.  would be better to custom up some images of the bay then drop them in as an object.
         // ***********************************************************************************
@@ -148,8 +157,175 @@ class Shipwrecked extends Phaser.Scene {
             }
             xMax -= 1;
         }
+*/
+        console.log("out of ocean 1 creation");
 
-        console.log("out of ocean creation");
+        /* *********************************************************************
+         * *********** Main Map Setup ******************************************* 
+         * *********************************************************************/
+        this.theJungle = this.physics.add.staticGroup();
+
+        for (i = 250; i < 1016; i += 64) {
+            console.log("in first i loop for jungle line");
+            for (j = 0; j < 75; j += 45) {
+                this.theJungle.create(i, j, "jungleTrees");
+            }// end for j
+        }// end for i
+
+        let maxTiles = 13;
+        let tiles = 0;
+        let maxRows = 4;
+        let jRows = 0;
+        let xStart = 280;
+        i = xStart;
+        j = 86;
+
+        // from top to bay approach
+        while (jRows < maxRows) {
+            console.log("while top to bay loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 40;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
+
+        // Bay Approach
+        maxTiles = 4;
+        tiles = 0;
+        maxRows = 2;
+        jRows = 0;
+        xStart = 440;
+        i = xStart;
+        j = 266;
+
+        
+        while (jRows < maxRows) {
+            console.log("while top to bay loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 40;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
+
+        //wide around top of bay
+        maxTiles = 2;
+        xStart = 520;
+        i = xStart;
+        j = 355;
+        tiles = 0;
+        maxRows = 3;
+        jRows = 0;
+        
+        while (jRows < maxRows) {
+            console.log("while JRows loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 40;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
+
+        // along the bay
+        maxTiles = 1;
+        xStart = 640;
+        i = xStart;
+        j = 490;
+        tiles = 0;
+        maxRows = 3;
+        jRows = 0;
+
+        while (jRows < maxRows) {
+            console.log("while JRows loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 0;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
+
+        // break
+        maxTiles = 1;
+        xStart = 640;
+        i = xStart;
+        j = 700;
+        tiles = 0;
+        maxRows = 2;
+        jRows = 0;
+
+        while (jRows < maxRows) {
+            console.log("while JRows loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 0;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
+
+
+        // along the bottom with a break..
+
+        xStart = 765;
+        let yStart = 710;
+        i = xStart;
+        j = yStart;
+        tiles = 0;
+        maxTiles = 4;
+        maxRows = 2;
+        jRows = 0;
+        
+
+        while (jRows < maxRows) {
+            console.log("while JRows loop");
+            while (tiles <= maxTiles) {
+                console.log("while tiles loop");
+                this.theJungle.create(i, j, "jungleTrees");
+                i += 64;
+                tiles += 1;
+            }// end while tiles
+            tiles = 0;
+            xStart += 0;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        }// end while j
+
 
 
         /* *********************************************************************
@@ -216,17 +392,17 @@ class Shipwrecked extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
 
-        // Piggy down the right side area for now
+        // Piggy scattered in some good areas for now
         this.boars = this.physics.add.group({
             key: "boar",
-            repeat: 4,
-            setXY: { x: 550, y: 0, stepY: 150 }
+            repeat: 6,
+            setXY: { x: 150, y: 0, stepX: 150, stepY: 150 }
         });
 
-
+        // no speed now. will give random speed and direction in update
         this.boars.children.iterate(function (child) {
-            //  Give each boar a speed to the left and bounded by world and an id number.
-            child.setVelocityX(-10);
+            //  Give each boar a speed to the left and bounded by world 
+            //child.setVelocityX(-10);
             child.setCollideWorldBounds(true);
         });
 
@@ -235,7 +411,7 @@ class Shipwrecked extends Phaser.Scene {
         //this.scoreText = this.add.text(16, 16, myItem, { fontSize: "32px", fill: "#000" });
 
         // adds header
-        this.goldText = this.add.text(20, 10, "Gold: 0", { fontsize: "32px", fill: "#000", align: "center" });
+        this.goldText = this.add.text(20, 10, "Gold: " + this.gold, { fontsize: "32px", fill: "#000", align: "center" });
         this.goldText.setScrollFactor(0);
 
         this.woodText = this.add.text(100, 10, "Wood: 0", { fontsize: "32px", fill: "#000", align: "center" });
@@ -257,7 +433,9 @@ class Shipwrecked extends Phaser.Scene {
 
         //  Collide the player and the boars with the ocean
         this.physics.add.collider(this.player, this.BigOcean);
+        this.physics.add.collider(this.player, this.theJungle);
         this.physics.add.collider(this.boars, this.BigOcean);
+        this.physics.add.collider(this.boars, this.theJungle);
 
         // collide boars with each other.
         this.physics.add.collider(this.boars, this.boars);
@@ -336,7 +514,22 @@ class Shipwrecked extends Phaser.Scene {
         }
 
 
+        // move boars around randomly every maxBoarRun count.:
+        if (this.boarRunTime > this.maxBoarRun) {
 
+            this.boars.children.iterate(function (child) {
+                //  Give each boar a speed to the left and bounded by world 
+                child.setVelocityX(-40 + (Math.random() * 80));
+                child.setVelocityY(-40 + (Math.random() * 80));
+            });
+            this.boarRunTime = 0;
+        }
+        else {
+            this.boarRunTime += 1;
+        }
+        
+
+        // player movement
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-100);
             this.player.anims.play("left", true);
@@ -445,6 +638,9 @@ class Shipwrecked extends Phaser.Scene {
     boarPlayerCombat(thePlayer, boar) {
         playerLife -= 5;
         boar.disableBody(true, true);
+        this.gold++;
+        this.goldText.setText("Gold: " + this.gold);
+
 
         if (playerLife <= 0) {
 
@@ -453,6 +649,7 @@ class Shipwrecked extends Phaser.Scene {
 
             // turn player bloody red
             thePlayer.setTint(0xff0000);
+            this.playerLifeImg.setTexture("noHealth");
 
             // force facing
             thePlayer.anims.play("turn");
