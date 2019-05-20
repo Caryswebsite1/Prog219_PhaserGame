@@ -21,12 +21,29 @@ let config = {
 console.log("in game.js");
 let playerStartX = 500;
 let playerStartY = 500;
+// scene sleep checks
 let sleep1 = false;
 let sleep2 = false;
 let sleep3 = false;
 let sleep4 = false;
-let playerLife = 10;
 
+// player life related
+let playerLife = 10;
+let hearts = [];
+
+// player inventory, gathered items and tools
+let playerInventory = [];
+
+// items
+let Gold = 0;
+let Wood = 0;
+let Rope = 0;
+let Wool = 0;
+let Food = 0;
+
+
+// tools
+let Machete = "Machete";
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);
