@@ -36,8 +36,9 @@ class Shipwrecked extends Phaser.Scene {
         this.load.image("ocean2", "assets/ocean2.png");
         this.load.image("greenGround", "assets/greenGround.png");
         this.load.image("jungleTrees", "assets/JungleOK64.png");
-        this.load.image("macheteImg", "assets/machete64A.png");
+        this.load.image("macheteImg", "assets/machete16A.png");
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
+        this.load.image("TreeImg", "assets/Jungle-Tree6450.png");
         this.load.image("boar", "assets/boarhit.png");
         this.load.spritesheet("sheepImg", "assets/sheep_eat32.png", { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet("dude", "assets/universal-lpc-sprite_male_01_32pix.png", { frameWidth: 32, frameHeight: 32 });
@@ -46,18 +47,8 @@ class Shipwrecked extends Phaser.Scene {
         // status icons will be on top of anything else.
         this.load.image("singleHeart", "assets/singleHeart16.png");
         this.load.image("blankHeart", "assets/blankHeart16.png");
-        this.load.image("heart2", "assets/heartshealth2.png");
-        this.load.image("heart1", "assets/heartshealth1.png");
-        this.load.image("noHealth", "assets/noHealth.png");
 
     } // end preload
-
-
-
-    // NOTE:  Our dude sprite sheet is 0 - 12 sprites wide over all. so
-    //        that means row 1 is 0 -12 for a total of 13 POSSIBLE slots.
-    //        However, we only have 7 in row 1 so slots 7-12 are empty.
-    //        row 2 starts on slot 13, etc. 
 
 
     // ---------------------------------------------------------
@@ -68,8 +59,6 @@ class Shipwrecked extends Phaser.Scene {
     // Sets interaction types etc.
     // -----------------------------------------------------------
     create() {
-
-
 
         // General Create:
         this.events.on('wake', this.onWake, this);
@@ -88,19 +77,6 @@ class Shipwrecked extends Phaser.Scene {
         let i = 0;
         let j = 0;
 
-        /*
-// add the ground we can walk on (beach etc) as the whole underlying group to start..
-this.ground = this.physics.add.staticGroup();
-//  A sand everywhere.
-let i = 0;
-let j = 0;
-for (i = 0; i < 1000; i += 16) {
-    console.log("in first i loop for sand");
-    for (j = 0; j < 1000; j += 16) {
-        this.ground.create(i, j, "sand");
-    }// end for j
-}// end for i
-*/
 
         // to only add an image someplace, you would say:
         this.add.image(500, 500, "bigSand");
@@ -111,13 +87,14 @@ for (i = 0; i < 1000; i += 16) {
         this.BigOcean.create(500, 970, "ocean2");
         this.BigOcean.create(70, 500, "ocean1");
 
-
-
         console.log("out of ocean 1 creation");
+
 
         /* *********************************************************************
          * *********** Main Map Setup ******************************************* 
          * *********************************************************************/
+
+        // Jungle:
         this.theJungle = this.physics.add.staticGroup();
 
         let newChild = "";
@@ -299,14 +276,10 @@ for (i = 0; i < 1000; i += 16) {
         // location.  We could do it that way if the player was a game global and not
         // a scene object.
         //----------------------------------------------------------------------
-        //this.theJungle.children.iterate(this.setJungleInteractions, this);
         this.theJungle.children.iterate(
             function (child) {
                 child.setInteractive();
-                //child.name = "jungle";
             }
-            //    child.on('pointerdown', this.jungleClickHandler);
-            //}, this);
         );
 
 
@@ -406,19 +379,22 @@ for (i = 0; i < 1000; i += 16) {
 
 
          // Sheep: try to restrict to green grass.
-        //this.sheepHerd = this.physics.add.group();
-        this.sheepHerd = [];
-
         let newSheep = "";
-        let herdIndex = 0;
+        this.sheepHerd = this.physics.add.group();
         for (j = 280; j <= 600; j += 60) {
             for (i = 800; i < 965; i += 50) {
-                newSheep = this.physics.add.sprite(i, j, "sheepImg");
-                newSheep.name = "sheep";
-                this.sheepHerd[herdIndex] = newSheep;
-                herdIndex += 1;
+                newChild = this.sheepHerd.create(i, j, "sheepImg");
+                newChild.name = "sheep";
+            }// end i
+        }// end j
+
+        // make the sheep interactive: 
+        this.sheepHerd.children.iterate(
+            function (child) {
+                child.setInteractive();
             }
-        }
+        );
+
         console.log("sheep made.  Herd: " + this.sheepHerd);
 
 
@@ -443,7 +419,27 @@ for (i = 0; i < 1000; i += 16) {
         //    repeate: -1
         //});
 
+        // a few trees with the sheep.
+        let newTree = "";
+        this.sheepTrees = this.physics.add.staticGroup();
 
+        // only 3 trees so hardcoding location:
+        // 1:
+        newTree = this.sheepTrees.create(840, 320, "TreeImg");
+        newTree.name = "tree";
+        // 2:
+        newTree = this.sheepTrees.create(900, 460, "TreeImg");
+        newTree.name = "tree";
+        // 3:
+        newTree = this.sheepTrees.create(800, 600, "TreeImg");
+        newTree.name = "tree";
+
+        // make the trees interactive: 
+        this.sheepTrees.children.iterate(
+            function (child) {
+                child.setInteractive();
+            }
+        );
 
 
         //  The score
@@ -473,17 +469,6 @@ for (i = 0; i < 1000; i += 16) {
             hearts[i] = this.add.image((20 + (i * 18)), 50, 'singleHeart');
             hearts[i].setScrollFactor(0);
         }
-
-        //this.playerLifeImg = this.physics.add.staticGroup({
-        //    key: "heart2",
-        //    repeat: 6,
-        //    setXY: { x: 500, y: 50, stepX: 40, stepY: 0 }
-        //});
-
-
-        //adds 2 hearts to display
-        //this.playerLifeImg = this.add.image(500, 50, "heart2")
-        //this.playerLifeImg.setScrollFactor(0);
 
 
         //plugins
@@ -515,22 +500,28 @@ for (i = 0; i < 1000; i += 16) {
             child.setCollideWorldBounds(true);
         });
 
-        this.sheepHerd.forEach((child) => { child.setCollideWorldBounds(true) });
-        this.sheepHerd.forEach((child) => { child.setInteractive() });
-
-        //  Collide the player, the boars and the sheep with the ocean and jungle.
-        this.physics.add.collider(this.player, this.BigOcean);
-        this.physics.add.collider(this.player, this.theJungle);
-        this.physics.add.collider(this.boars, this.BigOcean);
-        this.physics.add.collider(this.boars, this.theJungle);
-        this.sheepHerd.forEach((child) => {
-            this.physics.add.collider(child, this.theJungle);
-            this.physics.add.collider(child, this.BigOcean);
+        this.sheepHerd.children.iterate(function (child) {
+            child.setCollideWorldBounds(true);
         });
 
+        this.sheepTrees.children.iterate(function (child) {
+            child.setCollideWorldBounds(true);
+        });
 
-        // collide boars with each other.
+        //  Collide the everything for the most part.  
+        this.physics.add.collider(this.player, this.BigOcean);
+        this.physics.add.collider(this.player, this.theJungle);
+        this.physics.add.collider(this.player, this.sheepTrees);
+        this.physics.add.collider(this.boars, this.BigOcean);
+        this.physics.add.collider(this.boars, this.theJungle);
+        this.physics.add.collider(this.sheepHerd, this.BigOcean);
+        this.physics.add.collider(this.sheepHerd, this.theJungle);
+
+        
+        // collide boars and sheep with each other.
         this.physics.add.collider(this.boars, this.boars);
+        this.physics.add.collider(this.sheepHerd, this.boars);
+        this.physics.add.collider(this.sheepHerd, this.sheepHerd);
 
         //  Checks to see if the player overlaps with any of the boars, if he does call the boarCombat function
         this.physics.add.overlap(this.player, this.boars, this.boarPlayerCombat, null, this);
@@ -631,7 +622,8 @@ for (i = 0; i < 1000; i += 16) {
         if (this.sheepEatTime > this.maxSheepEat) {
 
             // make as random as posible but not very changing.
-            this.sheepHerd.forEach((child) => {
+           // this.sheepHerd.forEach((child) => {
+            this.sheepHerd.children.iterate(function (child) {
                 if (Math.random() > 0.5) {
                     // 25% chance to change.
                     // 50% change for either facing direction.
@@ -839,7 +831,52 @@ for (i = 0; i < 1000; i += 16) {
                     }
 
                 }// end else
-                break; // end jungle
+                break; // end sheep
+
+
+            case "tree":
+
+                if (!playerInventory.includes("Axe")) {
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                    ) {
+
+                        this.dialogBox.setText("I sure wish I had an Axe!");
+                        console.log("I sure wish I had an Axe!");
+                    }
+                    else {
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                    }
+                }
+                else {
+                    console.log("in else for trees, Check to see if close enough!");
+
+                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    console.log("tree x: " + gameObject.x + "  tree y: " + gameObject.y);
+                    // if player close to sheep piece then destroy it (chopped!).
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                    ) {
+                        // close enough to chop!
+                        //############### NEED A sheep dieing SOUND HERE #################
+                        this.dialogBox.setText("Chop! Chop! Chop! Tiiiimmmmmbbbbbeeerrrrrr!");
+
+                        gameObject.disableBody(true, true);
+
+                        // gain resources!
+                        Wood++;
+                        this.woodText.setText("Wood: " + Wood);
+
+                    }
+                    else {
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                        console.log("NOPE NOT close enough!");
+                    }
+
+                }// end else
+                break; // end tree
 
             default:
                 break;
