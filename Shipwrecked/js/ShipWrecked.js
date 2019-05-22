@@ -24,6 +24,11 @@ class Shipwrecked extends Phaser.Scene {
     // or sprite loaded in.
     // -----------------------------------------------------------
     preload() {
+
+        // plugins
+        this.load.plugin('DialogModalPlugin', './js/dialog_plugin.js');
+
+        // main images
         this.load.image("bigSand", "assets/island_sand_d.jpg");
         this.load.image("ocean1", "assets/ocean4.png");
         this.load.image("ocean2", "assets/ocean2.png");
@@ -61,6 +66,9 @@ class Shipwrecked extends Phaser.Scene {
     // -----------------------------------------------------------
     create() {
 
+
+
+        // General Create:
         this.events.on('wake', this.onWake, this);
 
         // Camera: set bounds to whole world size.
@@ -428,6 +436,25 @@ for (i = 0; i < 1000; i += 16) {
         //this.playerLifeImg = this.add.image(500, 50, "heart2")
         //this.playerLifeImg.setScrollFactor(0);
 
+
+        //plugins
+
+        // Dialog box:
+        this.sys.install('DialogModalPlugin');
+        console.log(this.sys.dialogModal);
+
+        //this.dialogBox = this.add.text(200, 200, this.sys.dialogModal.init());
+        this.dialogBox = this.sys.dialogModal;
+        this.dialogBox.init({windowHeight: 100, windowWidth: 500, locationX: 20, locationY: 490 });
+
+        console.log(this.dialogBox);
+
+        // set scrollFactor so it scrolls with the camera (1). a (0) keeps in place.
+        //this.dialogBox.graphics.scrollFactorX(1);
+        //this.dialogBox.scrollFactorY(1);
+        //End dialog box stuff
+
+
         /* ************************************************************
          * ************** Colliders Section ***************************
          * ************************************************************ */
@@ -634,6 +661,7 @@ for (i = 0; i < 1000; i += 16) {
 
                 if (!playerInventory.includes("Machete")) {
                     //############### NEED A MESSAGE TO THE PLAYER HERE #################
+                    this.dialogBox.setText("Sure wish I had a Machete!");
                     console.log("Sure wish I had a Machete!");
                 }
                 else {
@@ -648,6 +676,8 @@ for (i = 0; i < 1000; i += 16) {
                     ) {
                         // close enough to chop!
                         //############### NEED A CHOPPING SOUND HERE #################
+                        this.dialogBox.setText("CHOP! CHOP!");
+
                         gameObject.disableBody(true, true);
                         console.log("chopping jungle yet to be fully implemented.");
                     }
@@ -682,6 +712,7 @@ for (i = 0; i < 1000; i += 16) {
         theMachete.disableBody(true, true);
 
         //############### NEED A MESSAGE TO THE PLAYER HERE #################
+        this.dialogBox.setText("At Last! A Machete!");
         console.log(playerInventory);
     }
 
@@ -715,6 +746,7 @@ for (i = 0; i < 1000; i += 16) {
             playerLife -= 1;
             hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
             hearts[playerLife].setScrollFactor(0);
+            this.dialogBox.setText("Take that boar!  Ha!");
         }
         else {
             let i = 0;
@@ -733,6 +765,7 @@ for (i = 0; i < 1000; i += 16) {
                     index = playerLife - i - 1;
                     hearts[index] = this.add.image((20 + (index * 18)), 50, 'blankHeart');
                     hearts[index].setScrollFactor(0);
+                    this.dialogBox.setText("Ow! Ow! OW!  That HURT!");
                 }
             }// end else
 
@@ -760,6 +793,7 @@ for (i = 0; i < 1000; i += 16) {
             thePlayer.anims.play("turn");
 
             this.gameOver = true;
+            this.dialogBox.setText("Alas! You have died!");
 
         } // end if playerLife
 
