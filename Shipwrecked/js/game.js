@@ -19,8 +19,8 @@ let config = {
 };
 
 console.log("in game.js");
-let playerStartX = 500;
-let playerStartY = 500;
+let playerStartX = 350;
+let playerStartY = 400;
 // scene sleep checks
 let sleep1 = false;
 let sleep2 = false;
@@ -37,13 +37,14 @@ let playerInventory = [];
 // items
 let Gold = 0;
 let Wood = 0;
-let Rope = 0;
+let Iron = 0;
 let Wool = 0;
 let Food = 0;
 
 
-// tools
+// tools  Not sure we need these since we have the inventory.
 let Machete = "Machete";
+let Axe = "Axe";
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);

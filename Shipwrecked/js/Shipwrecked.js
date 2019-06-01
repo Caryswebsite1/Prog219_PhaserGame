@@ -6,7 +6,7 @@ class Shipwrecked extends Phaser.Scene {
 
         this.gameOver = false;
         this.score = 0;
-        this.startX = 500;
+        this.startX = 350;
         this.startY = 400;
         this.boarRunTime = 150; // so we get one movement set right away.
         this.maxBoarRun = 150;
@@ -452,8 +452,8 @@ class Shipwrecked extends Phaser.Scene {
         this.woodText = this.add.text(100, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woodText.setScrollFactor(0);
 
-        this.ropeText = this.add.text(180, 10, "Rope: " + Rope, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
-        this.ropeText.setScrollFactor(0);
+        this.ironText = this.add.text(180, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.ironText.setScrollFactor(0);
 
         this.woolText = this.add.text(260, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woolText.setScrollFactor(0);

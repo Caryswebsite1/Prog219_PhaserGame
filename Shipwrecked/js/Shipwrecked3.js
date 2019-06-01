@@ -31,6 +31,7 @@ class Shipwrecked3 extends Phaser.Scene {
         this.load.image("ocean", "assets/ocean16.jpg");
         this.load.image("jungle", "assets/jungle_mntn2_d16.jpg");
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
+        this.load.image("VolcanoImg", "assets/VolcanoTopA.png");
         this.load.image("boar", "assets/boarhit.png");
         this.load.spritesheet("dude", "assets/universal-lpc-sprite_male_01_32pix.png", { frameWidth: 32, frameHeight: 32 });
 
@@ -101,7 +102,7 @@ class Shipwrecked3 extends Phaser.Scene {
         //  add ocean as a static but we will set it up as a collider later.
         this.BigOcean = this.physics.add.staticGroup();
         // just a couple tiles wide down the right and accross the top for now.
-        for (i = 935; i < 1000; i += 16) {
+        for (i = 800; i < 1000; i += 16) {
             console.log("in first i loop for 3rd ocean");
             for (j = 0; j < 1000; j += 16) {
                 this.BigOcean.create(i, j, "ocean");
@@ -117,6 +118,11 @@ class Shipwrecked3 extends Phaser.Scene {
         }// end for i
 
         console.log("out of ocean 3 creation");
+
+
+        this.Volcano = this.physics.add.staticGroup();
+        this.Volcano.create(940, 820, "VolcanoImg");
+
 
 
         /* *********************************************************************
@@ -182,6 +188,7 @@ class Shipwrecked3 extends Phaser.Scene {
         //  Collide the player and the boars with the ocean
         this.physics.add.collider(this.player, this.BigOcean);
         this.physics.add.collider(this.boars, this.BigOcean);
+        this.physics.add.collider(this.player, this.Volcano);
 
         // collide boars with each other.
         this.physics.add.collider(this.boars, this.boars);
