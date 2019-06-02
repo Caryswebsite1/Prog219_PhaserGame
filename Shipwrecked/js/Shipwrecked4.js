@@ -35,15 +35,12 @@ class Shipwrecked4 extends Phaser.Scene {
         this.load.image("bigSand", "assets/island_sand_d.jpg");
         this.load.image("ocean7", "assets/ocean7.png");
         this.load.image("ocean8", "assets/ocean8.png");
-        this.load.image("greenGround", "assets/greenGround.png");
         this.load.image("jungleTrees", "assets/JungleOK64.png");
         this.load.image("AxeImg", "assets/Axe21.png");
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
         this.load.image("TreeImg", "assets/Jungle-Tree6450.png");
+        this.load.image("greenGround", "assets/greenGroundMap4.png");
         this.load.image("VolcanoB", "assets/VolcanoBottom1.png");
-        //this.load.image("VolcanoMS1", "assets/VolcanoMidSlice1.png");
-        //this.load.image("VolcanoMS2", "assets/VolcanoMidSlice2.png");
-        //this.load.image("VolcanoMS3", "assets/VolcanoMidSlice3.png");
         this.load.image("VolcanoB1", "assets/VolcanoBottom1Test.png");
         this.load.image("VolcanoB2", "assets/VolcanoBottom1E.png");
         this.load.image("VolcanoB3", "assets/VolcanoBottom1D.png");
@@ -99,8 +96,20 @@ class Shipwrecked4 extends Phaser.Scene {
         let j = 0;
 
 
+
+
+       /* *********************************************************************
+        * *********** Main Map Setup ******************************************* 
+        * *********************************************************************/
+
+        //NOTE: add in order from bottom layer to top.
+
         // to only add an image someplace, you would say:
         this.add.image(500, 500, "bigSand");
+
+
+        // add the green ground.
+        this.add.image(200, 380, "greenGround");
 
 
         this.BigOcean = this.physics.add.staticGroup();
@@ -110,9 +119,6 @@ class Shipwrecked4 extends Phaser.Scene {
 
 
         this.Volcano = this.physics.add.staticGroup();
-        //this.Volcano.create(980, 8, "VolcanoMS1");
-        //this.Volcano.create(970, 24, "VolcanoMS2");
-        //this.Volcano.create(960, 40, "VolcanoMS3");
         this.Volcano.create(934, 24, "VolcanoB1");
         this.Volcano.create(936, 136, "VolcanoB2");
         this.Volcano.create(916, 184, "VolcanoB3");
@@ -120,10 +126,12 @@ class Shipwrecked4 extends Phaser.Scene {
         this.Volcano.create(831, 303, "VolcanoB5");
         this.Volcano.create(825, 373, "VolcanoB6");
         
-        // rocky slope..
+        // ****** rocky slope.. *******
         this.add.image(660, 470, "RockyImg");
 
-        // Iron ore, under trees,  if a tree is there, you have to cut it down first.
+
+        // ******* Iron ore, protected by boars. *******
+        // ****** If under trees, you have to cut the tree down first. *******
         this.IronOreGroup = this.physics.add.staticGroup();
 
         let newChild = "";
@@ -193,23 +201,21 @@ class Shipwrecked4 extends Phaser.Scene {
 
 
 
-        /* *********************************************************************
-        * *********** Main Map Setup ******************************************* 
-        * *********************************************************************/
 
-        // Jungle:
+        // ********* Jungle ******************
         this.theJungle = this.physics.add.staticGroup();
 
+         // from top left to volcano on right with a tree of overlap or so.
         newChild = "";
-        maxTiles = 3;
+        maxTiles = 7;
         tiles = 0;
         maxRows = 3;
         jRows = 0;
         xStart = 0;
         i = xStart;
-        j = 135;
+        j = 0;
 
-        // from treeline at top to left diagonal
+       
         while (jRows < maxRows) {
             console.log("while top map4 loop");
             while (tiles <= maxTiles) {
@@ -218,7 +224,33 @@ class Shipwrecked4 extends Phaser.Scene {
                 i += 64;
                 tiles += 1;
             } // end while tiles
-            maxTiles += 1;
+            tiles = 0;
+            xStart += 0;
+            i = xStart;
+            j += 45;
+            jRows += 1;
+        } // end while j
+
+
+        // from treeline at top to left diagonal
+        newChild = "";
+        maxTiles = 7;
+        tiles = 0;
+        maxRows = 3;
+        jRows = 0;
+        xStart = 0;
+        i = xStart;
+        j = 135;
+
+        while (jRows < maxRows) {
+            console.log("while top map4 loop");
+            while (tiles <= maxTiles) {
+                newChild = this.theJungle.create(i, j, "jungleTrees");
+                newChild.name = "jungle";
+                i += 64;
+                tiles += 1;
+            } // end while tiles
+            if (jRows == 0) { maxTiles -= 1; }
             tiles = 0;
             xStart += 0;
             i = xStart;
@@ -393,53 +425,41 @@ class Shipwrecked4 extends Phaser.Scene {
         // Piggy scattered around
         this.boars = this.physics.add.group({
             key: "boar",
-            repeat: 6,
-            setXY: { x: 150, y: 50, stepX: 150, stepY: 150 }
+            repeat: 8,
+            setXY: { x: 100, y: 100, stepX: 75, stepY: 75 }
         });
 
         // no speed now. will give random speed and direction in update
 
 
-        // Sheep: try to restrict to green grass.
-        //let newSheep = "";
-        //this.sheepHerd = this.physics.add.group();
-        //for (j = 280; j <= 600; j += 60) {
-        //    for (i = 200; i < 765; i += 50) {
-        //        newChild = this.sheepHerd.create(i, j, "sheepImg");
-        //        newChild.name = "sheep";
-        //    }// end i
-        //}// end j
-
-        //// make the sheep interactive: 
-        //this.sheepHerd.children.iterate(
-        //    function (child) {
-        //        child.setInteractive();
-        //    }
-        //);
-
-        //console.log("sheep made.  Herd: " + this.sheepHerd);
+         //Sheep: try to restrict to green grass.
+        let newSheep = "";
+        this.sheepHerd = this.physics.add.group();
+        for (j = 280; j < 400; j += 60) {
+            for (i = 32; i <= 100; i += 45) {
+                newChild = this.sheepHerd.create(i, j, "sheepImg");
+                newChild.name = "sheep";
+            }// end i
+        }// end j
 
 
-        //this.anims.create({
-        //    key: "sheepLeft",
-        //    frames: this.anims.generateFrameNumbers("sheepImg", { start: 0, end: 3 }),
-        //    frameRate: 2,
-        //    repeate: -1
-        //});
+        // and a couple more lower down.
+        newChild = this.sheepHerd.create(32, 500, "sheepImg");
+        newChild.name = "sheep";
 
-        //this.anims.create({
-        //    key: "sheepRight",
-        //    frames: this.anims.generateFrameNumbers("sheepImg", { start: 4, end: 8 }),
-        //    frameRate: 2,
-        //    repeate: -1
-        //});
+        newChild = this.sheepHerd.create(32, 680, "sheepImg");
+        newChild.name = "sheep";
 
-        //this.anims.create({
-        //    key: "sheepStand",
-        //    frames: [{ key: "sheepImg", frame: 2 }],
-        //    frameRate: 2,
-        //    repeate: -1
-        //});
+
+        // make the sheep interactive: 
+        this.sheepHerd.children.iterate(
+            function (child) {
+                child.setInteractive();
+            }
+        );
+
+        console.log("sheep made Map 4.  Herd: " + this.sheepHerd);
+
 
         // Grove of trees for wood.. Protected by boars....
         let newTree = "";
@@ -465,17 +485,6 @@ class Shipwrecked4 extends Phaser.Scene {
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-        // Header and hearts
-        //this.goldText = this.add.text(this.sys.globalFunctions.goldTextFunction());
-
-        //this.woodText = this.add.text(this.sys.globalFunctions.woodTextFunction());
-
-        //this.ropeText = this.add.text(this.sys.globalFunctions.ropeTextFunction());
-
-        //this.woolText = this.add.text(this.sys.globalFunctions.woolTextFunction());
-
-        //this.foodText = this.add.text(this.sys.globalFunctions.foodTextFunction());
-
         this.sys.globalFunctions.goldTextFunction();
 
         this.sys.globalFunctions.woodTextFunction();
@@ -492,23 +501,6 @@ class Shipwrecked4 extends Phaser.Scene {
         console.log("in map 4 create, life is: " + playerLife);
         this.sys.globalFunctions.updateHearts();
 
-        //this.foodText = this.add.text(this.sys.globalFunctions.foodTextFunction());
-
-        //adds 2 hearts to display
-        // this.playerLifeImg = this.add.image(500, 50, "heart2")
-        // this.playerLifeImg.setScrollFactor(0);
-
-
-        /* **************************************************************
-         * ********* Life heart bar test ******************************
-         * *************************************************************** */
-
-        //for (let i = 0; i < 10; i++) {
-
-        //    hearts[i] = this.add.image((20 + (i * 18)), 50, 'singleHeart');
-        //    hearts[i].setScrollFactor(0);
-        //}
-
 
         /* ************************************************************
          * ************** Colliders Section ***************************
@@ -520,9 +512,9 @@ class Shipwrecked4 extends Phaser.Scene {
             child.setCollideWorldBounds(true);
         });
 
-        //this.sheepHerd.children.iterate(function (child) {
-        //    child.setCollideWorldBounds(true);
-        //});
+        this.sheepHerd.children.iterate(function (child) {
+            child.setCollideWorldBounds(true);
+        });
 
 
         //  Collide the everything for the most part.  
@@ -533,19 +525,18 @@ class Shipwrecked4 extends Phaser.Scene {
         this.physics.add.collider(this.boars, this.BigOcean);
         this.physics.add.collider(this.boars, this.Volcano);
         this.physics.add.collider(this.boars, this.theJungle);
-        //this.physics.add.collider(this.sheepHerd, this.BigOcean);
-        //this.physics.add.collider(this.sheepHerd, this.Volcano);
-        //this.physics.add.collider(this.sheepHerd, this.theJungle);
+        this.physics.add.collider(this.sheepHerd, this.BigOcean);
+        this.physics.add.collider(this.sheepHerd, this.Volcano);
+        this.physics.add.collider(this.sheepHerd, this.theJungle);
 
 
         // collide boars and sheep with each other.
         this.physics.add.collider(this.boars, this.boars);
-        //this.physics.add.collider(this.sheepHerd, this.boars);
-        //this.physics.add.collider(this.sheepHerd, this.sheepHerd);
+        this.physics.add.collider(this.sheepHerd, this.boars);
+        this.physics.add.collider(this.sheepHerd, this.sheepHerd);
 
         //  Checks to see if the player overlaps with any of the boars, if he does call the boarCombat function
         this.physics.add.overlap(this.player, this.boars, this.sys.globalFunctions.boarPlayerCombat, null, this);
-
 
 
         // check for tools:
@@ -583,7 +574,6 @@ class Shipwrecked4 extends Phaser.Scene {
             return;
         }
 
-        //console.log("Doing update 4");
 
         // move boars around randomly every maxBoarRun count.:
         if (this.boarRunTime > this.maxBoarRun) {
@@ -601,32 +591,32 @@ class Shipwrecked4 extends Phaser.Scene {
 
 
         // Sheep movement: 
-        //if (this.sheepEatTime > this.maxSheepEat) {
+        if (this.sheepEatTime > this.maxSheepEat) {
 
-        //    // make as random as posible but not very changing.
-        //    // this.sheepHerd.forEach((child) => {
-        //    this.sheepHerd.children.iterate(function (child) {
-        //        if (Math.random() > 0.5) {
-        //            // 25% chance to change.
-        //            // 50% change for either facing direction.
-        //            if (Math.random() > 0.5) {
-        //                child.anims.play("sheepLeft", true);
-        //            }
-        //            else {
-        //                child.anims.play("sheepRight", true);
-        //            }
-        //            //  Give each sheep a very very slow speed  
-        //            child.setVelocityX(-2 + (Math.random() * 4));
-        //            child.setVelocityY(-2 + (Math.random() * 4));
-        //        }// end if changing
+            // make as random as posible but not very changing.
+            // this.sheepHerd.forEach((child) => {
+            this.sheepHerd.children.iterate(function (child) {
+                if (Math.random() > 0.5) {
+                    // 25% chance to change.
+                    // 50% change for either facing direction.
+                    if (Math.random() > 0.5) {
+                        child.anims.play("sheepLeft", true);
+                    }
+                    else {
+                        child.anims.play("sheepRight", true);
+                    }
+                    //  Give each sheep a very very slow speed  
+                    child.setVelocityX(-2 + (Math.random() * 4));
+                    child.setVelocityY(-2 + (Math.random() * 4));
+                }// end if changing
 
-        //    }); // end for each
+            }); // end for each
 
-        //    this.sheepEatTime = 0;
-        //}
-        //else {
-        //    this.sheepEatTime += 1;
-        //}// end sheep update
+            this.sheepEatTime = 0;
+        }
+        else {
+            this.sheepEatTime += 1;
+        }// end sheep update
 
 
 
@@ -648,11 +638,6 @@ class Shipwrecked4 extends Phaser.Scene {
             this.player.anims.play("turn");
         } // end else
 
-        // Health Heart display update:
-        // checks if 50% health
-        //if (playerLife === 5) {
-            //this.playerLifeImg.setTexture("heart1");
-        //}
 
         //  Position the center of the camera on the player
         //  We -400 because the camera width is 800px and
@@ -701,33 +686,6 @@ class Shipwrecked4 extends Phaser.Scene {
         // right is ocean, bottom is ocean so don't need them.
 
     } // end update
-
-
-    // ---------------------------------------------------------
-    // boarPlayerCombat(thePlayer, boar)
-    //
-    // Description: Handler for when player and boar connect.
-    // currently just decrements players hitpoints and if player
-    // reaches 0, ends the game.
-    // -----------------------------------------------------------
-    //boarPlayerCombat(thePlayer, boar) {
-    //    playerLife -= 5;
-    //    boar.disableBody(true, true);
-
-    //    if (playerLife <= 0) {
-
-    //        this.physics.pause();
-
-    //        thePlayer.setTint(0xff0000);
-
-    //        thePlayer.anims.play("turn");
-
-    //        this.playerLifeImg.setTexture("noHealth");
-    //        this.gameOver = true;
-
-    //    } // end if playerLife
-
-    //} // end boarPlayerCombat
 
 
 
