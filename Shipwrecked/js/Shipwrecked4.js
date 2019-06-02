@@ -40,7 +40,6 @@ class Shipwrecked4 extends Phaser.Scene {
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
         this.load.image("TreeImg", "assets/Jungle-Tree6450.png");
         this.load.image("greenGround", "assets/greenGroundMap4.png");
-        this.load.image("VolcanoB", "assets/VolcanoBottom1.png");
         this.load.image("VolcanoB1", "assets/VolcanoBottom1Test.png");
         this.load.image("VolcanoB2", "assets/VolcanoBottom1E.png");
         this.load.image("VolcanoB3", "assets/VolcanoBottom1D.png");
