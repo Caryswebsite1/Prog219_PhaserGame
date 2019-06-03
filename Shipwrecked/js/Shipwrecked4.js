@@ -657,8 +657,8 @@ class Shipwrecked4 extends Phaser.Scene {
         //  Position the center of the camera on the player
         //  We -400 because the camera width is 800px and
         //  we want the center of the camera on the player, not the left-hand side of it
-        this.cameras.main.scrollX = this.player.x - 400;
-        this.cameras.main.scrollY = this.player.y - 300;
+        //this.cameras.main.scrollX = this.player.x - 400;
+       // this.cameras.main.scrollY = this.player.y - 300;
 
 
         /* ***************************************************
