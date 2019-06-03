@@ -19,8 +19,8 @@ let config = {
 };
 
 console.log("in game.js");
-let playerStartX = 350;
-let playerStartY = 400;
+let playerStartX = 250;
+let playerStartY = 350;
 // scene sleep checks
 let sleep1 = false;
 let sleep2 = false;

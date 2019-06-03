@@ -64,8 +64,8 @@ class Shipwrecked2 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(800, 600);
-
+        this.cameras.main.setSize(1000, 1000);
+        //this.cameras.main.setSize(400, 400);
 
         // only for test..
         this.gold = 1;
@@ -131,6 +131,11 @@ class Shipwrecked2 extends Phaser.Scene {
 
         //  Player physics properties. Give the little guy a slight bounce.
         //this.player.setBounce(0.15);
+
+        // set camera to follow player:
+        this.cameras.main.startFollow(this.player);
+
+
         this.player.setCollideWorldBounds(true);
 
 

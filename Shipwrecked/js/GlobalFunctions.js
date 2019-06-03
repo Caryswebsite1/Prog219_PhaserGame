@@ -331,6 +331,76 @@ GlobalFunctionsPlugin.prototype = {
                 }// end else
                 break; // end Iron
 
+
+
+            case "Gold1":
+            case "Gold2":
+            case "Gold3":
+            case "Gold4":
+
+                if (!playerInventory.includes("PickAxe")) {
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 40) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 40)
+                    ) {
+
+                        this.dialogBox.setText("I sure wish I had a PickAxe!");
+                        console.log("I sure wish I had a PickAxe!");
+                    }
+                    else {
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                    }
+                }
+                else {
+                    console.log("in else for Gold, Check to see if close enough!");
+
+                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    console.log("tree x: " + gameObject.x + "  tree y: " + gameObject.y);
+                    // if player close to Iron piece then destroy it (Mined!).
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 40) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 40)
+                    ) {
+                        // close enough to chop!
+                        //############### NEED A sheep dieing SOUND HERE #################
+                        this.dialogBox.setText("Thunk... Thunk.. Thunk.. Whew! Pounding Rocks is Hard!");
+
+                        // gain resources! Switch on iron type.
+                        switch (gameObject.name) {
+                            case "Gold1":
+                                Gold++;
+                                break;
+
+                            case "Gold2":
+                                Gold += 2;
+                                break;
+
+                            case "Gold3":
+                                Gold += 3;
+                                break;
+
+                            case "Gold4":
+                                Gold += 4;
+                                break;
+
+                            default:
+                                Gold++;
+                                break;
+                        } // end gain resources switch.
+
+                        // set text:
+                        this.sys.globalFunctions.goldText.setText("Gold: " + Gold);
+
+                        gameObject.disableBody(true, true);
+                    }// end close enough, mine it!
+                    else {
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                        console.log("NOPE NOT close enough!");
+                    }
+
+                }// end else
+                break; // end Gold
+
             default:
                 break;
 
@@ -347,19 +417,19 @@ GlobalFunctionsPlugin.prototype = {
         this.goldText.setScrollFactor(0);
     },
     woodTextFunction: function () {
-        this.woodText = this.scene.add.text(100, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.woodText = this.scene.add.text(130, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woodText.setScrollFactor(0);
     },
     ironTextFunction: function () {
-        this.ironText = this.scene.add.text(180, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.ironText = this.scene.add.text(240, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.ironText.setScrollFactor(0);
     },
     woolTextFunction: function () {
-        this.woolText = this.scene.add.text(260, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.woolText = this.scene.add.text(350, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woolText.setScrollFactor(0);
     },
     foodTextFunction: function () {
-        this.foodText = this.scene.add.text(340, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.foodText = this.scene.add.text(460, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.foodText.setScrollFactor(0);
     },
 

@@ -40,6 +40,7 @@ class Shipwrecked4 extends Phaser.Scene {
         this.load.image("hcTree", "assets/horse-chestnut-tree_16.png");
         this.load.image("TreeImg", "assets/Jungle-Tree6450.png");
         this.load.image("greenGround", "assets/greenGroundMap4.png");
+        this.load.image("VolcanoB", "assets/VolcanoBottom1.png");
         this.load.image("VolcanoB1", "assets/VolcanoBottom1Test.png");
         this.load.image("VolcanoB2", "assets/VolcanoBottom1E.png");
         this.load.image("VolcanoB3", "assets/VolcanoBottom1D.png");
@@ -84,8 +85,8 @@ class Shipwrecked4 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(800, 600);
-
+        this.cameras.main.setSize(1000, 1000);
+        //this.cameras.main.setSize(400, 400);
 
         // only for test..
         this.score = 6;
@@ -198,6 +199,16 @@ class Shipwrecked4 extends Phaser.Scene {
         } // end while j
 
 
+        //----------------------------------------------------------------------
+        // set the Iron ore to be interactive 
+        //
+        // NOTE: Click handler taken care of by GlobalFunctions plugin.
+        //----------------------------------------------------------------------
+        this.IronOreGroup.children.iterate(
+            function (child) {
+                child.setInteractive();
+            }
+        );
 
 
 
@@ -398,6 +409,11 @@ class Shipwrecked4 extends Phaser.Scene {
 
         //  Player physics properties. Give the little guy a slight bounce.
         // this.player.setBounce(0.15);
+
+        // set camera to follow player:
+        this.cameras.main.startFollow(this.player);
+
+
 
         //########################################################
         // NOTE: CANT do another anims for the player here.  It 
@@ -685,6 +701,8 @@ class Shipwrecked4 extends Phaser.Scene {
         // right is ocean, bottom is ocean so don't need them.
 
     } // end update
+
+
 
 
 

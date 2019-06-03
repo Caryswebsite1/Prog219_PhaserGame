@@ -6,8 +6,8 @@ class Shipwrecked extends Phaser.Scene {
 
         this.gameOver = false;
         this.score = 0;
-        this.startX = 350;
-        this.startY = 400;
+        this.startX = 250;
+        this.startY = 250;
         this.boarRunTime = 150; // so we get one movement set right away.
         this.maxBoarRun = 150;
         this.sheepEatTime = 400; // so we get one movement set right away.
@@ -67,7 +67,8 @@ class Shipwrecked extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(800, 600);
+        this.cameras.main.setSize(1000, 1000);
+        //this.cameras.main.setSize(400, 400);
 
 
         // only for test..
@@ -307,6 +308,8 @@ class Shipwrecked extends Phaser.Scene {
         //  Player physics properties. Give the little guy a slight bounce.
         //this.player.setBounce(0.15);
 
+        // set camera to follow player:
+        this.cameras.main.startFollow(this.player);
 
 
         // ######################################
@@ -551,6 +554,8 @@ class Shipwrecked extends Phaser.Scene {
          * put in a global to short circuit the update and it seems to work.
          * **************************************************************** */
         // note, data shows sleeping is not stopping update... neither is pause....
+        // and not visible
+
         // put them to sleep.
         this.scene.sleep("Shipwrecked2");
         this.scene.sleep("Shipwrecked3");
@@ -560,11 +565,10 @@ class Shipwrecked extends Phaser.Scene {
         sleep3 = true;
         sleep4 = true;
 
-
-        // and not visible
         this.scene.setVisible(false, "Shipwrecked2");
         this.scene.setVisible(false, "Shipwrecked3");
         this.scene.setVisible(false, "Shipwrecked4");
+
 
 
         // bring our first one up for input and display.
