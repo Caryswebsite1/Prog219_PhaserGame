@@ -15,7 +15,7 @@ let config = {
     }
   },
  
-    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction]
+    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene]
 };
 
 console.log("in game.js");

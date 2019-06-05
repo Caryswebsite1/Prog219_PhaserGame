@@ -192,4 +192,4 @@ class ShipConstruction extends Phaser.Scene {
     }
 
 
-} // end class Shipwrecked 2
+} // end class ShipConstruction
