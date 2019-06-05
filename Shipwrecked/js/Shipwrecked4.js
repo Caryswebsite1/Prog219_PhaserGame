@@ -85,22 +85,21 @@ class Shipwrecked4 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(1000, 1000);
-        //this.cameras.main.setSize(400, 400);
+        //this.cameras.main.setSize(1000, 1000);
+        this.cameras.main.setSize(500, 400);
 
         // only for test..
         this.score = 6;
-
-        // loop variables
-        let i = 0;
-        let j = 0;
-
 
 
 
        /* *********************************************************************
         * *********** Main Map Setup ******************************************* 
         * *********************************************************************/
+
+        // loop variables
+        let i = 0;
+        let j = 0;
 
         //NOTE: add in order from bottom layer to top.
 
@@ -180,7 +179,8 @@ class Shipwrecked4 extends Phaser.Scene {
                 }
 
                 // randomize x placement some.
-                i += 32 + 32*rand;
+                if (rand < 1) { rand = 1 }
+                i += 32*rand;
                 tiles += 1;
                 // if we are now over the water... kick out of loop
                 if (i > 800) {
@@ -477,15 +477,43 @@ class Shipwrecked4 extends Phaser.Scene {
 
 
         // Grove of trees for wood.. Protected by boars....
-        let newTree = "";
         this.woodTrees = this.physics.add.staticGroup();
-        for (i = 240; i < 600; i += 80) {
-            for (j = 400; j < 650; j += 80) {
+
+        maxTiles = 4;
+        tiles = 0;
+        maxRows = 6;
+        jRows = 0;
+        xStart = 210;
+        i = xStart;
+        j = 400;
+
+        rand = 0;
+        let newTree = "";
+
+        while (jRows < maxRows) {
+            console.log("while map2 wood Tree  loop");
+            while (tiles <= maxTiles) {
+                rand = Math.floor(Math.random() * 4);
+                // randomize x placement some.
+                i += 10 + (32 * rand);
                 newTree = this.woodTrees.create(i, j, "TreeImg");
                 newTree.name = "tree";
-            }
+                tiles += 1;
+                if (i >= 800) {
+                    // reached the end of max row length.
+                    tiles = maxTiles + 1;
+                }
+            } // end while tiles
 
-        }
+            tiles = 0;
+            i = xStart;
+            // shift starting x placement slightly for these rows
+            if (jRows === 1 || jRows === 3)
+                i+= 20;
+            j += 45;
+            jRows += 1;
+        } // end while j
+
 
         // make the trees interactive: 
         this.woodTrees.children.iterate(
@@ -558,9 +586,13 @@ class Shipwrecked4 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.Axe, this.getAxe, null, this);
 
 
+        /* ************************************************************
+         * ***************** Dialog Box Section ***********************
+         * ************************************************************ */
+
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 100, windowWidth: 500, locationX: 20, locationY: 490 });
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 350, locationX: 20, locationY: 320 });
         this.dialogBox.setText("howdy fellow from shipreck 4");
 
 
@@ -722,6 +754,16 @@ class Shipwrecked4 extends Phaser.Scene {
         console.log(playerInventory);
     }
 
+
+    // ---------------------------------------------------------
+    // setSleepFlag(bool)
+    //
+    // Description: sets our scene sleep flag to true (sleeping) or 
+    // false (awake.)
+    // -----------------------------------------------------------
+    setSleepFlag(bSleep) {
+        sleep4 = bSleep;
+    }
 
 
     // ---------------------------------------------------------

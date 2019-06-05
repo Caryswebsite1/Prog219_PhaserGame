@@ -65,9 +65,10 @@ class Shipwrecked3 extends Phaser.Scene {
     // Sets interaction types etc.
     // -----------------------------------------------------------
     create() {
+
+                // plugins:
         this.sys.install('DialogModalPlugin');
         console.log(this.sys.dialogModal);
-
 
         this.sys.install('GlobalFunctionsPlugin');
         console.log("from 3")
@@ -79,20 +80,21 @@ class Shipwrecked3 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(1000, 1000);
-        //this.cameras.main.setSize(400, 400);
+        //this.cameras.main.setSize(1000, 1000);
+        this.cameras.main.setSize(500, 400);
 
         // only for test..
        this.score = 6;
 
-        // loop variables
-        let i = 0;
-        let j = 0;
 
 
         /* *********************************************************************
         * *********** Main Map Setup ******************************************* 
         * *********************************************************************/
+
+        // loop variables
+        let i = 0;
+        let j = 0;
 
         //NOTE: add in order from bottom layer to top.
 
@@ -169,7 +171,8 @@ class Shipwrecked3 extends Phaser.Scene {
                 }
 
                 // randomize x placement some.
-                i += 32 + 32 * rand;
+                if (rand < 1) { rand = 1 }
+                i += 32 * rand;
                 tiles += 1;
                 // if we are now over the water... kick out of loop
                 if (i > 800) {
@@ -234,7 +237,8 @@ class Shipwrecked3 extends Phaser.Scene {
                 }
 
                 // randomize x placement some.
-                i += 32 + 32 * rand;
+                if (rand < 1) { rand = 1}
+                i += 32 * rand;
                 tiles += 1;
                 // if we are now outside of the field
                 if (i > 800) {
@@ -488,9 +492,14 @@ class Shipwrecked3 extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.PickAxe, this.getPickAxe, null, this);
 
 
+
+        /* ************************************************************
+         * ***************** Dialog Box Section ***********************
+         * ************************************************************ */
+
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 60, windowWidth: 500, locationX: 20, locationY: 490 });
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 320 });
         this.dialogBox.setText("howdy fellow from shipreck 3");
 
 
@@ -658,6 +667,15 @@ class Shipwrecked3 extends Phaser.Scene {
     }
 
 
+    // ---------------------------------------------------------
+    // setSleepFlag(bool)
+    //
+    // Description: sets our scene sleep flag to true (sleeping) or 
+    // false (awake.)
+    // -----------------------------------------------------------
+    setSleepFlag(bSleep) {
+        sleep3 = bSleep;
+    }
 
     // ---------------------------------------------------------
     // onWake()

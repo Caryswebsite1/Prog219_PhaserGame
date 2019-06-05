@@ -64,29 +64,9 @@ GlobalFunctionsPlugin.prototype = {
             hearts[playerLife].setScrollFactor(0);
             this.dialogBox.setText("Take that boar!  Ha!");
         } else {
-            let i = 0;
-            //if (playerLife <= 5) {
-            //    // all blank now.
-            //    for (i = 0; i < 10; i++) {
 
-            //        hearts[i] = this.add.image((20 + (i * 18)), 50, 'blankHeart');
-            //        hearts[i].setScrollFactor(0);
-            //    }
-            //} else {
-            //    // blank the last 5.
-            //    let index = 0;
-            //    for (i = 0; i < 5; i++) {
-            //        index = playerLife - i - 1;
-            //        hearts[index] = this.add.image((20 + (index * 18)), 50, 'blankHeart');
-            //        hearts[index].setScrollFactor(0);
-            //        this.dialogBox.setText("Ow! Ow! OW!  That HURT!");
-            //    }
-            //} // end else
-
-            // now drop life by 5
+            // no machete == Ouch Time! drop life by 5!
             playerLife -= 5;
-
-
         } // end else no machete 
 
         // update hearts: 
@@ -132,8 +112,8 @@ GlobalFunctionsPlugin.prototype = {
 
                 if (!playerInventory.includes("Machete")) {
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                        (Math.abs((this.player.x - gameObject.x)) <= 60) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
 
                         this.dialogBox.setText("Sure wish I had a Machete!");
@@ -150,8 +130,8 @@ GlobalFunctionsPlugin.prototype = {
                     console.log("jungle x: " + gameObject.x + "  jungle y: " + gameObject.y);
                     // if player close to jungle piece then destroy it (chopped!).
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                        (Math.abs((this.player.x - gameObject.x)) <= 60) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
                         // close enough to chop!
                         //############### NEED A CHOPPING SOUND HERE #################
@@ -175,8 +155,8 @@ GlobalFunctionsPlugin.prototype = {
 
                 if (!playerInventory.includes("Machete")) {
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 16) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 16)
+                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 30)
                     ) {
 
                         this.dialogBox.setText("I can't sheer these sheep with my bare hands!");
@@ -193,8 +173,8 @@ GlobalFunctionsPlugin.prototype = {
                     console.log("sheep x: " + gameObject.x + "  sheep y: " + gameObject.y);
                     // if player close to sheep piece then destroy it (chopped!).
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 16) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 16)
+                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 30)
                     ) {
                         // close enough to chop!
                         //############### NEED A sheep dieing SOUND HERE #################
@@ -222,8 +202,8 @@ GlobalFunctionsPlugin.prototype = {
 
                 if (!playerInventory.includes("Axe")) {
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                        (Math.abs((this.player.x - gameObject.x)) <= 60) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
 
                         this.dialogBox.setText("I sure wish I had an Axe!");
@@ -240,8 +220,8 @@ GlobalFunctionsPlugin.prototype = {
                     console.log("tree x: " + gameObject.x + "  tree y: " + gameObject.y);
                     // if player close to sheep piece then destroy it (chopped!).
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
+                        (Math.abs((this.player.x - gameObject.x)) <= 60) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
                         // close enough to chop!
                         //############### NEED A sheep dieing SOUND HERE #################
@@ -401,6 +381,52 @@ GlobalFunctionsPlugin.prototype = {
                 }// end else
                 break; // end Gold
 
+
+
+            case "ShipConstructBtn":
+                var shipScene = this.scene.manager.getScene("ShipConstruction");
+                console.log("in ConstructBtn Handler. getScene Results: " + shipScene.scene.key);
+                this.scene.wake("ShipConstruction");
+                this.scene.bringToTop("ShipConstruction");
+                this.scene.setActive(true, "ShipConstruction");
+                this.scene.setVisible(true, "ShipConstruction");
+                shipScene.setSleepFlag(false);
+                shipScene.oldSceneKey = this.scene.key;
+                console.log("the old scene key: " + shipScene.oldSceneKey);
+
+                // save player location in global.
+                playerStartX = this.player.x;
+                playerStartY = this.player.y;
+
+
+                this.scene.setActive(false);
+                this.scene.setVisible(false);
+                this.scene.sleep();
+                this.setSleepFlag(true);
+
+                break; // end ShipConstructBtn
+
+
+            case "ShipBackBtn":
+                console.log("in ShipBackBtn Handler: old scene key: " + this.oldSceneKey);
+                var oldScene = this.scene.manager.getScene(this.oldSceneKey);
+                console.log("manager sent back: " + oldScene.key);
+
+                oldScene.scene.wake(this.oldSceneKey);
+                oldScene.scene.bringToTop(this.oldSceneKey);
+                oldScene.scene.setActive(this.oldSceneKey);
+                oldScene.scene.setVisible(this.oldSceneKey);
+                oldScene.setSleepFlag(false);
+                this.oldSceneKey = null;
+
+                this.scene.setActive(false);
+                this.scene.setVisible(false);
+                this.scene.sleep();
+                this.setSleepFlag(true);
+
+                break; // end ShipBackBtn
+
+
             default:
                 break;
 
@@ -409,27 +435,28 @@ GlobalFunctionsPlugin.prototype = {
 
     }, // end onGameObjectClicked
 
+
     /* **********************************************************************************************************
     ***********  Text Display initalization functions:  All scenes must call these to enable their display *********
     ************************************************************************************************************ */
     goldTextFunction: function () {
-        this.goldText = this.scene.add.text(20, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
+        this.goldText = this.scene.add.text(50, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
         this.goldText.setScrollFactor(0);
     },
     woodTextFunction: function () {
-        this.woodText = this.scene.add.text(130, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.woodText = this.scene.add.text(140, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woodText.setScrollFactor(0);
     },
     ironTextFunction: function () {
-        this.ironText = this.scene.add.text(240, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.ironText = this.scene.add.text(230, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.ironText.setScrollFactor(0);
     },
     woolTextFunction: function () {
-        this.woolText = this.scene.add.text(350, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.woolText = this.scene.add.text(320, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.woolText.setScrollFactor(0);
     },
     foodTextFunction: function () {
-        this.foodText = this.scene.add.text(460, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.foodText = this.scene.add.text(410, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.foodText.setScrollFactor(0);
     },
 
@@ -444,9 +471,6 @@ GlobalFunctionsPlugin.prototype = {
         this.woolText.setText("Wool: " + Wool);
         this.foodText.setText("Food: " + Food);
     },
-   
-
-
 
 
 

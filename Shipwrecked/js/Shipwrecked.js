@@ -27,8 +27,10 @@ class Shipwrecked extends Phaser.Scene {
     // -----------------------------------------------------------
     preload() {
 
-        // plugins
+        // plugins:
         this.load.plugin('DialogModalPlugin', './js/dialog_plugin.js');
+        this.load.plugin('GlobalFunctionsPlugin', './js/GlobalFunctions.js');
+
 
         // main images
         this.load.image("bigSand", "assets/island_sand_d.jpg");
@@ -47,6 +49,8 @@ class Shipwrecked extends Phaser.Scene {
         // status icons will be on top of anything else.
         this.load.image("singleHeart", "assets/singleHeart16.png");
         this.load.image("blankHeart", "assets/blankHeart16.png");
+        this.load.image("ShipBtn", "assets/TallShip45.jpg");
+       
 
     } // end preload
 
@@ -60,6 +64,15 @@ class Shipwrecked extends Phaser.Scene {
     // -----------------------------------------------------------
     create() {
 
+        // plugins:
+        this.sys.install('DialogModalPlugin');
+        console.log(this.sys.dialogModal);
+
+        this.sys.install('GlobalFunctionsPlugin');
+        console.log("from 4")
+        console.log(this.sys.globalFunctions);
+
+
         // General Create:
         this.events.on('wake', this.onWake, this);
 
@@ -67,12 +80,13 @@ class Shipwrecked extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // set actual camera width and height for what we see.
-        this.cameras.main.setSize(1000, 1000);
-        //this.cameras.main.setSize(400, 400);
+        //this.cameras.main.setSize(1000, 1000);
+        this.cameras.main.setSize(500, 400);
 
 
-        // only for test..
-        this.score = 6;
+        /* *********************************************************************
+         * *********** Main Map Setup ******************************************* 
+         * *********************************************************************/
 
         // loop variables
         let i = 0;
@@ -91,9 +105,6 @@ class Shipwrecked extends Phaser.Scene {
         console.log("out of ocean 1 creation");
 
 
-        /* *********************************************************************
-         * *********** Main Map Setup ******************************************* 
-         * *********************************************************************/
 
         // Jungle:
         this.theJungle = this.physics.add.staticGroup();
@@ -365,7 +376,9 @@ class Shipwrecked extends Phaser.Scene {
         //  Input Events
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.input.on('gameobjectdown', this.onGameObjectClicked, this);
+        // note: gameobjectdown handler should be in global plug in now.
+        this.input.on('gameobjectdown', this.sys.globalFunctions.onGameObjectClicked, this);
+
 
         /* **************************************************************
          * ********* Roaming Animals *************************************
@@ -382,7 +395,6 @@ class Shipwrecked extends Phaser.Scene {
 
 
          // Sheep: try to restrict to green grass.
-        let newSheep = "";
         this.sheepHerd = this.physics.add.group();
         for (j = 280; j <= 600; j += 60) {
             for (i = 800; i < 965; i += 50) {
@@ -448,49 +460,34 @@ class Shipwrecked extends Phaser.Scene {
         //  The score
         //this.scoreText = this.add.text(16, 16, myItem, { fontSize: "32px", fill: "#000" });
 
-        // adds header
-        this.goldText = this.add.text(20, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
-        this.goldText.setScrollFactor(0);
+        /* *****************************************************************************************
+         * *********************  Header and Hearts ************************************************
+         * ***************************************************************************************** */
 
-        this.woodText = this.add.text(100, 10, "Wood: " + Wood, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
-        this.woodText.setScrollFactor(0);
+        this.sys.globalFunctions.goldTextFunction();
 
-        this.ironText = this.add.text(180, 10, "Iron: " + Iron, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
-        this.ironText.setScrollFactor(0);
+        this.sys.globalFunctions.woodTextFunction();
 
-        this.woolText = this.add.text(260, 10, "Wool: " + Wool, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
-        this.woolText.setScrollFactor(0);
+        this.sys.globalFunctions.ironTextFunction();
 
-        this.foodText = this.add.text(340, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
-        this.foodText.setScrollFactor(0);
+        this.sys.globalFunctions.woolTextFunction();
+
+        this.sys.globalFunctions.foodTextFunction();
 
         /* **************************************************************
-         * ********* Life heart bar test ******************************
+         * ********* Life heart bar  ******************************
          * *************************************************************** */
-        for (i = 0; i < 10; i++) {
-
-            hearts[i] = this.add.image((20 + (i * 18)), 50, 'singleHeart');
-            hearts[i].setScrollFactor(0);
-        }
+        console.log("in map 2 create, life is: " + playerLife);
+        this.sys.globalFunctions.updateHearts();
 
 
-        //plugins
-
-        // Dialog box:
-        this.sys.install('DialogModalPlugin');
-        console.log(this.sys.dialogModal);
-
-        //this.dialogBox = this.add.text(200, 200, this.sys.dialogModal.init());
-        this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({windowHeight: 100, windowWidth: 500, locationX: 20, locationY: 490 });
-
-        console.log(this.dialogBox);
-
-        // set scrollFactor so it scrolls with the camera (1). a (0) keeps in place.
-        //this.dialogBox.graphics.scrollFactorX(1);
-        //this.dialogBox.scrollFactorY(1);
-        //End dialog box stuff
-
+        // add ShipConstruction button
+        newChild = "";
+        this.ShipConstructBtn = this.physics.add.staticGroup();
+        newChild = this.ShipConstructBtn.create(20, 10, "ShipBtn");
+        newChild.name = "ShipConstructBtn";
+        newChild.setInteractive();
+        newChild.setScrollFactor(0);
 
         /* ************************************************************
          * ************** Colliders Section ***************************
@@ -527,12 +524,22 @@ class Shipwrecked extends Phaser.Scene {
         this.physics.add.collider(this.sheepHerd, this.sheepHerd);
 
         //  Checks to see if the player overlaps with any of the boars, if he does call the boarCombat function
-        this.physics.add.overlap(this.player, this.boars, this.boarPlayerCombat, null, this);
+        this.physics.add.overlap(this.player, this.boars, this.sys.globalFunctions.boarPlayerCombat, null, this);
 
 
         
         // check for tools:
         this.physics.add.overlap(this.player, this.machete, this.getMachete, null, this);
+
+
+        /* ************************************************************
+         * ***************** Dialog Box Section ***********************
+         * ************************************************************ */
+
+        // Dialog box:
+        this.dialogBox = this.sys.dialogModal;
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 320 });
+        this.dialogBox.setText("howdy fellow from shipreck 1. This is a run on sentence to see the wrap..");
 
 
 
@@ -544,6 +551,7 @@ class Shipwrecked extends Phaser.Scene {
         this.scene.launch("Shipwrecked2");
         this.scene.launch("Shipwrecked3");
         this.scene.launch("Shipwrecked4");
+        this.scene.launch("ShipConstruction");
 
 
         /********************************************************
@@ -554,20 +562,26 @@ class Shipwrecked extends Phaser.Scene {
          * put in a global to short circuit the update and it seems to work.
          * **************************************************************** */
         // note, data shows sleeping is not stopping update... neither is pause....
-        // and not visible
+        // and not visible.
+
+        // So basically, these function calls do NADA!  The sleep flags are what matters 
+        // to us and the set active and bring to top.
 
         // put them to sleep.
         this.scene.sleep("Shipwrecked2");
         this.scene.sleep("Shipwrecked3");
         this.scene.sleep("Shipwrecked4");
+        this.scene.sleep("ShipConstruction");
 
         sleep2 = true;
         sleep3 = true;
         sleep4 = true;
+        sleepShip = true;
 
         this.scene.setVisible(false, "Shipwrecked2");
         this.scene.setVisible(false, "Shipwrecked3");
         this.scene.setVisible(false, "Shipwrecked4");
+        this.scene.setVisible(false, "ShipConstruction");
 
 
 
@@ -671,19 +685,6 @@ class Shipwrecked extends Phaser.Scene {
         }
 
 
-        // Health Heart display update:
-        //checks if 50% health
-        //if (playerLife === 5) {
-           // this.playerLifeImg.setTexture("heart1");
-        //}
-
-
-        //  Position the center of the camera on the player
-        //  We -400 because the camera width is 800px and
-        //  we want the center of the camera on the player, not the left-hand side of it
-       // this.cameras.main.scrollX = this.player.x - 400;
-       // this.cameras.main.scrollY = this.player.y - 300;
-
 
         /* ***************************************************
          * Check for edge of map to switch maps!
@@ -717,10 +718,6 @@ class Shipwrecked extends Phaser.Scene {
             this.scene.setVisible(true, "Shipwrecked4");
             sleep4 = false;
 
-            //this.scene.wake("Shipwrecked4", { y: this.player.y, x: 25 });
-            //this.registry.set('playerStartX', 25);
-            //this.registry.set('playerStartY', this.player.y);
-
             this.scene.setActive(false, "Shipwrecked");
             this.scene.setVisible(false, "Shipwrecked");
             this.scene.sleep("Shipwrecked");
@@ -744,151 +741,151 @@ class Shipwrecked extends Phaser.Scene {
     // Description:  A call back.  Called when any interactive object is clicked...
     // 
     // --------------------------------------------------------------
-    onGameObjectClicked(pointer, gameObject) {
-        console.log("made it into New onGameObjectClicked. ");
+    //onGameObjectClicked(pointer, gameObject) {
+    //    console.log("made it into New onGameObjectClicked. ");
 
-        switch (gameObject.name) {
-            case "jungle":
+    //    switch (gameObject.name) {
+    //        case "jungle":
 
-                if (!playerInventory.includes("Machete")) {
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
-                    ) {
+    //            if (!playerInventory.includes("Machete")) {
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 50)
+    //                ) {
 
-                        this.dialogBox.setText("Sure wish I had a Machete!");
-                        console.log("Sure wish I had a Machete!");
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything.");
-                    }
-                }
-                else {
-                    console.log("in else, Check to see if close enough!");
+    //                    this.dialogBox.setText("Sure wish I had a Machete!");
+    //                    console.log("Sure wish I had a Machete!");
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything.");
+    //                }
+    //            }
+    //            else {
+    //                console.log("in else, Check to see if close enough!");
 
-                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    console.log("jungle x: " + gameObject.x + "  jungle y: " + gameObject.y);
-                    // if player close to jungle piece then destroy it (chopped!).
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
-                    ) {
-                        // close enough to chop!
-                        //############### NEED A CHOPPING SOUND HERE #################
-                        this.dialogBox.setText("CHOP! CHOP!");
+    //                console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+    //                console.log("jungle x: " + gameObject.x + "  jungle y: " + gameObject.y);
+    //                // if player close to jungle piece then destroy it (chopped!).
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 50)
+    //                ) {
+    //                    // close enough to chop!
+    //                    //############### NEED A CHOPPING SOUND HERE #################
+    //                    this.dialogBox.setText("CHOP! CHOP!");
 
-                        gameObject.disableBody(true, true);
-                        console.log("chopping jungle yet to be fully implemented.");
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything.");
-                        console.log("NOPE NOT close enough!");
-                    }
+    //                    gameObject.disableBody(true, true);
+    //                    console.log("chopping jungle yet to be fully implemented.");
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything.");
+    //                    console.log("NOPE NOT close enough!");
+    //                }
 
-                }// end else
-
-
-                break; // end jungle
+    //            }// end else
 
 
-            case "sheep":
-
-                if (!playerInventory.includes("Machete")) {
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 16) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 16)
-                    ) {
-
-                        this.dialogBox.setText("I can't sheer these sheep with my bare hands!");
-                        console.log("can't sheer these sheep with bare hands");
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything."); 
-                    }
-                }
-                else {
-                    console.log("in else for sheep, Check to see if close enough!");
-
-                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    console.log("sheep x: " + gameObject.x + "  sheep y: " + gameObject.y);
-                    // if player close to sheep piece then destroy it (chopped!).
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 16) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 16)
-                    ) {
-                        // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
-                        this.dialogBox.setText("Baaaaa!  Baaaaa! Baa.");
-
-                        gameObject.disableBody(true, true);
-
-                        // gain resources!
-                        Wool++;
-                        Food++;
-                        this.woolText.setText("Wool: " + Wool);
-                        this.foodText.setText("Food: " + Food);
-
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything.");
-                        console.log("NOPE NOT close enough!");
-                    }
-
-                }// end else
-                break; // end sheep
+    //            break; // end jungle
 
 
-            case "tree":
+    //        case "sheep":
 
-                if (!playerInventory.includes("Axe")) {
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
-                    ) {
+    //            if (!playerInventory.includes("Machete")) {
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 16) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 16)
+    //                ) {
 
-                        this.dialogBox.setText("I sure wish I had an Axe!");
-                        console.log("I sure wish I had an Axe!");
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything.");
-                    }
-                }
-                else {
-                    console.log("in else for trees, Check to see if close enough!");
+    //                    this.dialogBox.setText("I can't sheer these sheep with my bare hands!");
+    //                    console.log("can't sheer these sheep with bare hands");
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything."); 
+    //                }
+    //            }
+    //            else {
+    //                console.log("in else for sheep, Check to see if close enough!");
 
-                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    console.log("tree x: " + gameObject.x + "  tree y: " + gameObject.y);
-                    // if player close to sheep piece then destroy it (chopped!).
-                    if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 50) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 50)
-                    ) {
-                        // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
-                        this.dialogBox.setText("Chop! Chop! Chop! Tiiiimmmmmbbbbbeeerrrrrr!");
+    //                console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+    //                console.log("sheep x: " + gameObject.x + "  sheep y: " + gameObject.y);
+    //                // if player close to sheep piece then destroy it (chopped!).
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 16) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 16)
+    //                ) {
+    //                    // close enough to chop!
+    //                    //############### NEED A sheep dieing SOUND HERE #################
+    //                    this.dialogBox.setText("Baaaaa!  Baaaaa! Baa.");
 
-                        gameObject.disableBody(true, true);
+    //                    gameObject.disableBody(true, true);
 
-                        // gain resources!
-                        Wood++;
-                        this.woodText.setText("Wood: " + Wood);
+    //                    // gain resources!
+    //                    Wool++;
+    //                    Food++;
+    //                    this.woolText.setText("Wool: " + Wool);
+    //                    this.foodText.setText("Food: " + Food);
 
-                    }
-                    else {
-                        this.dialogBox.setText("I am too far away from that to do anything.");
-                        console.log("NOPE NOT close enough!");
-                    }
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything.");
+    //                    console.log("NOPE NOT close enough!");
+    //                }
 
-                }// end else
-                break; // end tree
-
-            default:
-                break;
-
-        }// end switch
+    //            }// end else
+    //            break; // end sheep
 
 
-    }// end onGameObjectClicked
+    //        case "tree":
+
+    //            if (!playerInventory.includes("Axe")) {
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 50)
+    //                ) {
+
+    //                    this.dialogBox.setText("I sure wish I had an Axe!");
+    //                    console.log("I sure wish I had an Axe!");
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything.");
+    //                }
+    //            }
+    //            else {
+    //                console.log("in else for trees, Check to see if close enough!");
+
+    //                console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+    //                console.log("tree x: " + gameObject.x + "  tree y: " + gameObject.y);
+    //                // if player close to sheep piece then destroy it (chopped!).
+    //                if (
+    //                    (Math.abs((this.player.x - gameObject.x)) <= 50) &&
+    //                    (Math.abs((this.player.y - gameObject.y)) <= 50)
+    //                ) {
+    //                    // close enough to chop!
+    //                    //############### NEED A sheep dieing SOUND HERE #################
+    //                    this.dialogBox.setText("Chop! Chop! Chop! Tiiiimmmmmbbbbbeeerrrrrr!");
+
+    //                    gameObject.disableBody(true, true);
+
+    //                    // gain resources!
+    //                    Wood++;
+    //                    this.woodText.setText("Wood: " + Wood);
+
+    //                }
+    //                else {
+    //                    this.dialogBox.setText("I am too far away from that to do anything.");
+    //                    console.log("NOPE NOT close enough!");
+    //                }
+
+    //            }// end else
+    //            break; // end tree
+
+    //        default:
+    //            break;
+
+    //    }// end switch
+
+
+    //}// end onGameObjectClicked
 
 
 
@@ -903,7 +900,6 @@ class Shipwrecked extends Phaser.Scene {
         playerInventory.push("Machete");
         theMachete.disableBody(true, true);
 
-        //############### NEED A MESSAGE TO THE PLAYER HERE #################
         this.dialogBox.setText("At Last! A Machete!");
         console.log(playerInventory);
     }
@@ -925,71 +921,82 @@ class Shipwrecked extends Phaser.Scene {
     //}// end getStartPosition
 
 
-    // ---------------------------------------------------------
-    // boarPlayerCombat(thePlayer, boar)
-    //
-    // Description: Handler for when player and boar connect.
-    // currently just decrements players hitpoints and if player
-    // reaches 0, ends the game.
-    // -----------------------------------------------------------
-    boarPlayerCombat(thePlayer, boar) {
+    //// ---------------------------------------------------------
+    //// boarPlayerCombat(thePlayer, boar)
+    ////
+    //// Description: Handler for when player and boar connect.
+    //// currently just decrements players hitpoints and if player
+    //// reaches 0, ends the game.
+    //// -----------------------------------------------------------
+    //boarPlayerCombat(thePlayer, boar) {
 
-        if (playerInventory.includes("Machete")) {
-            playerLife -= 1;
-            hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
-            hearts[playerLife].setScrollFactor(0);
-            this.dialogBox.setText("Take that boar!  Ha!");
-        }
-        else {
-            let i = 0;
-            if (playerLife <= 5) {
-                // all blank now.
-                for (i = 0; i < 10; i++) {
+    //    if (playerInventory.includes("Machete")) {
+    //        playerLife -= 1;
+    //        hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
+    //        hearts[playerLife].setScrollFactor(0);
+    //        this.dialogBox.setText("Take that boar!  Ha!");
+    //    }
+    //    else {
+    //        let i = 0;
+    //        if (playerLife <= 5) {
+    //            // all blank now.
+    //            for (i = 0; i < 10; i++) {
 
-                    hearts[i] = this.add.image((20 + (i * 18)), 50, 'blankHeart');
-                    hearts[i].setScrollFactor(0);
-                }
-            }
-            else {
-                // blank the last 5.
-                let index = 0;
-                for (i = 0; i < 5; i++) {
-                    index = playerLife - i - 1;
-                    hearts[index] = this.add.image((20 + (index * 18)), 50, 'blankHeart');
-                    hearts[index].setScrollFactor(0);
-                    this.dialogBox.setText("Ow! Ow! OW!  That HURT!");
-                }
-            }// end else
+    //                hearts[i] = this.add.image((20 + (i * 18)), 50, 'blankHeart');
+    //                hearts[i].setScrollFactor(0);
+    //            }
+    //        }
+    //        else {
+    //            // blank the last 5.
+    //            let index = 0;
+    //            for (i = 0; i < 5; i++) {
+    //                index = playerLife - i - 1;
+    //                hearts[index] = this.add.image((20 + (index * 18)), 50, 'blankHeart');
+    //                hearts[index].setScrollFactor(0);
+    //                this.dialogBox.setText("Ow! Ow! OW!  That HURT!");
+    //            }
+    //        }// end else
 
-            // now drop life by 5
-            playerLife -= 5;
-        }// end else no machete 
+    //        // now drop life by 5
+    //        playerLife -= 5;
+    //    }// end else no machete 
 
         
-        boar.disableBody(true, true);
-        Gold++;
-        Food++;
-        this.goldText.setText("Gold: " + Gold);
-        this.foodText.setText("Food: " + Food);
+    //    boar.disableBody(true, true);
+    //    Gold++;
+    //    Food++;
+    //    this.goldText.setText("Gold: " + Gold);
+    //    this.foodText.setText("Food: " + Food);
 
-        if (playerLife <= 0) {
+    //    if (playerLife <= 0) {
 
-            // stop movement on screen
-            this.physics.pause();
+    //        // stop movement on screen
+    //        this.physics.pause();
 
-            // turn player bloody red
-            thePlayer.setTint(0xff0000);
-            //this.playerLifeImg.setTexture("noHealth");
+    //        // turn player bloody red
+    //        thePlayer.setTint(0xff0000);
+    //        //this.playerLifeImg.setTexture("noHealth");
 
-            // force facing
-            thePlayer.anims.play("turn");
+    //        // force facing
+    //        thePlayer.anims.play("turn");
 
-            this.gameOver = true;
-            this.dialogBox.setText("Alas! You have died!");
+    //        this.gameOver = true;
+    //        this.dialogBox.setText("Alas! You have died!");
 
-        } // end if playerLife
+    //    } // end if playerLife
 
-    } // end boarPlayerCombat
+    //} // end boarPlayerCombat
+
+    // ---------------------------------------------------------
+    // setSleepFlag(bool)
+    //
+    // Description: sets our scene sleep flag to true (sleeping) or 
+    // false (awake.)
+    // -----------------------------------------------------------
+    setSleepFlag(bSleep) {
+        sleep1 = bSleep;
+    }
+
 
 
     // ---------------------------------------------------------
@@ -1004,7 +1011,12 @@ class Shipwrecked extends Phaser.Scene {
         this.player.x = playerStartX;
         this.player.y = playerStartY;
         console.log("Set player position to " + playerStartX + ", " + playerStartY);
+
+        // update life and resource displays.
+        this.sys.globalFunctions.updateHearts();
+        this.sys.globalFunctions.updateResourceDisplay();
+
     }
 
 
-} // end class
+} // end class Shipwrecked

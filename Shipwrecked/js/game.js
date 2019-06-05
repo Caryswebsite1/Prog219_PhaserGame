@@ -15,7 +15,7 @@ let config = {
     }
   },
  
-    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4,]
+    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction]
 };
 
 console.log("in game.js");
@@ -26,6 +26,7 @@ let sleep1 = false;
 let sleep2 = false;
 let sleep3 = false;
 let sleep4 = false;
+let sleepShip = false;
 
 // player life related
 let playerLife = 10;

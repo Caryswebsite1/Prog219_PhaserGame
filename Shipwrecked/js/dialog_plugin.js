@@ -1,5 +1,5 @@
 // JavaScript source code
-const customGameWidth = 800;
+//const customGameWidth = 800;
 var DialogModalPlugin = function (scene) {
     // the scene that owns the plugin
     this.scene = scene;
@@ -49,8 +49,8 @@ DialogModalPlugin.prototype = {
         this.windowAlpha = opts.windowAlpha || 0.8;
         this.windowColor = opts.windowColor || 0x303030;
         this.windowHeight = opts.windowHeight || 150;
-        this.windowWidth = opts.windowWidth || customGameWidth - (this.padding * 2);
-        this.padding = opts.padding || 32;
+        this.windowWidth = opts.windowWidth || this.scene.sys.game.config.width;
+        this.padding = opts.padding || 15;
         this.closeBtnColor = opts.closeBtnColor || 'darkgoldenrod';
         this.textColor = opts.textColor || 'gold';
         this.dialogSpeed = opts.dialogSpeed || 3;
@@ -76,8 +76,8 @@ DialogModalPlugin.prototype = {
 
     // Gets the width of the game (based on the scene)
     _getGameWidth: function () {
-        return customGameWidth;
-        //return this.scene.sys.game.config.width;
+        return this.scene.sys.game.config.width;;
+    
     },
 
     // Gets the height of the game (based on the scene)
@@ -85,11 +85,24 @@ DialogModalPlugin.prototype = {
         return this.scene.sys.game.config.height;
     },
 
-    // Calculates where to place the dialog window based on the game size
+    // Calculates dialog window dimentions and placement, can be based on the game size
     _calculateWindowDimensions: function (width, height) {
-        var x = this.padding;
-        var y = height - this.windowHeight - this.padding;
-        var rectWidth = width - (this.padding * 2);
+        var x;
+        var y;
+        if (this.locationX != null) {
+            x = this.locationX;
+        }
+        else {
+            x = this.padding;
+        }
+
+        if (this.locationY != null) {
+            y = this.locationY;
+        }
+        else {
+            y = height - this.windowHeight - this.padding;
+        }
+        var rectWidth = this.windowWidth;
         var rectHeight = this.windowHeight;
         return {
             x,
@@ -113,9 +126,11 @@ DialogModalPlugin.prototype = {
 
     // Creates the dialog window
     _createWindow: function () {
-        var gameHeight = this._getGameHeight();
-        var gameWidth = this._getGameWidth();
-        var dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
+        //var gameHeight = this._getGameHeight();
+        //var gameWidth = this._getGameWidth();
+        //var dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
+
+        var dimensions = this._calculateWindowDimensions(this.windowWidth, this.windowHeight);
 
         // check for user placement specs:
         if (this.locationX != null) {
@@ -144,7 +159,9 @@ DialogModalPlugin.prototype = {
         let buttonX = 0;
         let buttonY = 0;
 
-        buttonX = this._getGameWidth() - this.padding - 6 - this.locationX;
+        //buttonX = this._getGameWidth() - this.padding - 6 - this.locationX;
+        buttonX = this.windowWidth - this.padding  + this.locationX;
+
         buttonY = this.locationY + 3;
 
         this.closeBtn = this.scene.make.text({
@@ -183,7 +200,8 @@ DialogModalPlugin.prototype = {
         let x = 0;
         let y = 0;
 
-        x = this._getGameWidth() - this.padding - 13 - this.locationX;
+        //x = this._getGameWidth() - this.padding - 13 - this.locationX;
+        x = this.windowWidth - this.padding - 6 + this.locationX;
         y = this.locationY + 2;
 
         this.graphics.strokeRect(x, y, 20, 20);
@@ -246,9 +264,13 @@ DialogModalPlugin.prototype = {
          let x = this.locationX + this.padding + 20;
          let y = this.locationY + this.padding + 10;
 
+        //this.text = this.scene.add.text(x, y, newText, {
+        //    fontsize: "32px", strokeThickness: 1, stroke: this.textColor, fill: this.textColor, align: "center",
+        //    wordWrap: { width: this._getGameWidth() - (this.padding * 2) - 25 }
+        //});
         this.text = this.scene.add.text(x, y, newText, {
             fontsize: "32px", strokeThickness: 1, stroke: this.textColor, fill: this.textColor, align: "center",
-            wordWrap: { width: this._getGameWidth() - (this.padding * 2) - 25 }
+            wordWrap: { width: this.windowWidth - (this.padding * 2) - 25 }
         });
 
         
