@@ -97,7 +97,7 @@ GlobalFunctionsPlugin.prototype = {
 
             this.gameOver = true;
             this.dialogBox.setText("Alas! You have died!");
-            this.sys.globalFunctions.ShipwreckedGameOver(this.scene);
+            this.sys.globalFunctions.ShipwreckedGameOver(this);
 
         } // end if playerLife
 
@@ -516,46 +516,81 @@ GlobalFunctionsPlugin.prototype = {
 
 
     /* **************************************************************
+    * ********* Timer display init and update ******************************
+    * *************************************************************** */
+
+    timerTextFunction: function () {
+        this.timerText = this.scene.add.text(220, 40, "Time Left: " + theMin + ":" + theSec, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
+        this.timerText.setScrollFactor(0);
+    },
+
+
+    updateTimerDisplay: function () {
+        this.timerText.setText("Time Left: " + theMin + ":" + theSec);
+    },
+
+
+    /* **************************************************************
+     * ***************** Volcano Timer ******************************
+     * *************************************************************** */
+    VolcanoTimer: function (bPrintNow) {
+
+        let newTime = Date.now();
+        let newTimeLeft = 0;
+
+        // calculate time left:
+        newTimeLeft = explodeTime - (newTime - startTime);
+
+        if (bPrintNow ||(newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000) ) {
+            // update timer display
+
+            // calculate the global display values.
+            theMin = Math.floor((newTimeLeft / 1000) / 60);
+            theSec = Math.floor((newTimeLeft / 1000) % 60);
+
+            this.updateTimerDisplay();
+
+            // update global timeLeft
+            timeLeft = newTimeLeft;
+
+        }
+        else if (newTimeLeft <= 0) {
+            // explode and die.
+            this.ShipwreckedGameOver(this.scene, true);
+        }
+
+    }, // end VolcanoTimer
+
+
+    /* **************************************************************
     * ********* Shipwrecked Game Over ******************************
     * *************************************************************** */
-    ShipwreckedGameOver: function (callingScene) {
-        console.log("in ShipwreckedGameOver, calling scene key is: " + callingScene.key);
-        console.log("and the scene.scene is: " + callingScene.scene);
-        console.log("and the scene.scene.key is: " + callingScene.scene.key);
-
-        /* #################################################################################
+    ShipwreckedGameOver: function (callingScene, bVolcano) {
+ 
+        /* ------------------------------------------------------------------------------
          * NOTE: transition function does not exist in our version.It does in the next but
          * in the next, the dialog plug in code is broken.
          * ***************************************************************** */
 
-        /*
-        // Idealy we want to transition up the death image and 
-        // still keep the  dialog box AND kill all the other scenes...
-        // Soooo, we will have yet another scene that gets launched here.
-        let sceneTransitionConfig = {
 
-            target: "DeathScene",
-            duration: 3000,
-            sleep: true,
-            allowInput: false,
-            moveAbove: true,
-            moveBelow: false
-        };
+        callingScene.scene.bringToTop("DeathScene");
+        callingScene.scene.setActive("DeathScene");
+        callingScene.scene.setVisible("DeathScene");
 
-        // Sigh.. transition doesn't seem to work or exist??
-        //callingScene.manager.transition(sceneTransitionConfig);
-        //callingScene.scene.transition(sceneTransitionConfig);
-        //callingScene.transition(sceneTransitionConfig);
-        this.scene.transition(sceneTransitionConfig);
-        */
-
+        callingScene.scene.setActive(false);
+        callingScene.scene.setVisible(false);
+        callingScene.scene.sleep();
+        callingScene.setSleepFlag(true);
 
         // get manager to enable killing old scenes.
-        let manager = callingScene.manager;
+        let manager = callingScene.scene.manager;
 
-        // start new death scene 
-        callingScene.start("DeathScene");
+        // set text box text for DeathScene if from volcano.
+        if (bVolcano) {
+            manager.getScene("DeathScene").dialogBox.setText("The Volcano blew up!  Alas!  You have died!");
+        }
 
+        // now remove them.
         manager.remove("ShipConstruction");
         manager.remove("Shipwreck");
         manager.remove("Shipwreck2");
@@ -563,7 +598,6 @@ GlobalFunctionsPlugin.prototype = {
         manager.remove("Shipwreck4");
 
     } // end ShipwreckedGameOver
-
 
 
 }// end plugin prototype

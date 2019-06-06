@@ -27,6 +27,7 @@ let sleep2 = false;
 let sleep3 = false;
 let sleep4 = false;
 let sleepShip = false;
+let sleepDeath = false;
 
 // player life related
 let playerLife = 10;
@@ -42,10 +43,15 @@ let Iron = 0;
 let Wool = 0;
 let Food = 0;
 
+// timer related
+let startTime = 0;
+let explodeTime = 1000 * 60 * 6;  // 6 min
+let timeLeft = explodeTime;
 
-// tools  Not sure we need these since we have the inventory.
-let Machete = "Machete";
-let Axe = "Axe";
+startTime = Date.now();
+let theMin = 0;
+let theSec = 0;
+
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);

@@ -459,6 +459,14 @@ class Shipwrecked2 extends Phaser.Scene {
 
         this.sys.globalFunctions.foodTextFunction();
 
+
+        /* **********************************************************************
+         * **************  Game Timer *******************************************
+         * ********************************************************************** */
+
+        this.sys.globalFunctions.timerTextFunction();
+
+
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
@@ -542,7 +550,9 @@ class Shipwrecked2 extends Phaser.Scene {
             return;
         }
 
-        //console.log("Doing update 2");
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer();
+
 
 
         // move boars around randomly every maxBoarRun count.:
@@ -684,6 +694,10 @@ class Shipwrecked2 extends Phaser.Scene {
         // update life and resource displays.
         this.sys.globalFunctions.updateHearts();
         this.sys.globalFunctions.updateResourceDisplay();
+
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer(true);
+
 
     }
 

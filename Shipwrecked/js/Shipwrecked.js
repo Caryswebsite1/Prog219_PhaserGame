@@ -50,7 +50,6 @@ class Shipwrecked extends Phaser.Scene {
         this.load.image("singleHeart", "assets/singleHeart16.png");
         this.load.image("blankHeart", "assets/blankHeart16.png");
         this.load.image("ShipBtn", "assets/TallShip45.jpg");
-       
 
     } // end preload
 
@@ -474,10 +473,17 @@ class Shipwrecked extends Phaser.Scene {
 
         this.sys.globalFunctions.foodTextFunction();
 
+
+        /* **********************************************************************
+         * **************  Game Timer *******************************************
+         * ********************************************************************** */
+
+        this.sys.globalFunctions.timerTextFunction();
+
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
-        console.log("in map 2 create, life is: " + playerLife);
+        console.log("in map 1 create, life is: " + playerLife);
         this.sys.globalFunctions.updateHearts();
 
 
@@ -552,6 +558,7 @@ class Shipwrecked extends Phaser.Scene {
         this.scene.launch("Shipwrecked3");
         this.scene.launch("Shipwrecked4");
         this.scene.launch("ShipConstruction");
+        this.scene.launch("DeathScene");
 
 
         /********************************************************
@@ -572,16 +579,19 @@ class Shipwrecked extends Phaser.Scene {
         this.scene.sleep("Shipwrecked3");
         this.scene.sleep("Shipwrecked4");
         this.scene.sleep("ShipConstruction");
+        this.scene.sleep("DeathScene");
 
         sleep2 = true;
         sleep3 = true;
         sleep4 = true;
         sleepShip = true;
+        sleepDeath = true;
 
         this.scene.setVisible(false, "Shipwrecked2");
         this.scene.setVisible(false, "Shipwrecked3");
         this.scene.setVisible(false, "Shipwrecked4");
         this.scene.setVisible(false, "ShipConstruction");
+        this.scene.setVisible(false, "DeathScene");
 
 
 
@@ -619,6 +629,9 @@ class Shipwrecked extends Phaser.Scene {
         if (sleep1) {
             return;
         }
+
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer();
 
 
         // move boars around randomly every maxBoarRun count.:
@@ -782,6 +795,10 @@ class Shipwrecked extends Phaser.Scene {
         // update life and resource displays.
         this.sys.globalFunctions.updateHearts();
         this.sys.globalFunctions.updateResourceDisplay();
+
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer(true);
+
 
     }
 

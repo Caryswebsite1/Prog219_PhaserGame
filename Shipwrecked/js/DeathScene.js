@@ -85,5 +85,32 @@ class DeathScene extends Phaser.Scene {
     } // end create
 
 
+    // ---------------------------------------------------------
+    // update()
+    //
+    // Description: main update function for scene.  Handles 
+    // player movement and end of map event at this level.  
+    // Std functionality handles most everything else.
+    // -----------------------------------------------------------
+    update() {
+
+
+        if (sleepDeath) {
+            return;
+        }
+
+    }// end update
+
+
+    // ---------------------------------------------------------
+    // setSleepFlag(bool)
+    //
+    // Description: sets our scene sleep flag to true (sleeping) or 
+    // false (awake.)
+    // -----------------------------------------------------------
+    setSleepFlag(bSleep) {
+        sleepDeath = bSleep;
+    }
+
 
 } // end class DeathScene

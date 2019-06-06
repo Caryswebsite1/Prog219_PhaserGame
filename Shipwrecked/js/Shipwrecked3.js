@@ -455,6 +455,15 @@ class Shipwrecked3 extends Phaser.Scene {
 
         this.sys.globalFunctions.foodTextFunction();
 
+
+        /* **********************************************************************
+         * **************  Game Timer *******************************************
+         * ********************************************************************** */
+
+        this.sys.globalFunctions.timerTextFunction();
+
+
+
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
@@ -529,7 +538,9 @@ class Shipwrecked3 extends Phaser.Scene {
             return;
         }
 
-       //console.log("Doing update 3");
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer();
+
 
         // move boars around randomly every maxBoarRun count.:
         if (this.boarRunTime > this.maxBoarRun) {
@@ -545,36 +556,7 @@ class Shipwrecked3 extends Phaser.Scene {
         }
 
 
-
-        // Sheep movement: 
-        //if (this.sheepEatTime > this.maxSheepEat) {
-
-        //    // make as random as posible but not very changing.
-        //    // this.sheepHerd.forEach((child) => {
-        //    this.sheepHerd.children.iterate(function (child) {
-        //        if (Math.random() > 0.5) {
-        //            // 25% chance to change.
-        //            // 50% change for either facing direction.
-        //            if (Math.random() > 0.5) {
-        //                child.anims.play("sheepLeft", true);
-        //            }
-        //            else {
-        //                child.anims.play("sheepRight", true);
-        //            }
-        //            //  Give each sheep a very very slow speed  
-        //            child.setVelocityX(-2 + (Math.random() * 4));
-        //            child.setVelocityY(-2 + (Math.random() * 4));
-        //        }// end if changing
-
-        //    }); // end for each
-
-        //    this.sheepEatTime = 0;
-        //}
-        //else {
-        //    this.sheepEatTime += 1;
-        //}// end sheep update
-
-
+        // no sheep in 3..
 
         // player movement
 
@@ -598,12 +580,6 @@ class Shipwrecked3 extends Phaser.Scene {
             this.player.anims.play("turn");
         }// end else
 
-
-        //  Position the center of the camera on the player
-        //  We -400 because the camera width is 800px and
-        //  we want the center of the camera on the player, not the left-hand side of it
-        //this.cameras.main.scrollX = this.player.x - 400;
-       // this.cameras.main.scrollY = this.player.y - 300;
 
 
         /* ***************************************************
@@ -694,6 +670,10 @@ class Shipwrecked3 extends Phaser.Scene {
         // update life and resource displays.
         this.sys.globalFunctions.updateHearts();
         this.sys.globalFunctions.updateResourceDisplay();
+
+        // call timer update:
+        this.sys.globalFunctions.VolcanoTimer(true);
+
     }
 
 
