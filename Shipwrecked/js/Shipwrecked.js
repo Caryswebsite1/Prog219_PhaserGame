@@ -6,12 +6,15 @@ class Shipwrecked extends Phaser.Scene {
 
         this.gameOver = false;
         this.score = 0;
-        this.startX = 250;
-        this.startY = 250;
+        this.startX = 200;
+        this.startY = 280;
         this.boarRunTime = 150; // so we get one movement set right away.
         this.maxBoarRun = 150;
         this.sheepEatTime = 400; // so we get one movement set right away.
         this.maxSheepEat = 400;
+        this.shakeInterval = 100;
+        this.shakeTime = 0;
+
     } // end constructor
 
 
@@ -51,6 +54,29 @@ class Shipwrecked extends Phaser.Scene {
         this.load.image("blankHeart", "assets/blankHeart16.png");
         this.load.image("ShipBtn", "assets/TallShip45.jpg");
 
+        // Audio: 
+        //Really should have.ogg too.
+        // Notes: instances allows for the given number of multiple simultainous plays of the same item.
+        // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
+        this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
+        this.load.audio('JungleSound', ['assets/audio/rainforest.mp3']);
+        this.load.audio('LavaSound', ['assets/audio/lava4.mp3']);
+        this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
+        this.load.audio('BoarSound', ['assets/audio/BoarOink.mp3']);
+        this.load.audio('SheepSound', ['assets/audio/Sheep.mp3']);
+        this.load.audio('HeadChopSound', ['assets/audio/BloodyHeadChop.mp3']);
+        this.load.audio('ChopWoodSound', ['assets/audio/ChopWood.mp3']);
+        this.load.audio('JungleChopSound', ['assets/audio/JungleChop.mp3']);
+        this.load.audio('PickAxeSound', ['assets/audio/PickAxe.mp3']);
+        this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
+        this.load.audio('HallelujahSound', ['assets/audio/Hallelujah.mp3']);
+
+        // possibly for intro??
+        this.load.audio('WindSound', ['assets/audio/Wind01.mp3'], {instances: 2});
+        this.load.audio('ThunderSound', ['assets/audio/ThunderStrike.mp3'], { instances: 3 });
+        this.load.audio('ThunderStormSound', ['assets/audio/ThunderStorm.mp3'], { instances: 2 });
+        this.load.audio('DrowningSound', ['assets/audio/Drowning.mp3']);
+
     } // end preload
 
 
@@ -82,6 +108,29 @@ class Shipwrecked extends Phaser.Scene {
         //this.cameras.main.setSize(1000, 1000);
         this.cameras.main.setSize(500, 400);
 
+
+        // island audios
+        this.OceanAudio = this.sound.add('OceanSound');
+        this.JungleAudio = this.sound.add('JungleSound');
+        this.VolcanoAudio = this.sound.add('VolcanoSound');
+        this.VolcanoAudio2 = this.sound.add('VolcanoSound');
+        this.BoarAudio = this.sound.add('BoarSound'); 
+        this.SheepAudio = this.sound.add('SheepSound');
+        this.HeadChopAudio = this.sound.add('HeadChopSound');
+        this.ChopWoodAudio = this.sound.add('ChopWoodSound');
+        this.ChopWoodAudio2 = this.sound.add('ChopWoodSound');
+        this.JungleChopAudio = this.sound.add('JungleChopSound');
+        this.PickAxeAudio = this.sound.add('PickAxeSound');
+        this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
+        this.HallelujahAudio = this.sound.add('HallelujahSound');
+
+
+
+        // set island ambiance
+        this.OceanAudio.volume = 0.2;
+        this.OceanAudio.play({ loop: true });
+        this.JungleAudio.volume = 0.7;
+        this.JungleAudio.play({loop: true});
 
         /* *********************************************************************
          * *********** Main Map Setup ******************************************* 
@@ -605,6 +654,10 @@ class Shipwrecked extends Phaser.Scene {
         console.log("3: " + this.scene.isSleeping("Shipwrecked2"));
         console.log("4: " + this.scene.isSleeping("Shipwrecked2"));
 
+
+
+
+
     } // end create
 
 
@@ -630,8 +683,25 @@ class Shipwrecked extends Phaser.Scene {
             return;
         }
 
+
+        //this.jungleAudio1 = this.sound.add('JungleSound');
+        //this.jungleAudio1.play();
+
+
+
         // call timer update:
         this.sys.globalFunctions.VolcanoTimer();
+
+        // shake camera if flag is set.
+        if (G_bShake && this.shakeTime > this.shakeInterval) {
+            // shake the camera
+            this.cameras.main.shake(250);
+            this.shakeTime = 0;
+        }
+        else {
+            this.shakeTime += 1;
+        }
+
 
 
         // move boars around randomly every maxBoarRun count.:
@@ -714,12 +784,23 @@ class Shipwrecked extends Phaser.Scene {
             this.scene.bringToTop("Shipwrecked2");
             this.scene.setActive(true, "Shipwrecked2");
             this.scene.setVisible(true, "Shipwrecked2");
+            // in Wake we start this maps ambience audio
             sleep2 = false;
 
             this.scene.setActive(false, "Shipwrecked");
             this.scene.setVisible(false, "Shipwrecked");
+            // shut down this maps ambience audio
+            this.OceanAudio.pause();
+            this.JungleAudio.pause();
+
+            // and earthquake if happening. ( will be kicked back on by timer event.)
+            if (this.EarthQuakeAudio.isPlaying) {
+                this.EarthQuakeAudio.pause();
+            }
+
             this.scene.sleep("Shipwrecked");
             sleep1 = true;
+
         } // now Right side:
         else if (this.player.x >= 983) {
             playerStartX = 25;
@@ -729,10 +810,19 @@ class Shipwrecked extends Phaser.Scene {
             this.scene.bringToTop("Shipwrecked4");
             this.scene.setActive(true, "Shipwrecked4");
             this.scene.setVisible(true, "Shipwrecked4");
+            // in Wake we start this maps ambience audio
             sleep4 = false;
 
             this.scene.setActive(false, "Shipwrecked");
             this.scene.setVisible(false, "Shipwrecked");
+            // shut down this maps ambience audio
+            this.OceanAudio.pause();
+            this.JungleAudio.pause();
+            // and earthquake if happening. ( will be kicked back on by timer event.)
+            if (this.EarthQuakeAudio.isPlaying) {
+                this.EarthQuakeAudio.pause();
+            }
+
             this.scene.sleep("Shipwrecked");
             sleep1 = true;
         } // end else if
@@ -747,8 +837,6 @@ class Shipwrecked extends Phaser.Scene {
      * ********************************************************************************
      * ******************************************************************************** */
 
-
-
     //--------------------------------------------------------------
     // getMachete()
     //
@@ -760,10 +848,10 @@ class Shipwrecked extends Phaser.Scene {
         playerInventory.push("Machete");
         theMachete.disableBody(true, true);
 
+        this.HallelujahAudio.play();
         this.dialogBox.setText("At Last! A Machete!");
         console.log(playerInventory);
     }
-
 
 
 
@@ -799,7 +887,9 @@ class Shipwrecked extends Phaser.Scene {
         // call timer update:
         this.sys.globalFunctions.VolcanoTimer(true);
 
-
+        // set island ambiance
+        this.OceanAudio.resume();
+        this.JungleAudio.resume();
     }
 
 } // end class Shipwrecked

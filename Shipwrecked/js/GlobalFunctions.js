@@ -10,6 +10,14 @@ var GlobalFunctionsPlugin = function (scene) {
     this.woolText = "";
     this.foodText = "";
 
+    //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
+    //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
+
+
+
+    //this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
+    //this.volcanoAudio = this.sound.add('VolcanoSound');
+    //this.volcanoAudio2 = this.sound.add('VolcanoSound');
 
     if (!scene.sys.settings.isBooted) {
         scene.sys.events.once('boot', this.boot, this);
@@ -66,10 +74,12 @@ GlobalFunctionsPlugin.prototype = {
             playerLife -= 1;
             hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
             hearts[playerLife].setScrollFactor(0);
+            this.HeadChopAudio.play();
             this.dialogBox.setText("Take that boar!  Ha!");
         } else {
 
             // no machete == Ouch Time! drop life by 5!
+            this.BoarAudio.play();
             playerLife -= 5;
             this.dialogBox.setText("ow! Ow! OW!  That Hurt!");
         } // end else no machete 
@@ -140,7 +150,8 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
                         // close enough to chop!
-                        //############### NEED A CHOPPING SOUND HERE #################
+                        this.JungleChopAudio.setSeek(2000);
+                        this.JungleChopAudio.play();
                         this.dialogBox.setText("CHOP! CHOP!");
 
                         gameObject.disableBody(true, true);
@@ -164,11 +175,12 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.x - gameObject.x)) <= 30) &&
                         (Math.abs((this.player.y - gameObject.y)) <= 30)
                     ) {
-
+                        this.SheepAudio.play();
                         this.dialogBox.setText("I can't sheer these sheep with my bare hands!");
                         console.log("can't sheer these sheep with bare hands");
                     }
                     else {
+                        this.SheepAudio.play();
                         this.dialogBox.setText("I am too far away from that to do anything.");
                     }
                 }
@@ -183,7 +195,8 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.y - gameObject.y)) <= 30)
                     ) {
                         // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
+                        this.SheepAudio.play();
+                        this.HeadChopAudio.play();
                         this.dialogBox.setText("Baaaaa!  Baaaaa! Baa.");
 
                         gameObject.disableBody(true, true);
@@ -230,8 +243,9 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.y - gameObject.y)) <= 60)
                     ) {
                         // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
-                        this.dialogBox.setText("Chop! Chop! Chop! Tiiiimmmmmbbbbbeeerrrrrr!");
+                        this.ChopWoodAudio.play();
+                        this.dialogBox.setText("Tiiiimmmmmbbbbbeeerrrrrr!");
+                        this.ChopWoodAudio2.play();
 
                         gameObject.disableBody(true, true);
 
@@ -278,8 +292,8 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.y - gameObject.y)) <= 40)
                     ) {
                         // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
-                        this.dialogBox.setText("Thunk... Thunk.. Thunk.. Whew! Pounding Rocks is Hard!");
+                        this.PickAxeAudio.play();
+                        this.dialogBox.setText("Whew! Mining Iron is Hard!");
 
                         // gain resources! Switch on iron type.
                         switch (gameObject.name) {
@@ -347,9 +361,9 @@ GlobalFunctionsPlugin.prototype = {
                         (Math.abs((this.player.x - gameObject.x)) <= 40) &&
                         (Math.abs((this.player.y - gameObject.y)) <= 40)
                     ) {
-                        // close enough to chop!
-                        //############### NEED A sheep dieing SOUND HERE #################
-                        this.dialogBox.setText("Thunk... Thunk.. Thunk.. Whew! Pounding Rocks is Hard!");
+                        // close enough to mine!
+                        this.PickAxeAudio.play();
+                        this.dialogBox.setText("gold, Gold, GOLD!");
 
                         // gain resources! Switch on iron type.
                         switch (gameObject.name) {
@@ -526,6 +540,10 @@ GlobalFunctionsPlugin.prototype = {
 
 
     updateTimerDisplay: function () {
+        if (theSec < 10) {
+            theSec = "0" + theSec.toString();
+        }
+
         this.timerText.setText("Time Left: " + theMin + ":" + theSec);
     },
 
@@ -541,6 +559,13 @@ GlobalFunctionsPlugin.prototype = {
         // calculate time left:
         newTimeLeft = explodeTime - (newTime - startTime);
 
+        if (newTimeLeft < 20000) {
+            G_bShake = true;
+            if (!(this.scene.EarthQuakeAudio.isPlaying)) {
+                this.scene.EarthQuakeAudio.play({ loop: true });
+            }
+        }
+
         if (bPrintNow ||(newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000) ) {
             // update timer display
 
@@ -554,9 +579,20 @@ GlobalFunctionsPlugin.prototype = {
             timeLeft = newTimeLeft;
 
         }
+        else if ( (newTimeLeft > -1000) && (newTimeLeft <= 1000) ) {
+            // volcano starts to blow..
+            if (!(this.scene.VolcanoAudio.isPlaying) ) {
+                this.scene.VolcanoAudio.play();
+            }
+        }
         else if (newTimeLeft <= 0) {
-            // explode and die.
+            this.scene.VolcanoAudio2.play();  
+
             this.ShipwreckedGameOver(this.scene, true);
+            // stop earthquake audio...
+            if (this.scene.EarthQuakeAudio.isPlaying) {
+                this.scene.EarthQuakeAudio.stop();
+            }
         }
 
     }, // end VolcanoTimer
@@ -571,12 +607,44 @@ GlobalFunctionsPlugin.prototype = {
          * NOTE: transition function does not exist in our version.It does in the next but
          * in the next, the dialog plug in code is broken.
          * ***************************************************************** */
+        // stop all environment audios except volcano...
+        if (callingScene.EarthQuakeAudio.isPlaying) {
+            callingScene.EarthQuakeAudio.stop();
+        }
+        if (callingScene.JungleAudio.isPlaying) {
+            callingScene.JungleAudio.stop();
+        }
+        if (callingScene.OceanAudio.isPlaying) {
+            callingScene.OceanAudio.stop();
+        }
+        if (callingScene.BoarAudio.isPlaying) {
+            callingScene.BoarAudio.stop();
+        }
+        if (callingScene.SheepAudio.isPlaying) {
+            callingScene.SheepAudio.stop();
+        }
+        if (callingScene.HeadChopAudio.isPlaying) {
+            callingScene.HeadChopAudio.stop();
+        }
+        if (callingScene.ChopWoodAudio.isPlaying) {
+            callingScene.ChopWoodAudio.stop();
+        }
+        if (callingScene.JungleChopAudio.isPlaying) {
+            callingScene.JungleChopAudio.stop();
+        }
+        if (callingScene.PickAxeAudio.isPlaying) {
+            callingScene.PickAxeAudio.stop();
+        }
+        if (callingScene.HallelujahAudio.isPlaying) {
+            callingScene.HallelujahAudio.stop();
+        }
 
 
         callingScene.scene.bringToTop("DeathScene");
         callingScene.scene.setActive("DeathScene");
         callingScene.scene.setVisible("DeathScene");
 
+       
         callingScene.scene.setActive(false);
         callingScene.scene.setVisible(false);
         callingScene.scene.sleep();

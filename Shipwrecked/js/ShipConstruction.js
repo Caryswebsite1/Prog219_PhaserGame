@@ -40,6 +40,25 @@ class ShipConstruction extends Phaser.Scene {
         this.load.image("singleHeart", "assets/singleHeart16.png");
         this.load.image("blankHeart", "assets/blankHeart16.png");
 
+
+        // Audio: 
+        //Really should have.ogg too.
+        // Notes: instances allows for the given number of multiple simultainous plays of the same item.
+        // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
+        this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
+        this.load.audio('JungleSound', ['assets/audio/rainforest.mp3']);
+        this.load.audio('LavaSound', ['assets/audio/lava4.mp3']);
+        this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
+        this.load.audio('BoarSound', ['assets/audio/BoarOink.mp3']);
+        this.load.audio('SheepSound', ['assets/audio/Sheep.mp3']);
+        this.load.audio('HeadChopSound', ['assets/audio/BloodyHeadChop.mp3']);
+        this.load.audio('ChopWoodSound', ['assets/audio/ChopWood.mp3']);
+        this.load.audio('JungleChopSound', ['assets/audio/JungleChop.mp3']);
+        this.load.audio('PickAxeSound', ['assets/audio/PickAxe.mp3']);
+        this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
+        this.load.audio('HallelujahSound', ['assets/audio/Hallelujah.mp3']);
+
+
     }// end preload
 
 
@@ -72,6 +91,35 @@ class ShipConstruction extends Phaser.Scene {
         // set actual camera width and height for what we see.
         //this.cameras.main.setSize(1000, 1000);
         this.cameras.main.setSize(500, 400);
+
+
+
+        // island audios
+        this.OceanAudio = this.sound.add('OceanSound');
+        this.JungleAudio = this.sound.add('JungleSound');
+        this.VolcanoAudio = this.sound.add('VolcanoSound');
+        this.VolcanoAudio2 = this.sound.add('VolcanoSound');
+        //this.BoarAudio = this.sound.add('BoarSound');
+        //this.SheepAudio = this.sound.add('SheepSound');
+        //this.HeadChopAudio = this.sound.add('HeadChopSound');
+        //this.ChopWoodAudio = this.sound.add('ChopWoodSound');
+        //this.ChopWoodAudio2 = this.sound.add('ChopWoodSound');
+        //this.JungleChopAudio = this.sound.add('JungleChopSound');
+        //this.PickAxeAudio = this.sound.add('PickAxeSound');
+        this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
+        //this.HallelujahAudio = this.sound.add('HallelujahSound');
+
+
+
+        // set island ambiance and pause so it doesn't override all the other maps
+        this.OceanAudio.volume = 0.2;
+        this.OceanAudio.play({ loop: true });
+        this.OceanAudio.pause();
+
+        this.JungleAudio.volume = 0.7;
+        this.JungleAudio.play({ loop: true });
+        this.JungleAudio.pause();
+
 
 
         /* *********************************************************************
@@ -180,6 +228,11 @@ class ShipConstruction extends Phaser.Scene {
     // -----------------------------------------------------------
     setSleepFlag(bSleep) {
         sleepShip = bSleep;
+
+        // shut down this maps ambience audio
+        this.OceanAudio.pause();
+        this.JungleAudio.pause();
+
     }
 
 
@@ -200,6 +253,9 @@ class ShipConstruction extends Phaser.Scene {
         // call timer update:
         this.sys.globalFunctions.VolcanoTimer(true);
 
+        // set island ambiance
+        this.OceanAudio.resume();
+        this.JungleAudio.resume();
 
     }
 

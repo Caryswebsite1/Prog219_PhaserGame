@@ -19,8 +19,9 @@ let config = {
 };
 
 console.log("in game.js");
-let playerStartX = 250;
-let playerStartY = 350;
+let playerStartX = 200;
+let playerStartY = 280;
+
 // scene sleep checks
 let sleep1 = false;
 let sleep2 = false;
@@ -52,6 +53,7 @@ startTime = Date.now();
 let theMin = 0;
 let theSec = 0;
 
+G_bShake = false;  // flag for camera shake.
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);
