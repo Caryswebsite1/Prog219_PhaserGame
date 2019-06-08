@@ -454,6 +454,48 @@ GlobalFunctionsPlugin.prototype = {
                 break; // end ShipBackBtn
 
 
+               
+            case "StartBtn":
+                // attempt to decrease camera size to main Shipwrecked size..
+                this.cameras.main.setSize(500, 400);
+
+                // got to Shipwrecked!
+                var startingScene = this.scene.manager.getScene("Shipwrecked");
+                console.log("in start Btn Handler");
+                this.scene.wake("Shipwrecked");
+                this.scene.bringToTop("Shipwrecked");
+                this.scene.setActive(true, "Shipwrecked");
+                this.scene.setVisible(true, "Shipwrecked");
+                startingScene.setSleepFlag(false);
+               
+                console.log("shutting down intro ");
+
+                // stop intro audio
+                this.OceanAudio.stop();
+                this.WindAudio.stop();
+                this.ThunderAudio.stop();
+                this.ThunderAudio2.stop();
+                this.ThunderAudio3.stop();
+                this.ThunderStormAudio.stop();
+                this.ThunderStormAudio2.stop();
+                this.ThunderStormAudio3.stop();
+
+                 // std close out code that doesn't hardly work...
+                this.scene.setActive(false);
+                this.scene.setVisible(false);
+                this.scene.sleep();
+
+                // use manager to remove us.
+                this.scene.manager.remove("ShipwreckedIntro");
+
+                // reset start and explode times so the player is not penalized for watching the intro screen!
+                timeLeft = explodeTime;
+                startTime = Date.now();
+                G_bShake = false;
+                G_bGameStarted = true;  // set game started flag!
+
+                break; // end Start Game
+
             default:
                 break;
 
@@ -553,6 +595,11 @@ GlobalFunctionsPlugin.prototype = {
      * *************************************************************** */
     VolcanoTimer: function (bPrintNow) {
 
+        // Dont do any time related stuff unless the game is started.
+        // Have to put this here because on launch, updates happen so this 
+        // would get started without the game started flag..
+        if (G_bGameStarted) {
+
         let newTime = Date.now();
         let newTimeLeft = 0;
 
@@ -593,7 +640,8 @@ GlobalFunctionsPlugin.prototype = {
             if (this.scene.EarthQuakeAudio.isPlaying) {
                 this.scene.EarthQuakeAudio.stop();
             }
-        }
+            }
+        }// end if game started. 
 
     }, // end VolcanoTimer
 

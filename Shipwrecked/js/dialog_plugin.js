@@ -273,16 +273,44 @@ DialogModalPlugin.prototype = {
             wordWrap: { width: this.windowWidth - (this.padding * 2) - 25 }
         });
 
-        
+    },
 
-        //this.text = this.scene.make.text({
-        //    x,
-        //    y,
-        //    newText,
-        //    style: {
-        //        wordWrap: { width: this._getGameWidth() - (this.padding * 2) - 25 }
-        //    }
-        //});
-        //this.text.setScrollFactor(0);
-    }
+
+    // adds text in the dialog window starting at the specified location.
+    // Does NOT destroy previous contents.
+    addTextLine: function (x, y, text, animate) {
+
+
+        let xLoc = this.locationX + this.padding + x;
+        let yLoc = this.locationY + this.padding + y;
+
+        // check if dialog is visable.  if not, make it so.
+        if (!this.visible) {
+            this.toggleWindow();
+        }
+
+        // Reset the dialog
+        this.eventCounter = 0;
+        this.dialog = text.split('');
+        if (this.timedEvent) this.timedEvent.remove();
+
+        var tempText = animate ? '' : text;
+        //this._setText(tempText);
+        this.text = this.scene.add.text(xLoc, yLoc, tempText, {
+            fontsize: "32px", strokeThickness: 1, stroke: this.textColor, fill: this.textColor, align: "left",
+            wordWrap: { width: this.windowWidth - (this.padding * 2) - 25 }
+        });
+        this.text.setScrollFactor(0);
+
+        if (animate) {
+            this.timedEvent = this.scene.time.addEvent({
+                delay: 150 - (this.dialogSpeed * 40),
+                callback: this._animateText,
+                callbackScope: this,
+                loop: true
+            });
+        }
+    },// end _setText
+
+
 };

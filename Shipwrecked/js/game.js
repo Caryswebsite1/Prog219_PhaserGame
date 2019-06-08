@@ -15,7 +15,7 @@ let config = {
     }
   },
  
-    scene: [Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene]
+    scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene]
 };
 
 console.log("in game.js");
@@ -44,7 +44,7 @@ let Iron = 0;
 let Wool = 0;
 let Food = 0;
 
-// timer related
+// game timer related
 let startTime = 0;
 let explodeTime = 1000 * 60 * 6;  // 6 min
 let timeLeft = explodeTime;
@@ -54,6 +54,7 @@ let theMin = 0;
 let theSec = 0;
 
 G_bShake = false;  // flag for camera shake.
+G_bGameStarted = false; // flag for if we are out of intro.
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);

@@ -129,8 +129,10 @@ class Shipwrecked extends Phaser.Scene {
         // set island ambiance
         this.OceanAudio.volume = 0.2;
         this.OceanAudio.play({ loop: true });
+        this.OceanAudio.pause();
         this.JungleAudio.volume = 0.7;
-        this.JungleAudio.play({loop: true});
+        this.JungleAudio.play({ loop: true });
+        this.JungleAudio.pause();
 
         /* *********************************************************************
          * *********** Main Map Setup ******************************************* 
@@ -597,67 +599,6 @@ class Shipwrecked extends Phaser.Scene {
         this.dialogBox.setText("howdy fellow from shipreck 1. This is a run on sentence to see the wrap..");
 
 
-
-        /* ************************************************************
-         * ***************** Launch Section ***************************
-         * ************************************************************ */
-
-        // launch the other shipwrecked scenes so they are able to get the registry data when needed.
-        this.scene.launch("Shipwrecked2");
-        this.scene.launch("Shipwrecked3");
-        this.scene.launch("Shipwrecked4");
-        this.scene.launch("ShipConstruction");
-        this.scene.launch("DeathScene");
-
-
-        /********************************************************
-         * ******  Current Status... *****************************
-         * *****  Can put the scenes to sleep here, but they get set to awake
-         * by the system somehow.  Thus their updates keep happening.  
-         * The isSleeping call I put into the update functions is NOT triggering.
-         * put in a global to short circuit the update and it seems to work.
-         * **************************************************************** */
-        // note, data shows sleeping is not stopping update... neither is pause....
-        // and not visible.
-
-        // So basically, these function calls do NADA!  The sleep flags are what matters 
-        // to us and the set active and bring to top.
-
-        // put them to sleep.
-        this.scene.sleep("Shipwrecked2");
-        this.scene.sleep("Shipwrecked3");
-        this.scene.sleep("Shipwrecked4");
-        this.scene.sleep("ShipConstruction");
-        this.scene.sleep("DeathScene");
-
-        sleep2 = true;
-        sleep3 = true;
-        sleep4 = true;
-        sleepShip = true;
-        sleepDeath = true;
-
-        this.scene.setVisible(false, "Shipwrecked2");
-        this.scene.setVisible(false, "Shipwrecked3");
-        this.scene.setVisible(false, "Shipwrecked4");
-        this.scene.setVisible(false, "ShipConstruction");
-        this.scene.setVisible(false, "DeathScene");
-
-
-
-        // bring our first one up for input and display.
-        this.scene.bringToTop("Shipwrecked");
-        this.scene.setActive(true, "Shipwrecked");
-        this.scene.setVisible(true, "Shipwrecked");
-
-        console.log("checking sleep status");
-        console.log("2: " + this.scene.isSleeping("Shipwrecked2"));
-        console.log("3: " + this.scene.isSleeping("Shipwrecked2"));
-        console.log("4: " + this.scene.isSleeping("Shipwrecked2"));
-
-
-
-
-
     } // end create
 
 
@@ -682,11 +623,6 @@ class Shipwrecked extends Phaser.Scene {
         if (sleep1) {
             return;
         }
-
-
-        //this.jungleAudio1 = this.sound.add('JungleSound');
-        //this.jungleAudio1.play();
-
 
 
         // call timer update:
