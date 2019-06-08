@@ -148,13 +148,13 @@ class Shipwrecked4 extends Phaser.Scene {
         this.OceanAudio.play({ loop: true });
         this.OceanAudio.pause();
 
-        this.JungleAudio.volume = 0.7;
+        this.JungleAudio.volume = 0.5;
         this.JungleAudio.play({ loop: true });
         this.JungleAudio.pause();
 
 
         // map specific ambience
-        this.LavaAudio.volume = 0.5;
+        this.LavaAudio.volume = 0.7;
         this.LavaAudio.play({ loop: true });
         this.LavaAudio.pause();
 

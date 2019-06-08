@@ -135,17 +135,17 @@ class Shipwrecked3 extends Phaser.Scene {
 
 
         // set island ambiance and pause so it doesn't override all the other maps
-        this.OceanAudio.volume = 0.2;
+        this.OceanAudio.volume = 0.1;
         this.OceanAudio.play({ loop: true });
         this.OceanAudio.pause();
 
-        this.JungleAudio.volume = 0.7;
+        this.JungleAudio.volume = 0.3;
         this.JungleAudio.play({ loop: true });
         this.JungleAudio.pause();
 
 
         // set map specific ambiance and pause so it doesn't override all the other maps
-        this.LavaAudio.volume = 0.5;
+        this.LavaAudio.volume = 0.9;
         this.LavaAudio.play({ loop: true });
         this.LavaAudio.pause();
 

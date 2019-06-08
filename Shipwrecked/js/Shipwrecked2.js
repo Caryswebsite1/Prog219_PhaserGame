@@ -126,7 +126,7 @@ class Shipwrecked2 extends Phaser.Scene {
         this.OceanAudio.play({ loop: true });
         this.OceanAudio.pause();
 
-        this.JungleAudio.volume = 0.7;
+        this.JungleAudio.volume = 0.5;
         this.JungleAudio.play({ loop: true });
         this.JungleAudio.pause();
 
