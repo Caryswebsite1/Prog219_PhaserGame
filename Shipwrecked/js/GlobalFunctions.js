@@ -10,14 +10,6 @@ var GlobalFunctionsPlugin = function (scene) {
     this.woolText = "";
     this.foodText = "";
 
-    //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
-    //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
-
-
-
-    //this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
-    //this.volcanoAudio = this.sound.add('VolcanoSound');
-    //this.volcanoAudio2 = this.sound.add('VolcanoSound');
 
     if (!scene.sys.settings.isBooted) {
         scene.sys.events.once('boot', this.boot, this);
@@ -245,7 +237,7 @@ GlobalFunctionsPlugin.prototype = {
                         // close enough to chop!
                         this.ChopWoodAudio.play();
                         this.dialogBox.setText("Tiiiimmmmmbbbbbeeerrrrrr!");
-                        this.ChopWoodAudio2.play();
+                        this.ChopWoodAudio2.play({ delay: 0.5 });
 
                         gameObject.disableBody(true, true);
 
@@ -454,7 +446,244 @@ GlobalFunctionsPlugin.prototype = {
                 break; // end ShipBackBtn
 
 
-               
+            case "buyCanoe":
+
+                if (this.sys.globalFunctions.validPurchase(canoe)) {
+                    this.dialogBox.setText("Congrats you have saved only yourself!");
+                    this.sys.globalFunctions.updateResourceDisplay();
+
+                    playerShip = canoe;
+                    this.sys.globalFunctions.displaySailButton(this);       // Sail away!
+
+                    //this.scene.start("PirateSailing");
+
+                } else {
+                    this.dialogBox.setText("You cant afford that yet!");
+                }
+                break;
+
+
+            case "buySchooner":
+
+                if (this.sys.globalFunctions.validPurchase(schooner)) {
+                    this.dialogBox.setText("you have bought a schooner, and actualy saved some other people then yourself!");
+                    this.sys.globalFunctions.updateResourceDisplay();
+
+                    playerShip = schooner;
+                    this.sys.globalFunctions.displaySailButton(this);       // Sail away!
+                } else {
+                    this.dialogBox.setText("You cant afford that yet!");
+                }
+
+                break;
+
+
+            case "buyTwoMaster":
+
+                if (this.sys.globalFunctions.validPurchase(twoMaster)) {
+                    this.dialogBox.setText("You bought a two master and saved a bunch of people!");
+                    this.sys.globalFunctions.updateResourceDisplay();
+
+                    playerShip = twoMaster;
+                    this.sys.globalFunctions.displaySailButton(this);       // Sail away!
+                } else {
+                    this.dialogBox.setText("You cant afford that yet!");
+                }
+                break;
+
+
+            case "buyFourMaster":
+
+                if (this.sys.globalFunctions.validPurchase(fourMaster)) {
+                    this.dialogBox.setText("You have saved all the people!");
+                    this.sys.globalFunctions.updateResourceDisplay();
+
+                    playerShip = fourMaster;
+                    this.sys.globalFunctions.displaySailButton(this);       // Sail away!
+                } else {
+                    this.dialogBox.setText("You cant afford that yet!");
+                }
+                break;
+
+
+            case "SailAway":
+                // Sail away from island!
+
+                // first initialize cargo
+                playerShip.iron = 0;
+                playerShip.wool = 0;
+                playerShip.wood = 0;
+                playerShip.food = 0;
+                playerShip.gold = 0;
+
+                let cargoSpace = playerShip.cargo;
+                // load cargo, gold first..
+                // gold:
+                if (Gold > cargoSpace) {
+                    playerShip.gold = cargoSpace;
+                }
+                else {
+                    playerShip.gold = Gold;
+                    cargoSpace -= Gold;
+                }
+
+                // Iron:
+                if (Iron > cargoSpace) {
+                    playerShip.iron = cargoSpace;
+                }
+                else {
+                    playerShip.iron = Iron;
+                    cargoSpace -= Iron;
+                }
+
+                // Wool:
+                if (Wool > cargoSpace) {
+                    playerShip.wool = cargoSpace;
+                }
+                else {
+                    playerShip.wool = Wool;
+                    cargoSpace -= Wool;
+                }
+
+                // Wood:
+                if (Wood > cargoSpace) {
+                    playerShip.wood = cargoSpace;
+                }
+                else {
+                    playerShip.wood = Wood;
+                    cargoSpace -= Wood;
+                }
+
+                // Food:
+                if (Food > cargoSpace) {
+                    playerShip.food = cargoSpace;
+                }
+                else {
+                    playerShip.food = Food;
+                    cargoSpace -= Food;
+                }
+
+                // ****** shut down Shipwrecked stuff. ********
+                // stop all environment audios including volcano...
+                if (this.OceanAudio) {
+                    if (this.OceanAudio.isPlaying) {
+                        this.OceanAudio.stop();
+                    }
+                }
+                if (this.JungleAudio) {
+                    if (this.JungleAudio.isPlaying) {
+                        this.JungleAudio.stop();
+                    }
+                }
+                if (this.BoarAudio) {
+                    if (this.BoarAudio.isPlaying) {
+                        this.BoarAudio.stop();
+                    }
+                }
+                if (this.SheepAudio) {
+                    if (this.SheepAudio.isPlaying) {
+                        this.SheepAudio.stop();
+                    }
+                }
+                if (this.HeadChopAudio) {
+                    if (this.HeadChopAudio.isPlaying) {
+                        this.HeadChopAudio.stop();
+                    }
+                }
+                if (this.ChopWoodAudio) {
+                    if (this.ChopWoodAudio.isPlaying) {
+                        this.ChopWoodAudio.stop();
+                    }
+                }
+                if (this.JungleChopAudio) {
+                    if (this.JungleChopAudio.isPlaying) {
+                        this.JungleChopAudio.stop();
+                    }
+                }
+                if (this.PickAxeAudio) {
+                    if (this.PickAxeAudio.isPlaying) {
+                        this.PickAxeAudio.stop();
+                    }
+                }
+                if (this.HallelujahAudio) {
+                    if (this.HallelujahAudio.isPlaying) {
+                        this.HallelujahAudio.stop();
+                    }
+                }
+                if (this.EarthQuakeAudio) {
+                    if (this.EarthQuakeAudio.isPlaying) {
+                        this.EarthQuakeAudio.stop();
+                    }
+                }
+
+
+
+                // scene specific audios
+                if (this.LavaAudio) {
+
+                    if (this.LavaAudio.isPlaying) {
+                        this.LavaAudio.stop();
+                    }
+
+                }
+
+                if (this.SizzlingAudio) {
+
+                    if (this.SizzlingAudio.isPlaying) {
+                        this.SizzlingAudio.stop();
+                    }
+
+                }
+
+                if (this.ForestFireAudio) {
+
+                    if (this.ForestFireAudio.isPlaying) {
+                        this.ForestFireAudio.stop();
+                    }
+
+                }
+
+
+                // bring up Tortuga! 
+                this.scene.bringToTop("Tortuga");
+                this.scene.setActive("Tortuga");
+                this.scene.setVisible("Tortuga");
+
+                // attempt to increase Tortuga camera size..
+                this.cameras.main.setSize(800, 600);
+
+
+                // shut down shipConstruction 
+                this.scene.setActive(false);
+                this.scene.setVisible(false);
+                this.scene.sleep();
+                this.setSleepFlag(true);
+
+                // get manager to enable killing all the Shipwrecked scenes.
+                let manager = this.scene.manager;
+
+                // now remove them.
+                manager.remove("ShipConstruction");
+                manager.remove("Shipwreck");
+                manager.remove("Shipwreck2");
+                manager.remove("Shipwreck3");
+                manager.remove("Shipwreck4");
+
+                // ok, ship loaded, Go to Tortuga!
+                // #################  NEED TORTUGA PORT SCREEN ############
+
+                /* ##########################################################
+                 * #### At Tortuga, explain what you took with, conversion to gold and
+                 * #### present options to buy upgrades like IronPlate or bigger ships??
+                 * ####  Finally have button to go sail.
+                 * ################################################################ */
+
+                // 
+
+                break;
+
+
+
             case "StartBtn":
                 // attempt to decrease camera size to main Shipwrecked size..
                 this.cameras.main.setSize(500, 400);
@@ -467,7 +696,7 @@ GlobalFunctionsPlugin.prototype = {
                 this.scene.setActive(true, "Shipwrecked");
                 this.scene.setVisible(true, "Shipwrecked");
                 startingScene.setSleepFlag(false);
-               
+
                 console.log("shutting down intro ");
 
                 // stop intro audio
@@ -480,7 +709,7 @@ GlobalFunctionsPlugin.prototype = {
                 this.ThunderStormAudio2.stop();
                 this.ThunderStormAudio3.stop();
 
-                 // std close out code that doesn't hardly work...
+                // std close out code that doesn't hardly work...
                 this.scene.setActive(false);
                 this.scene.setVisible(false);
                 this.scene.sleep();
@@ -495,6 +724,30 @@ GlobalFunctionsPlugin.prototype = {
                 G_bGameStarted = true;  // set game started flag!
 
                 break; // end Start Game
+
+
+
+            case "pirateSetSailBtn":
+                var shipScene = this.scene.manager.getScene("PirateSailing");
+                console.log("in pirateSetSailBtn Handler. getScene Results: " + shipScene.scene.key);
+                this.scene.wake("PirateSailing");
+                this.scene.bringToTop("PirateSailing");
+                this.scene.setActive(true, "PirateSailing");
+                this.scene.setVisible(true, "PirateSailing");
+                shipScene.setSleepFlag(false);
+
+                // attempt to decrease Tortuga camera size..
+                this.cameras.main.setSize(500, 400);
+
+                this.scene.setActive(false);
+                this.scene.setVisible(false);
+                this.scene.sleep();
+                this.setSleepFlag(true);
+
+                break; // end pirateSetSailBtn
+
+
+
 
             default:
                 break;
@@ -528,6 +781,15 @@ GlobalFunctionsPlugin.prototype = {
         this.foodText = this.scene.add.text(410, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.foodText.setScrollFactor(0);
     },
+
+    pirateGoldTextFunction: function () {
+        TortugaStyle = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+
+        this.pirateGoldText = this.scene.add.text(220, 20, "Gold: " + Gold, TortugaStyle);
+        this.pirateGoldText.setScrollFactor(0);
+
+    },
+
 
 
     /* **********************************************************************************************************
@@ -572,6 +834,53 @@ GlobalFunctionsPlugin.prototype = {
 
 
     /* **************************************************************
+    * ********* Purchase Boat Validation ******************************
+    * *************************************************************** */
+    validPurchase: function (boat) {
+        if (boat.wood > Wood) {
+            return false;
+        }
+        if (boat.food > Food) {
+            return false;
+        }
+        if (boat.wool > Wool) {
+            return false;
+        }
+        if (boat.iron > Iron) {
+            return false;
+        }
+        this.subtractResorces(boat);
+        return true;
+    },
+
+
+
+    /* **************************************************************
+    * ********* subtractResources for boat build/ purchase.**********
+    * *************************************************************** */
+    subtractResorces: function (boat) {
+        Wood -= boat.wood;
+        Food -= boat.food;
+        Wool -= boat.wool;
+        Iron -= boat.iron;
+    },
+
+
+    displaySailButton: function (aScene) {
+
+        aScene.sailButton = {
+            font: "30px Courier",
+            fill: "#f00",
+            border: "5px solid red"
+        };
+
+        aScene.Sail = aScene.add.text(300, 460, 'Sail Away!', aScene.sailButton);
+        aScene.Sail.name = "SailAway";
+        aScene.Sail.setInteractive();
+
+    },
+
+    /* **************************************************************
     * ********* Timer display init and update ******************************
     * *************************************************************** */
 
@@ -600,47 +909,48 @@ GlobalFunctionsPlugin.prototype = {
         // would get started without the game started flag..
         if (G_bGameStarted) {
 
-        let newTime = Date.now();
-        let newTimeLeft = 0;
+            let newTime = Date.now();
+            let newTimeLeft = 0;
 
-        // calculate time left:
-        newTimeLeft = explodeTime - (newTime - startTime);
+            // calculate time left:
+            newTimeLeft = explodeTime - (newTime - startTime);
 
-        if (newTimeLeft < 20000) {
-            G_bShake = true;
-            if (!(this.scene.EarthQuakeAudio.isPlaying)) {
-                this.scene.EarthQuakeAudio.play({ loop: true });
+            if ((newTimeLeft < 20000) && !this.gameOver) {
+                G_bShake = true;
+                if (!(this.scene.EarthQuakeAudio.isPlaying)) {
+                    this.scene.EarthQuakeAudio.play({ loop: true });
+                }
             }
-        }
 
-        if (bPrintNow ||(newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000) ) {
-            // update timer display
+            if (bPrintNow || (newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000)) {
+                // update timer display
 
-            // calculate the global display values.
-            theMin = Math.floor((newTimeLeft / 1000) / 60);
-            theSec = Math.floor((newTimeLeft / 1000) % 60);
+                // calculate the global display values.
+                theMin = Math.floor((newTimeLeft / 1000) / 60);
+                theSec = Math.floor((newTimeLeft / 1000) % 60);
 
-            this.updateTimerDisplay();
+                this.updateTimerDisplay();
 
-            // update global timeLeft
-            timeLeft = newTimeLeft;
+                // update global timeLeft
+                timeLeft = newTimeLeft;
 
-        }
-        else if ( (newTimeLeft > -1000) && (newTimeLeft <= 1000) ) {
-            // volcano starts to blow..
-            if (!(this.scene.VolcanoAudio.isPlaying) ) {
-                this.scene.VolcanoAudio.play();
             }
-        }
-        else if (newTimeLeft <= 0) {
-            this.scene.VolcanoAudio2.play();  
+            else if ((newTimeLeft > -1000) && (newTimeLeft <= 1000)) {
+                // volcano starts to blow..
+                if (!(this.scene.VolcanoAudio.isPlaying)) {
+                    this.scene.VolcanoAudio.play();
+                }
+            }
+            else if (newTimeLeft <= 0) {
+                this.scene.VolcanoAudio2.play();
 
-            this.ShipwreckedGameOver(this.scene, true);
-            // stop earthquake audio...
-            if (this.scene.EarthQuakeAudio.isPlaying) {
-                this.scene.EarthQuakeAudio.stop();
-            }
-            }
+                if (this.scene.EarthQuakeAudio.isPlaying) {
+                    this.scene.EarthQuakeAudio.stop();
+                }
+
+                this.ShipwreckedGameOver(this.scene, true);
+                // stop earthquake audio...
+           }
         }// end if game started. 
 
     }, // end VolcanoTimer
@@ -650,49 +960,97 @@ GlobalFunctionsPlugin.prototype = {
     * ********* Shipwrecked Game Over ******************************
     * *************************************************************** */
     ShipwreckedGameOver: function (callingScene, bVolcano) {
- 
+
         /* ------------------------------------------------------------------------------
          * NOTE: transition function does not exist in our version.It does in the next but
          * in the next, the dialog plug in code is broken.
          * ***************************************************************** */
         // stop all environment audios except volcano...
-        if (callingScene.EarthQuakeAudio.isPlaying) {
-            callingScene.EarthQuakeAudio.stop();
+        if (callingScene.OceanAudio) {
+            if (callingScene.OceanAudio.isPlaying) {
+                callingScene.OceanAudio.stop();
+            }
         }
-        if (callingScene.JungleAudio.isPlaying) {
-            callingScene.JungleAudio.stop();
+        if (callingScene.JungleAudio) {
+            if (callingScene.JungleAudio.isPlaying) {
+                callingScene.JungleAudio.stop();
+            }
         }
-        if (callingScene.OceanAudio.isPlaying) {
-            callingScene.OceanAudio.stop();
+        if (callingScene.BoarAudio) {
+            if (callingScene.BoarAudio.isPlaying) {
+                callingScene.BoarAudio.stop();
+            }
         }
-        if (callingScene.BoarAudio.isPlaying) {
-            callingScene.BoarAudio.stop();
+        if (callingScene.SheepAudio) {
+            if (callingScene.SheepAudio.isPlaying) {
+                callingScene.SheepAudio.stop();
+            }
         }
-        if (callingScene.SheepAudio.isPlaying) {
-            callingScene.SheepAudio.stop();
+        if (callingScene.HeadChopAudio) {
+            if (callingScene.HeadChopAudio.isPlaying) {
+                callingScene.HeadChopAudio.stop();
+            }
         }
-        if (callingScene.HeadChopAudio.isPlaying) {
-            callingScene.HeadChopAudio.stop();
+        if (callingScene.ChopWoodAudio) {
+            if (callingScene.ChopWoodAudio.isPlaying) {
+                callingScene.ChopWoodAudio.stop();
+            }
         }
-        if (callingScene.ChopWoodAudio.isPlaying) {
-            callingScene.ChopWoodAudio.stop();
+        if (callingScene.JungleChopAudio) {
+            if (callingScene.JungleChopAudio.isPlaying) {
+                callingScene.JungleChopAudio.stop();
+            }
         }
-        if (callingScene.JungleChopAudio.isPlaying) {
-            callingScene.JungleChopAudio.stop();
+        if (callingScene.PickAxeAudio) {
+            if (callingScene.PickAxeAudio.isPlaying) {
+                callingScene.PickAxeAudio.stop();
+            }
         }
-        if (callingScene.PickAxeAudio.isPlaying) {
-            callingScene.PickAxeAudio.stop();
+        if (callingScene.HallelujahAudio) {
+            if (callingScene.HallelujahAudio.isPlaying) {
+                callingScene.HallelujahAudio.stop();
+            }
         }
-        if (callingScene.HallelujahAudio.isPlaying) {
-            callingScene.HallelujahAudio.stop();
+        if (callingScene.EarthQuakeAudio) {
+            if (callingScene.EarthQuakeAudio.isPlaying) {
+                callingScene.EarthQuakeAudio.stop();
+            }
         }
+
+
+
+        // scene specific audios
+        if (callingScene.LavaAudio) {
+
+            if (callingScene.LavaAudio.isPlaying) {
+                callingScene.LavaAudio.stop();
+            }
+
+        }
+
+        if (callingScene.SizzlingAudio) {
+
+            if (callingScene.SizzlingAudio.isPlaying) {
+                callingScene.SizzlingAudio.stop();
+            }
+
+        }
+
+        if (callingScene.ForestFireAudio) {
+
+            if (callingScene.ForestFireAudio.isPlaying) {
+                callingScene.ForestFireAudio.stop();
+            }
+
+        }
+
 
 
         callingScene.scene.bringToTop("DeathScene");
         callingScene.scene.setActive("DeathScene");
         callingScene.scene.setVisible("DeathScene");
 
-       
+
         callingScene.scene.setActive(false);
         callingScene.scene.setVisible(false);
         callingScene.scene.sleep();
@@ -712,6 +1070,8 @@ GlobalFunctionsPlugin.prototype = {
         manager.remove("Shipwreck2");
         manager.remove("Shipwreck3");
         manager.remove("Shipwreck4");
+
+        this.gameOver = true;
 
     } // end ShipwreckedGameOver
 

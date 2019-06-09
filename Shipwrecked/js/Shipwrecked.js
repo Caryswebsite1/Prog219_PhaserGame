@@ -596,7 +596,7 @@ class Shipwrecked extends Phaser.Scene {
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
         this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 320 });
-        this.dialogBox.setText("howdy fellow from shipreck 1. This is a run on sentence to see the wrap..");
+        this.dialogBox.toggleWindow();
 
 
     } // end create
@@ -799,6 +799,16 @@ class Shipwrecked extends Phaser.Scene {
     // -----------------------------------------------------------
     setSleepFlag(bSleep) {
         sleep1 = bSleep;
+
+        // because we can get to the construction scene through a button... 
+        if (bSleep === true) {
+            this.OceanAudio.pause();
+            this.JungleAudio.pause();
+            if (this.EarthQuakeAudio.isPlaying) {
+                this.EarthQuakeAudio.pause();
+            }
+
+        }
     }
 
 

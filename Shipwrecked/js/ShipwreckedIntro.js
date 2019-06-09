@@ -144,7 +144,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.introText[0] = "It was supposed to be an easy crossing..";
         this.introText[1] = "But an unseasonable storm came upon us...";
         this.introText[2] = "It was as if the ancient Greek God Poseidon had decide to punish us! ";
-        this.introText[3] = "The lightning lit our ships on fire, the wind fanned the flames, and the waves crushed us..";
+        this.introText[3] = "The lightning set our ships on fire, the wind fanned the flames, and the waves crushed us..";
         this.introText[4] = " ";
         this.introText[5] = "A few of us managed to make it to a nearby island.";
         this.introText[6] = "Alas! The island is infested with mad wild boar and the volcano is rumbling!";
@@ -167,7 +167,8 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.launch("Shipwrecked4");
         this.scene.launch("ShipConstruction");
         this.scene.launch("DeathScene");
-
+        this.scene.launch("Tortuga");
+        this.scene.launch("PirateSailing");
 
         /********************************************************
          * ******  Current Status... *****************************
@@ -189,6 +190,9 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.sleep("Shipwrecked4");
         this.scene.sleep("ShipConstruction");
         this.scene.sleep("DeathScene");
+        this.scene.sleep("Tortuga");
+        this.scene.sleep("PirateSailing");
+
 
         sleep1 = true;
         sleep2 = true;
@@ -196,6 +200,8 @@ class ShipwreckedIntro extends Phaser.Scene {
         sleep4 = true;
         sleepShip = true;
         sleepDeath = true;
+        sleepTortuga = true;
+        sleepPirate = true;
 
         this.scene.setVisible(false, "Shipwrecked");
         this.scene.setVisible(false, "Shipwrecked2");
@@ -203,6 +209,8 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.setVisible(false, "Shipwrecked4");
         this.scene.setVisible(false, "ShipConstruction");
         this.scene.setVisible(false, "DeathScene");
+        this.scene.setVisible(false,"Tortuga");
+        this.scene.setVisible(false,"PirateSailing");
 
 
         // bring this intro scene up for input and display.
@@ -233,7 +241,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         if ((i < this.introText.length) && (elapsedTime >= this.maxTimeToText) ) {
             // add a new line of text using the new addTextLine and keep track of where you are!.
 
-            this.dialogBox.addTextLine(20, (i*20),  this.introText[i], true);
+            this.dialogBox.addTextLine(20, (i*20),  this.introText[i], false);
             this.introTextArrayCounter += 1;
 
             this.introTextTime = currentTime; // update next text display time.

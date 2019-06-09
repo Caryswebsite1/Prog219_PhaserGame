@@ -77,7 +77,7 @@ DialogModalPlugin.prototype = {
     // Gets the width of the game (based on the scene)
     _getGameWidth: function () {
         return this.scene.sys.game.config.width;;
-    
+
     },
 
     // Gets the height of the game (based on the scene)
@@ -141,7 +141,7 @@ DialogModalPlugin.prototype = {
         }
 
         this.graphics = this.scene.add.graphics();
-        this.graphics.scrollFactorX = -0,7;
+        this.graphics.scrollFactorX = -0, 7;
         this.graphics.scrollFactorY = 0;
 
         this._createOuterWindow(dimensions.x, dimensions.y, dimensions.rectWidth, dimensions.rectHeight);
@@ -160,7 +160,7 @@ DialogModalPlugin.prototype = {
         let buttonY = 0;
 
         //buttonX = this._getGameWidth() - this.padding - 6 - this.locationX;
-        buttonX = this.windowWidth - this.padding  + this.locationX;
+        buttonX = this.windowWidth - this.padding + this.locationX;
 
         buttonY = this.locationY + 3;
 
@@ -224,7 +224,7 @@ DialogModalPlugin.prototype = {
         if (!this.visible) {
             this.toggleWindow();
         }
-        
+
         // Reset the dialog
         this.eventCounter = 0;
         this.dialog = text.split('');
@@ -261,8 +261,8 @@ DialogModalPlugin.prototype = {
         // Reset the dialog
         if (this.text) this.text.destroy();
 
-         let x = this.locationX + this.padding + 20;
-         let y = this.locationY + this.padding + 10;
+        let x = this.locationX + this.padding + 20;
+        let y = this.locationY + this.padding + 10;
 
         //this.text = this.scene.add.text(x, y, newText, {
         //    fontsize: "32px", strokeThickness: 1, stroke: this.textColor, fill: this.textColor, align: "center",
