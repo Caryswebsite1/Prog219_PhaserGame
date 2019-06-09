@@ -4,7 +4,8 @@ class PirateSailing extends Phaser.Scene {
         super({ key: "PirateSailing" });
 
         this.gameOver = false;
-        this.oldSceneKey = null;
+        this.hunterStartTime = Date.now();
+        this.hunterSpawnTime = 60000;   // one hunter every min.
     } // end constructor
 
 
@@ -22,7 +23,7 @@ class PirateSailing extends Phaser.Scene {
 
         // plugins:
         this.load.plugin('DialogModalPlugin', './js/dialog_plugin.js');
-        this.load.plugin('GlobalFunctionsPlugin', './js/GlobalFunctions.js');
+        this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
 
         // main images
         this.load.image("island1", "assets/island1.png");
@@ -60,9 +61,9 @@ class PirateSailing extends Phaser.Scene {
         this.sys.install('DialogModalPlugin');
         console.log(this.sys.dialogModal);
 
-        this.sys.install('GlobalFunctionsPlugin');
-        console.log("from ShipConstruction")
-        console.log(this.sys.globalFunctions);
+        this.sys.install('PirateFunctionsPlugin');
+        console.log("from PirateSailing")
+        console.log(this.sys.PirateFunctions);
 
 
         this.events.on('wake', this.onWake, this);
@@ -82,18 +83,13 @@ class PirateSailing extends Phaser.Scene {
 
         // to only add an image someplace, you would say:
         this.add.image(500, 500, "bigWater");
-        this.add.image(500, 500, "island1");
-        this.add.image(100, 100, "island2");
-        this.add.image(800, 100, "island3");
-        this.add.image(100, 850, "island4");
-        this.add.image(800, 850, "island5");
 
 
         //  Input Events
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // note: gameobjectdown handler should be in global plug in now.
-        this.input.on('gameobjectdown', this.sys.globalFunctions.onGameObjectClicked, this);
+        this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
 
         this.player = this.physics.add.sprite(300, 100, "ship");
@@ -150,7 +146,87 @@ class PirateSailing extends Phaser.Scene {
         //this.text1.parseList(this.canoe);
 
 
+        // islands group
+        this.islands = this.physics.add.staticGroup();
+        let newChild = "";
+
+        newChild = this.islands.create(500, 500, "island1");
+        newChild.name = "island";
+
+        newChild = this.islands.create(100, 100, "island2");
+        newChild.name = "island";
+
+        newChild = this.islands.create(800, 100, "island3");
+        newChild.name = "island";
+
+        newChild = this.islands.create(100, 850, "island4");
+        newChild.name = "island";
+
+        newChild = this.islands.create(800, 850, "island5");
+        newChild.name = "island";
+
+
+
+        //this.add.image(500, 500, "island1");
+        //this.add.image(100, 100, "island2");
+        //this.add.image(800, 100, "island3");
+        //this.add.image(100, 850, "island4");
+        //this.add.image(800, 850, "island5");
+
+
+
+
+        // cargo ships group
+        this.cargoShips = this.physics.add.group();
+        //{
+        //    key: "cargoShip",
+        //    repeat: 6,
+        //    setXY: { x: 150, y: 50, stepX: 150, stepY: 150 }
+        //});
+
+        //let newChild = "";
+
+        //       newChild = this.cargoShips.create(i, j, "cargoShipImg");
+        //        newChild.name = "cargoShip";
+
+        // Pirate Hunters group
+        this.pirateHunters = this.physics.add.group();
+
+
+     /* ************************************************************
+      * ************** Colliders Section ***************************
+      * ************************************************************ */
+
+        // collide with world:
+        this.player.setCollideWorldBounds(true);
+
+        //this.cargoShips.children.iterate(function (child) {
+        //    child.setCollideWorldBounds(true);
+        //});
+
+        //this.pirateHunters.children.iterate(function (child) {
+        //    child.setCollideWorldBounds(true);
+        //});
+
+
+        //  Collide the everything for the most part.  
+        //this.physics.add.collider(this.player, this.cargoShips);
+        //this.physics.add.collider(this.player, this.pirateHunters);
+        this.physics.add.collider(this.player, this.islands);
+        //this.physics.add.collider(this.pirateHunter, this.islands);
+        //this.physics.add.collider(this.cargoShip, this.islands);
+
+
+        //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
+        //this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
+
+        //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
+       // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
+
+
     } // end create
+
+
 
     // ---------------------------------------------------------
     // update()
@@ -191,8 +267,67 @@ class PirateSailing extends Phaser.Scene {
             //this.player.anims.play("shipturn");
         }
 
+        this.checkForHunterSpawn();
+        this.checkForCargoShipSpawn();
 
     } // end update
+
+
+    // ---------------------------------------------------------
+    // checkForHunterSpawn()
+    //
+    // Description: checks to see if enough time as elapse to 
+    // cause another Pirate Hunter to spawn.  If so, it spawns
+    // the hunter in a random location.
+    // -----------------------------------------------------------
+    checkForHunterSpawn() {
+        let currentTime = Date.now();
+
+        if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
+            // spawn hunter!
+            let locX = Math.random() * 1000;
+            let locY = Math.random() * 1000;
+
+            let newChild = "";
+
+            newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
+            newChild.name = "pirateHunter";
+
+            // reset timer.
+            this.hunterStartTime = Date.now();
+        }// end if time to spawn hunter.
+
+    }// end check for hunter spawn.
+
+
+    // ---------------------------------------------------------
+    // checkForCargoShipSpawn()
+    //
+    // Description: checks each island to see if enough time has 
+    // elapse to cause another cargo ship to spawn.  If so, it spawns
+    // a cargo ship just outside that island's port with another Island
+    // destination.
+    // -----------------------------------------------------------
+    checkForCargoShipSpawn() {
+        //let currentTime = Date.now();
+
+        //if ((currentTime - hunterStartTime) >= this.hunterSpawnTime) {
+        //    // spawn hunter!
+        //    let locX = Math.random() * 1000;
+        //    let locY = Math.random() * 1000;
+
+        //    let newChild = "";
+
+        //    newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
+        //    newChild.name = "pirateHunter";
+
+        //    // restt timer.
+        //    hunterStartTime = Date.now();
+        //}// end if time to spawn hunter.
+
+    }// end checkForCargoShipSpawn
+
+
 
 
     // ---------------------------------------------------------
@@ -217,8 +352,8 @@ class PirateSailing extends Phaser.Scene {
         console.log("in PirateSailing onWake");
 
         // update life and resource displays.
-        this.sys.globalFunctions.updateHearts();
-        this.sys.globalFunctions.updateResourceDisplay();
+        //this.sys.PirateFunctions.updateHearts();
+        //this.sys.PirateFunctions.updateSailingDisplay();
 
     }
 

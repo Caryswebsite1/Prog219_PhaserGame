@@ -6,7 +6,7 @@ class ShipwreckedIntro extends Phaser.Scene {
 
         // start button timer related
         this.loadStart = 0;
-        this.loadingTime = 20000;  // 20 seconds
+        this.loadingTime = 22000;  // 22 seconds
         this.bStartBtn = false;
 
         this.loadStart = Date.now();
@@ -167,8 +167,14 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.launch("Shipwrecked4");
         this.scene.launch("ShipConstruction");
         this.scene.launch("DeathScene");
+
+
+        // these are required here because we are merging our Pirate and Shipwrecked.
+        this.scene.launch("PirateIntro");
         this.scene.launch("Tortuga");
         this.scene.launch("PirateSailing");
+
+
 
         /********************************************************
          * ******  Current Status... *****************************
@@ -190,8 +196,12 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.sleep("Shipwrecked4");
         this.scene.sleep("ShipConstruction");
         this.scene.sleep("DeathScene");
+
+        // these are required here because we are merging our Pirate and Shipwrecked.
+        this.scene.sleep("PirateIntro");
         this.scene.sleep("Tortuga");
         this.scene.sleep("PirateSailing");
+
 
 
         sleep1 = true;
@@ -200,8 +210,13 @@ class ShipwreckedIntro extends Phaser.Scene {
         sleep4 = true;
         sleepShip = true;
         sleepDeath = true;
+
+
+        // these are required here because we are merging our Pirate and Shipwrecked.
+        sleepPirateIntro = true;
         sleepTortuga = true;
         sleepPirate = true;
+
 
         this.scene.setVisible(false, "Shipwrecked");
         this.scene.setVisible(false, "Shipwrecked2");
@@ -209,8 +224,11 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.setVisible(false, "Shipwrecked4");
         this.scene.setVisible(false, "ShipConstruction");
         this.scene.setVisible(false, "DeathScene");
-        this.scene.setVisible(false,"Tortuga");
-        this.scene.setVisible(false,"PirateSailing");
+
+        // these are required here because we are merging our Pirate and Shipwrecked.
+        this.scene.setVisible("PirateIntro");
+        this.scene.setVisible("Tortuga");
+        this.scene.setVisible("PirateSailing");
 
 
         // bring this intro scene up for input and display.
@@ -240,6 +258,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         // intro text display...
         if ((i < this.introText.length) && (elapsedTime >= this.maxTimeToText) ) {
             // add a new line of text using the new addTextLine and keep track of where you are!.
+            console.log("in intro text if.");
 
             this.dialogBox.addTextLine(20, (i*20),  this.introText[i], false);
             this.introTextArrayCounter += 1;

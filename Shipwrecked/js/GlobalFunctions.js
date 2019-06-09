@@ -644,13 +644,14 @@ GlobalFunctionsPlugin.prototype = {
                 }
 
 
-                // bring up Tortuga! 
-                this.scene.bringToTop("Tortuga");
-                this.scene.setActive("Tortuga");
-                this.scene.setVisible("Tortuga");
+                // bring up Pirate Intro! 
+                var introScene = this.scene.manager.getScene("PirateIntro");
+                this.scene.bringToTop("PirateIntro");
+                this.scene.setActive("PirateIntro");
+                this.scene.setVisible("PirateIntro");
 
-                // attempt to increase Tortuga camera size..
-                this.cameras.main.setSize(800, 600);
+                // attempt to increase PirateIntro camera size..
+                introScene.cameras.main.setSize(800, 600);
 
 
                 // shut down shipConstruction 
@@ -668,17 +669,6 @@ GlobalFunctionsPlugin.prototype = {
                 manager.remove("Shipwreck2");
                 manager.remove("Shipwreck3");
                 manager.remove("Shipwreck4");
-
-                // ok, ship loaded, Go to Tortuga!
-                // #################  NEED TORTUGA PORT SCREEN ############
-
-                /* ##########################################################
-                 * #### At Tortuga, explain what you took with, conversion to gold and
-                 * #### present options to buy upgrades like IronPlate or bigger ships??
-                 * ####  Finally have button to go sail.
-                 * ################################################################ */
-
-                // 
 
                 break;
 
@@ -725,30 +715,6 @@ GlobalFunctionsPlugin.prototype = {
 
                 break; // end Start Game
 
-
-
-            case "pirateSetSailBtn":
-                var shipScene = this.scene.manager.getScene("PirateSailing");
-                console.log("in pirateSetSailBtn Handler. getScene Results: " + shipScene.scene.key);
-                this.scene.wake("PirateSailing");
-                this.scene.bringToTop("PirateSailing");
-                this.scene.setActive(true, "PirateSailing");
-                this.scene.setVisible(true, "PirateSailing");
-                shipScene.setSleepFlag(false);
-
-                // attempt to decrease Tortuga camera size..
-                this.cameras.main.setSize(500, 400);
-
-                this.scene.setActive(false);
-                this.scene.setVisible(false);
-                this.scene.sleep();
-                this.setSleepFlag(true);
-
-                break; // end pirateSetSailBtn
-
-
-
-
             default:
                 break;
 
@@ -780,14 +746,6 @@ GlobalFunctionsPlugin.prototype = {
     foodTextFunction: function () {
         this.foodText = this.scene.add.text(410, 10, "Food: " + Food, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", align: "center" });
         this.foodText.setScrollFactor(0);
-    },
-
-    pirateGoldTextFunction: function () {
-        TortugaStyle = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
-
-        this.pirateGoldText = this.scene.add.text(220, 20, "Gold: " + Gold, TortugaStyle);
-        this.pirateGoldText.setScrollFactor(0);
-
     },
 
 

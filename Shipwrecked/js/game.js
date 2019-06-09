@@ -15,7 +15,7 @@ let config = {
     }
   },
  
-    scene: [Tortuga] //, ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, Tortuga, PirateSailing]
+    scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing]
 };
 
 console.log("in game.js");
@@ -29,6 +29,7 @@ let sleep3 = false;
 let sleep4 = false;
 let sleepShip = false;
 let sleepDeath = false;
+let sleepPirateIntro = false;
 let sleepPirate = false;
 let sleepTortuga = false;
 
@@ -59,6 +60,7 @@ let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFoo
     this.gold = 0;
     this.hitPoints = 0;
     this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
+    this.maxCannon = 0;
     this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
     this.shipType = "";
 
@@ -66,21 +68,25 @@ let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFoo
     switch (pCrew) {
         case 1:
             this.hitPoints = 10;
+            this.maxCannon = 1;
             this.shipType = "Canoe";
             break;
 
         case 15:
             this.hitPoints = 150;
+            this.maxCannon = 3;
             this.shipType = "Schooner";
             break;
 
         case 30:
             this.hitPoints = 300;
+            this.maxCannon = 8;
             this.shipType = "Brig";
             break;
 
         case 50:
             this.hitPoints = 500;
+            this.maxCannon = 20;
             this.shipType = "Frigate";
             break;
 
@@ -103,7 +109,7 @@ let fourMaster = new BoatConstructor(50, 60, 75, 80, 45, 35, 50);   // Base hit 
 let playerShip = "";  // to be filled in when player gets a ship!
 
 
-// game timer related
+// volcano explode timer related
 let startTime = 0;
 let explodeTime = 1000 * 60 * 6;  // 6 min
 let timeLeft = explodeTime;

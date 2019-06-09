@@ -171,8 +171,8 @@ class ShipConstruction extends Phaser.Scene {
 
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 490 });
-        this.dialogBox.setText("howdy fellow from ShipConstruction");
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 510 });
+        this.dialogBox.setText("Build your ship and escape!");
 
 
         // ******* Boat Construction and Selection Texts  **************
@@ -246,28 +246,28 @@ class ShipConstruction extends Phaser.Scene {
 
         // ***********  BUY BUTTON ETC..  **********
         this.buyButton = {
-            font: "30px Courier",
+            font: "25px Courier",
             fill: "#000",
             border: "5px solid red"
         };
 
         //buy canoe
-        this.buyCanoe = this.add.text(110, 410, 'Buy', this.buyButton);
+        this.buyCanoe = this.add.text(80, 410, 'Build', this.buyButton);
         this.buyCanoe.name = "buyCanoe";
         this.buyCanoe.setInteractive();
 
         // buy schooner
-        this.buySchooner = this.add.text(190, 410, 'Buy', this.buyButton);
+        this.buySchooner = this.add.text(180, 410, 'Build', this.buyButton);
         this.buySchooner.name = "buySchooner";
         this.buySchooner.setInteractive();
 
         // buy two master
-        this.buyTwoMaster = this.add.text(310, 410, 'Buy', this.buyButton);
+        this.buyTwoMaster = this.add.text(310, 410, 'Build', this.buyButton);
         this.buyTwoMaster.name = "buyTwoMaster";
         this.buyTwoMaster.setInteractive();
 
         // buy Four master
-        this.buyFourMaster = this.add.text(460, 410, 'Buy', this.buyButton);
+        this.buyFourMaster = this.add.text(460, 410, 'Build', this.buyButton);
         this.buyFourMaster.name = "buyFourMaster";
         this.buyFourMaster.setInteractive();
 
