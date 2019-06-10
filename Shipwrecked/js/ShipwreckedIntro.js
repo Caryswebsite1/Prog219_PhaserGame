@@ -49,7 +49,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
 
         // possibly for intro??
-        this.load.audio('WindSound', ['assets/audio/Wind01.mp3'], { instances: 2 });
+        this.load.audio('WindSound', ['assets/audio/wind01.mp3'], { instances: 2 });
         this.load.audio('ThunderSound', ['assets/audio/ThunderStrike.mp3'], { instances: 3 });
         this.load.audio('ThunderStormSound', ['assets/audio/ThunderStorm.mp3'], { instances: 3 });
         this.load.audio('DrowningSound', ['assets/audio/Drowning.mp3']);
@@ -256,11 +256,11 @@ class ShipwreckedIntro extends Phaser.Scene {
         let i = this.introTextArrayCounter; // not so much to type!
 
         // intro text display...
-        if ((i < this.introText.length) && (elapsedTime >= this.maxTimeToText) ) {
+        if ((i < this.introText.length) && (elapsedTime >= this.maxTimeToText)) {
             // add a new line of text using the new addTextLine and keep track of where you are!.
             console.log("in intro text if.");
 
-            this.dialogBox.addTextLine(20, (i*20),  this.introText[i], false);
+            this.dialogBox.addTextLine(20, (i * 20), this.introText[i], false);
             this.introTextArrayCounter += 1;
 
             this.introTextTime = currentTime; // update next text display time.
