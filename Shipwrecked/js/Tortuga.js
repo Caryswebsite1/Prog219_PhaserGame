@@ -24,7 +24,7 @@ class Tortuga extends Phaser.Scene {
         this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
 
         // main images
-        this.load.image("Port", "assets/island_sand_d.jpg");
+        this.load.image("Port", "assets/PortScene800.jpg");
         this.load.image("SailBtn", "assets/TallShip45.jpg");
         this.load.image("IronBtn", "assets/IronOre4.png");
 
@@ -114,7 +114,7 @@ class Tortuga extends Phaser.Scene {
         //NOTE: add in order from bottom layer to top.
 
         // to only add an image someplace, you would say:
-        this.add.image(500, 500, "Port");
+        this.add.image(400, 400, "Port");
         //this.add.image(250, 200, "Hull");
 
 

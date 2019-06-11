@@ -172,6 +172,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.launch("PirateIntro");
         this.scene.launch("Tortuga");
         this.scene.launch("PirateSailing");
+        this.scene.launch("PirateRetire");
 
 
 
@@ -200,7 +201,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.sleep("PirateIntro");
         this.scene.sleep("Tortuga");
         this.scene.sleep("PirateSailing");
-
+        this.scene.sleep("PirateRetire");
 
 
         sleep1 = true;
@@ -215,6 +216,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         sleepPirateIntro = true;
         sleepTortuga = true;
         sleepPirate = true;
+        sleepRetire = true;
 
 
         this.scene.setVisible(false, "Shipwrecked");
@@ -228,6 +230,7 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.setVisible(false, "PirateIntro");
         this.scene.setVisible(false, "Tortuga");
         this.scene.setVisible(false, "PirateSailing");
+        this.scene.setVisible(false, "PirateRetire");
 
         
 

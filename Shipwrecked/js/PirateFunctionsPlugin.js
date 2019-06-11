@@ -339,6 +339,7 @@ PirateFunctionsPlugin.prototype = {
                 // attempt to decrease camera size for Tortuga..
                 this.cameras.main.setSize(500, 400);
 
+                console.log("in SetsailBtn handler. the this is scene: " + this.scene.key);
                 this.scene.setActive(false);
                 this.scene.setVisible(false);
                 this.scene.sleep();
@@ -606,7 +607,7 @@ PirateFunctionsPlugin.prototype = {
     /* **********************************************************************************************************
     ***********  Text Display initalization functions:  All scenes must call these to enable their display *********
     ************************************************************************************************************ */
-    sailingGoldTextFunction: function () {
+    sailingTextFunction: function () {
         this.sailingGoldText = this.scene.add.text(50, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
         this.sailingGoldText.setScrollFactor(0);
     },
@@ -638,7 +639,7 @@ PirateFunctionsPlugin.prototype = {
     },
 
     updateSailingDisplay: function () {
-        this.sailingGoldText.setText("Gold: " + Gold);
+        this.sailingText.setText("Gold: " + Gold);
     },
 
 

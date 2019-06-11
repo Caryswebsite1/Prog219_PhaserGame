@@ -86,12 +86,38 @@ class PirateSailing extends Phaser.Scene {
         this.add.image(500, 500, "bigWater");
 
 
+        // islands group
+        this.islands = this.physics.add.staticGroup();
+        let newChild = "";
+
+        newChild = this.islands.create(500, 500, "island1");
+        newChild.name = "island";
+
+        newChild = this.islands.create(100, 100, "island2");
+        newChild.name = "island";
+
+        newChild = this.islands.create(800, 100, "island3");
+        newChild.name = "island";
+
+        newChild = this.islands.create(100, 850, "island4");
+        newChild.name = "island";
+
+        newChild = this.islands.create(800, 850, "island5");
+        newChild.name = "island";
+
+
+
+
         //  Input Events
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // note: bring in PirateFunctions..
         this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
+
+        /* *********************************************************************
+         * *********** Player (Pirate Ship) Setup ***************************** 
+         * *********************************************************************/
 
         // make player (pirate ship)
         this.player = this.physics.add.sprite(300, 100, "ship");
@@ -135,48 +161,11 @@ class PirateSailing extends Phaser.Scene {
         });
 
 
+
+
         /* *****************************************************************************************
-         * *********************  Header and Hearts ************************************************
+         * *********************  Cargo and Hunter ships ******************************************
          * ***************************************************************************************** */
-
-
-
-
-
-
-        //this.scene.add.text(60, 64, 'hi');
-        //this.add.text(210, 10, "Food: "); //, this.style);
-        //this.text1.parseList(this.canoe);
-
-
-        // islands group
-        this.islands = this.physics.add.staticGroup();
-        let newChild = "";
-
-        newChild = this.islands.create(500, 500, "island1");
-        newChild.name = "island";
-
-        newChild = this.islands.create(100, 100, "island2");
-        newChild.name = "island";
-
-        newChild = this.islands.create(800, 100, "island3");
-        newChild.name = "island";
-
-        newChild = this.islands.create(100, 850, "island4");
-        newChild.name = "island";
-
-        newChild = this.islands.create(800, 850, "island5");
-        newChild.name = "island";
-
-
-
-        //this.add.image(500, 500, "island1");
-        //this.add.image(100, 100, "island2");
-        //this.add.image(800, 100, "island3");
-        //this.add.image(100, 850, "island4");
-        //this.add.image(800, 850, "island5");
-
-
 
 
         // cargo ships group
@@ -192,8 +181,30 @@ class PirateSailing extends Phaser.Scene {
         //       newChild = this.cargoShips.create(i, j, "cargoShipImg");
         //        newChild.name = "cargoShip";
 
+
+
         // Pirate Hunters group
         //this.pirateHunters = this.physics.add.group();
+
+
+
+
+
+        /* *****************************************************************************************
+         * *********************  Header and Hearts ************************************************
+         * ***************************************************************************************** */
+
+        this.sys.PirateFunctions.sailingTextFunction();
+
+
+
+
+        //this.scene.add.text(60, 64, 'hi');
+        //this.add.text(210, 10, "Food: "); //, this.style);
+        //this.text1.parseList(this.canoe);
+
+
+
 
 
         /* ************************************************************

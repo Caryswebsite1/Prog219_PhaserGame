@@ -15,7 +15,7 @@ let config = {
     }
   },
 
-  scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing]
+  scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing, PirateRetire]
 };
 
 console.log("in game.js");
@@ -23,15 +23,16 @@ let playerStartX = 200;
 let playerStartY = 280;
 
 // scene sleep checks
-let sleep1 = false;
-let sleep2 = false;
-let sleep3 = false;
-let sleep4 = false;
-let sleepShip = false;
-let sleepDeath = false;
-let sleepPirateIntro = false;
-let sleepPirate = false;
-let sleepTortuga = false;
+let sleep1 = true;
+let sleep2 = true;
+let sleep3 = true;
+let sleep4 = true;
+let sleepShip = true;
+let sleepDeath = true;
+let sleepPirateIntro = true;
+let sleepPirate = true;
+let sleepTortuga = true;
+let sleepRetire = true;
 
 // player life related
 let playerLife = 10;
