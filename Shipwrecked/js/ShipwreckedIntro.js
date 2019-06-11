@@ -137,23 +137,22 @@ class ShipwreckedIntro extends Phaser.Scene {
 
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 300, windowWidth: 960, locationX: 20, locationY: 502 });
+        this.dialogBox.init({ windowHeight: 300, windowWidth: 960, locationX: 20, locationY: 480 });
 
         // text for while we are loading up all the game stuff.
         this.introText = [];
-        this.introText[0] = "It was supposed to be an easy crossing..";
-        this.introText[1] = "But an unseasonable storm came upon us...";
-        this.introText[2] = "It was as if the ancient Greek God Poseidon had decide to punish us! ";
-        this.introText[3] = "The lightning set our ships on fire, the wind fanned the flames, and the waves crushed us..";
-        this.introText[4] = " ";
-        this.introText[5] = "A few of us managed to make it to a nearby island.";
-        this.introText[6] = "Alas! The island is infested with mad wild boar and the volcano is rumbling!";
-        this.introText[7] = "We must hurry and gather materials to make a ship to escape before the volcano explodes!";
-        this.introText[8] = " ";
-        this.introText[9] = "Use the arrow keys to move.  Use the mouse to interact with things. ";
-        this.introText[10] = "Beware the wild boar!  If you don't have a weapon, you are likely to get gored!";
-        this.introText[11] = "Click on the ship icon in the upper left of the first map to see what ship you can build.";
-        this.introText[12] = "The timer shows how much time left till the volcano explodes.  You don't want to be around for that!";
+        this.introText[0] = "It was supposed to be an easy crossing, but an unseasonable storm came upon us...";
+        this.introText[1] = "It was as if the ancient Greek God Poseidon had decided to punish us! ";
+        this.introText[2] = "The lightning set our ships on fire, the wind fanned the flames, and the waves crushed us..";
+        this.introText[3] = " ";
+        this.introText[4] = "A few of us managed to make it to a nearby island.";
+        this.introText[5] = "Alas! The island is infested with mad wild boar and the volcano is rumbling!";
+        this.introText[6] = "We must hurry and gather materials to make a ship to escape before the volcano explodes!";
+        this.introText[7] = " ";
+        this.introText[8] = "Use the arrow keys to move.  Use the mouse to interact with things. ";
+        this.introText[9] = "Beware the wild boar!  If you don't have a weapon, you are likely to get gored!";
+        this.introText[10] = "Click on the ship icon in the upper left of the first map to see what ship you can build.";
+        this.introText[11] = "The timer shows how much time left till the volcano explodes.  You don't want to be around for that!";
 
 
         /* ************************************************************
@@ -226,10 +225,11 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.setVisible(false, "DeathScene");
 
         // these are required here because we are merging our Pirate and Shipwrecked.
-        this.scene.setVisible("PirateIntro");
-        this.scene.setVisible("Tortuga");
-        this.scene.setVisible("PirateSailing");
+        this.scene.setVisible(false, "PirateIntro");
+        this.scene.setVisible(false, "Tortuga");
+        this.scene.setVisible(false, "PirateSailing");
 
+        
 
         // bring this intro scene up for input and display.
         this.scene.bringToTop("ShipwreckedIntro");
@@ -276,7 +276,7 @@ class ShipwreckedIntro extends Phaser.Scene {
                 // add Start button
                 let newChild = "";
                 this.StartGameBtn = this.physics.add.staticGroup();
-                newChild = this.StartGameBtn.create(500, 475, "StartBtn");
+                newChild = this.StartGameBtn.create(500, 455, "StartBtn");
                 newChild.name = "StartBtn";
                 newChild.setInteractive();
                 newChild.setScrollFactor(0);

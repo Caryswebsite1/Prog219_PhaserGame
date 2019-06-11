@@ -14,8 +14,8 @@ let config = {
       debug: false
     }
   },
- 
-    scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing]
+
+  scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing]
 };
 
 console.log("in game.js");
@@ -50,52 +50,52 @@ let Food = 1;
 
 //boats related.
 let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFood) {
-    this.crew = pCrew;
-    this.cargo = pCargo;
-    this.speed = pSpeed;
-    this.iron = pIron;
-    this.wool = pWool;
-    this.wood = pWood;
-    this.food = pFood;
-    this.gold = 0;
-    this.hitPoints = 0;
-    this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
-    this.maxCannon = 0;
-    this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
-    this.shipType = "";
+  this.crew = pCrew;
+  this.cargo = pCargo;
+  this.speed = pSpeed;
+  this.iron = pIron;
+  this.wool = pWool;
+  this.wood = pWood;
+  this.food = pFood;
+  this.gold = 0;
+  this.hitPoints = 0;
+  this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
+  this.maxCannon = 0;
+  this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
+  this.shipType = "";
 
 
-    switch (pCrew) {
-        case 1:
-            this.hitPoints = 10;
-            this.maxCannon = 1;
-            this.shipType = "Canoe";
-            break;
+  switch (pCrew) {
+    case 1:
+      this.hitPoints = 10;
+      this.maxCannon = 1;
+      this.shipType = "Canoe";
+      break;
 
-        case 15:
-            this.hitPoints = 150;
-            this.maxCannon = 3;
-            this.shipType = "Schooner";
-            break;
+    case 15:
+      this.hitPoints = 150;
+      this.maxCannon = 3;
+      this.shipType = "Schooner";
+      break;
 
-        case 30:
-            this.hitPoints = 300;
-            this.maxCannon = 8;
-            this.shipType = "Brig";
-            break;
+    case 30:
+      this.hitPoints = 300;
+      this.maxCannon = 8;
+      this.shipType = "Brig";
+      break;
 
-        case 50:
-            this.hitPoints = 500;
-            this.maxCannon = 20;
-            this.shipType = "Frigate";
-            break;
+    case 50:
+      this.hitPoints = 500;
+      this.maxCannon = 20;
+      this.shipType = "Frigate";
+      break;
 
-        default:
-            this.hitPoints = 10;
-            this.shipType = "Canoe";
-            break;
+    default:
+      this.hitPoints = 10;
+      this.shipType = "Default Error";
+      break;
 
-    }// end switch
+  }// end switch
 
 
 } // end boat constructor
@@ -107,6 +107,7 @@ let twoMaster = new BoatConstructor(30, 25, 50, 40, 25, 15, 30);    // Base hit 
 let fourMaster = new BoatConstructor(50, 60, 75, 80, 45, 35, 50);   // Base hit points: 500;
 
 let playerShip = "";  // to be filled in when player gets a ship!
+let IronPlateModifier = 0.1;   // damage taken multiplyer if player has Iron Plate.
 
 
 // volcano explode timer related

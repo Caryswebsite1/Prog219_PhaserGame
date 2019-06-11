@@ -130,7 +130,7 @@ class ShipConstruction extends Phaser.Scene {
         newChild.name = "ShipBackBtn";
         newChild.setInteractive();
 
- 
+
         //  Input Events
         // note: gameobjectdown handler should be in global plug in now.
         this.input.on('gameobjectdown', this.sys.globalFunctions.onGameObjectClicked, this);
@@ -177,7 +177,7 @@ class ShipConstruction extends Phaser.Scene {
 
         // ******* Boat Construction and Selection Texts  **************
         this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
-        
+
         //heading
         this.text1 = this.add.text(20, 120, 'Crew:', this.style);
         this.text2 = this.add.text(20, 150, 'Cargo:', this.style);
@@ -247,7 +247,7 @@ class ShipConstruction extends Phaser.Scene {
         // ***********  BUY BUTTON ETC..  **********
         this.buyButton = {
             font: "25px Courier",
-            fill: "#000",
+            fill: "#0a0",
             border: "5px solid red"
         };
 
@@ -296,7 +296,7 @@ class ShipConstruction extends Phaser.Scene {
         // call timer update:
         this.sys.globalFunctions.VolcanoTimer();
 
- 
+
     }// end update
 
 

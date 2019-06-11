@@ -53,46 +53,83 @@ PirateFunctionsPlugin.prototype = {
     // -----------------------------------------------------------
     cargoShipCombat(cargoShip) {
 
-    //    if (playerInventory.includes("Machete")) {
-    //        playerLife -= 1;
-    //        hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
-    //        hearts[playerLife].setScrollFactor(0);
-    //        this.HeadChopAudio.play();
-    //        this.dialogBox.setText("Take that boar!  Ha!");
-    //    } else {
+        // Check if player is in range.  If so then check if player
+        // has any cannon.  If so always get a shot with cannon.  
+        // Then if cargoship not sunk, check if this overlap, if so
+        // initiate hand to hand.  Eliminate cargo crew vs pirate crew.. 
+        // 1 pirate crew elim for every 10 cargo crew..??
+        // when cargo crew dead, cargo ship sinks, gold credited to player.
+        // 
+        // IF Not overlap, cargo ship shoots back.  Strength depends on cargoship size.
+        // canoe = 1 cannon, Schooner = 2 cannon, Brig = 4 cannon, Galleon = 10 cannon
+        // after return fire, check if player sunk.
+        // cargo ship will only return fire, never auto fire on player.
+        //
 
-    //        // no machete == Ouch Time! drop life by 5!
-    //        this.BoarAudio.play();
-    //        playerLife -= 5;
-    //        this.dialogBox.setText("ow! Ow! OW!  That Hurt!");
-    //    } // end else no machete 
+        // if player in range, shoot cannon!.
+        if (
+            (Math.abs((this.player.x - cargoShip.x)) <= 150) &&
+            (Math.abs((this.player.y - cargoShip.y)) <= 150)
+        ) {
 
-    //    // update hearts: 
-    //    this.sys.globalFunctions.updateHearts();
+            if (playerShip.cannon > 0) {
+                // #############  NEED TO DISPLAY PLAYER SHOOTING AND 
+                // play cannon shot audio
+                //############## Cargo Ship getting hit..
+                let damageToCargoShip = playerShip.cannon * 10;
+                cargoShip.hitPoints -= damageToCargoShip;
 
-    //    boar.disableBody(true, true);
-    //    Gold++;
-    //    Food++;
-    //    this.sys.globalFunctions.goldText.setText("Gold: " + Gold);
-    //    this.sys.globalFunctions.foodText.setText("Food: " + Food);
+                if (cargoShip.hitpoints <= 0) {
+                    // cargoShip sinks, player gets gold.
+                    Gold += cargoShip.gold;
+                    cargoShip.disableBody(true, true);
+                    this.updateSailingDisplay();
+                }
+                else {
+                    // cargoShip returns fire!
+                    // play cannon shot audio
+                    //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
+                    let damageToPlayer = cargoShip.cannon * 10;
 
-    //    if (playerLife <= 0) {
+                    // check for ironplate.
+                    if (playerShip.bIronPlate) {
+                        damageToPlayer = damageToPlayer * IronPlateModifier;
+                    }
 
-    //        // stop movement on screen
-    //        this.physics.pause();
+                    playerShip.hitPoints -= damageToPlayer;
+                    if (playerShip.hitPoints <= 0) {
+                        // Player Sinks!! Game over!!
+                        // play drowning audio
+                        // sink ship..
 
-    //        // turn player bloody red
-    //        thePlayer.setTint(0xff0000);
-    //        //this.playerLifeImg.setTexture("noHealth");
+                        //stop movement on screen
+                        this.physics.pause();
 
-    //        // force facing
-    //        thePlayer.anims.play("turn");
+                        this.updateSailingDisplay();
+                        this.gameOver = true;
+                        this.dialogBox.setText("Alas! You have died!");
+                        this.sys.PirateFunctions.PirateGameOver(this);
 
-    //        this.gameOver = true;
-    //        this.dialogBox.setText("Alas! You have died!");
-    //        this.sys.globalFunctions.ShipwreckedGameOver(this);
+                    }// end if player sinks
+                }// end cargoship returns fire
 
-    //    } // end if playerLife
+            }// end if player has cannon.
+            else {
+                // check for close range and if so, initiate hand to hand..
+                if (
+                    (Math.abs((this.player.x - cargoShip.x)) <= 25) &&
+                    (Math.abs((this.player.y - cargoShip.y)) <= 25)
+                ) {
+                    // #### Implement hand to hand if desired here.. #####
+
+                }
+
+            }// end else hand to hand 
+        }// end if in cannon range
+        else {
+            this.dialogBox.setText("I am too far away from that to do anything.");
+            console.log("NOPE NOT close enough!");
+        }
 
     }, // end cargoShipCombat
 
@@ -107,103 +144,147 @@ PirateFunctionsPlugin.prototype = {
     // -----------------------------------------------------------
     PirateHunterCombat: function (thePlayer, hunter) {
 
-    //    if (playerInventory.includes("Machete")) {
-    //        playerLife -= 1;
-    //        hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
-    //        hearts[playerLife].setScrollFactor(0);
-    //        this.HeadChopAudio.play();
-    //        this.dialogBox.setText("Take that boar!  Ha!");
-    //    } else {
+        // Check if player is in range.  If so then check if player
+        // has any cannon.  If so always get a shot with cannon.  
+        // Then if Hunter not sunk, check if this overlap, if so
+        // initiate hand to hand.  Eliminate Hunter crew vs pirate crew.. 
+        // 1 pirate crew elim for every 2 hunter crew..??
+        // when Hunter crew dead, Hunter ship sinks, gold credited to player.
+        // 
+        // IF Not overlap, Hunter ship shoots back.  Hunter Ships are always Frigates..
+        // Cannon = 20;
+        // after return fire, check if player sunk.
+        // Hunter ship will return fire, then if in range, will fire on player every 2 seconds.
+        //
 
-    //        // no machete == Ouch Time! drop life by 5!
-    //        this.BoarAudio.play();
-    //        playerLife -= 5;
-    //        this.dialogBox.setText("ow! Ow! OW!  That Hurt!");
-    //    } // end else no machete 
+        // if player in range, shoot cannon!.
+        if (
+            (Math.abs((this.player.x - hunter.x)) <= 150) &&
+            (Math.abs((this.player.y - hunter.y)) <= 150)
+        ) {
 
-    //    // update hearts: 
-    //    this.sys.globalFunctions.updateHearts();
+            if (playerShip.cannon > 0) {
+                // #############  NEED TO DISPLAY PLAYER SHOOTING AND 
+                // play cannon shot audio
+                //############## Cargo Ship getting hit..
+                let damageToHunter = playerShip.cannon * 10;
+                hunter.hitPoints -= damageToHunter;
 
-    //    boar.disableBody(true, true);
-    //    Gold++;
-    //    Food++;
-    //    this.sys.globalFunctions.goldText.setText("Gold: " + Gold);
-    //    this.sys.globalFunctions.foodText.setText("Food: " + Food);
+                if (hunter.hitpoints <= 0) {
+                    // cargoShip sinks, player gets gold.
+                    Gold += hunter.gold;
+                    hunter.disableBody(true, true);
+                    this.updateSailingDisplay();
+                }
+                else {
+                    // cargoShip returns fire!
+                    // play cannon shot audio
+                    //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
+                    let damageToPlayer = hunter.cannon * 10;
 
-    //    if (playerLife <= 0) {
+                    // check for ironplate.
+                    if (playerShip.bIronPlate) {
+                        damageToPlayer = damageToPlayer * IronPlateModifier;
+                    }
 
-    //        // stop movement on screen
-    //        this.physics.pause();
+                    playerShip.hitPoints -= damageToPlayer;
+                    if (playerShip.hitPoints <= 0) {
+                        // Player Sinks!! Game over!!
+                        // play drowning audio
+                        // sink ship..
 
-    //        // turn player bloody red
-    //        thePlayer.setTint(0xff0000);
-    //        //this.playerLifeImg.setTexture("noHealth");
+                        //stop movement on screen
+                        this.physics.pause();
 
-    //        // force facing
-    //        thePlayer.anims.play("turn");
+                        this.updateSailingDisplay();
+                        this.gameOver = true;
+                        this.dialogBox.setText("Alas! You have died!");
+                        this.sys.PirateFunctions.PirateGameOver(this);
 
-    //        this.gameOver = true;
-    //        this.dialogBox.setText("Alas! You have died!");
-    //        this.sys.globalFunctions.ShipwreckedGameOver(this);
+                    }// end if player sinks
+                }// end hunter returns fire
 
-    //    } // end if playerLife
+            }// end if player has cannon.
+            else {
+                // check for close range and if so, initiate hand to hand..
+                if (
+                    (Math.abs((this.player.x - hunter.x)) <= 25) &&
+                    (Math.abs((this.player.y - hunter.y)) <= 25)
+                ) {
+                    // #### Implement hand to hand if desired here.. #####
+
+                }
+
+            }// end else hand to hand 
+        }// end if in cannon range
+        else {
+            this.dialogBox.setText("I am too far away from that to do anything.");
+            console.log("NOPE NOT close enough!");
+        }
 
     }, // end PirateHunterCombat
 
 
     // ---------------------------------------------------------
-    // PirateHunterAttack(thePlayer, hunter)
+    // HunterAttack(thePlayer, hunter)
     //
     // Description: Handler for when Pirate Hunter attacks the player
     // from range.  Started if the player gets too close to the
-    // Pirate Hunter, regardless if the player attacks..
-    // Will not be active if the Pirate Hunter's ship overlaps
-    // the player's.  In that case, see PirateHunterCombat.
-   // -----------------------------------------------------------
-    PirateHunterAttack: function (thePlayer, hunter) {
+    // Pirate Hunter and stays in range for 2 seconds.  
+    // Will be active if the Pirate Hunter's ship overlaps
+    // the player's. See also PirateHunterCombat.
+    // -----------------------------------------------------------
+    HunterAttack: function (thePlayer, hunter) {
 
-        //    if (playerInventory.includes("Machete")) {
-        //        playerLife -= 1;
-        //        hearts[playerLife] = this.add.image((20 + (playerLife * 18)), 50, 'blankHeart');
-        //        hearts[playerLife].setScrollFactor(0);
-        //        this.HeadChopAudio.play();
-        //        this.dialogBox.setText("Take that boar!  Ha!");
-        //    } else {
+        // Hunter shoots player at range.  
+        // Then if player not sunk, check if this overlap, if so
+        // initiate hand to hand.  Eliminate Hunter crew vs pirate crew.. 
+        // 1 pirate crew elim for every 2 hunter crew..??
+        // when Hunter crew dead, Hunter ship sinks, no gold on hunter ships.
+        // if pirate crew dead, player ship sinks, end of game.
+        // 
+        // IF Not overlap, up to player to shoot back.  Not automatic.
+        // Hunter Ships are always Frigates..
+        // Cannon = 20;
 
-        //        // no machete == Ouch Time! drop life by 5!
-        //        this.BoarAudio.play();
-        //        playerLife -= 5;
-        //        this.dialogBox.setText("ow! Ow! OW!  That Hurt!");
-        //    } // end else no machete 
+        // If this gets called, player was in range long enough.
 
-        //    // update hearts: 
-        //    this.sys.globalFunctions.updateHearts();
+        // hunter fires on Player:
+        // play cannon shot audio
+        //###############  DISPLAY Hunter FIREING AND PLAYER GETTING HIT
+        let damageToPlayer = hunter.cannon * 10;
 
-        //    boar.disableBody(true, true);
-        //    Gold++;
-        //    Food++;
-        //    this.sys.globalFunctions.goldText.setText("Gold: " + Gold);
-        //    this.sys.globalFunctions.foodText.setText("Food: " + Food);
+        // check for ironplate.
+        if (playerShip.bIronPlate) {
+            damageToPlayer = damageToPlayer * IronPlateModifier;
+        }
 
-        //    if (playerLife <= 0) {
+        playerShip.hitPoints -= damageToPlayer;
+        if (playerShip.hitPoints <= 0) {
+            // Player Sinks!! Game over!!
+            // play drowning audio
+            // sink ship..
 
-        //        // stop movement on screen
-        //        this.physics.pause();
+            //stop movement on screen
+            this.physics.pause();
 
-        //        // turn player bloody red
-        //        thePlayer.setTint(0xff0000);
-        //        //this.playerLifeImg.setTexture("noHealth");
+            this.updateSailingDisplay();
+            this.gameOver = true;
+            this.dialogBox.setText("Alas! You have died!");
+            this.sys.PirateFunctions.PirateGameOver(this);
 
-        //        // force facing
-        //        thePlayer.anims.play("turn");
+        }// end if player sinks
 
-        //        this.gameOver = true;
-        //        this.dialogBox.setText("Alas! You have died!");
-        //        this.sys.globalFunctions.ShipwreckedGameOver(this);
+        // check for close range and if so, initiate hand to hand..
+        if (
+            (Math.abs((this.player.x - hunter.x)) <= 25) &&
+            (Math.abs((this.player.y - hunter.y)) <= 25)
+        ) {
+            // #### Implement hand to hand if desired here.. #####
 
-        //    } // end if playerLife
+        }
 
-    }, // end PirateHunterAttack
+    }, // end HunterAttack
 
 
 
@@ -390,7 +471,11 @@ PirateFunctionsPlugin.prototype = {
             case "buyCanoeWGold":
                 if (Gold >= 3) {
                     Gold -= 3;
-                    playerShip = new BoatConstructor(1, 5, 25, 0, 0, 0, 0);;
+                    playerShip = new BoatConstructor(1, 5, 25, 0, 0, 0, 0);
+
+                    // update display
+                    this.sys.PirateFunctions.updateTortugaDisplay();
+
                 }
                 else {
                     this.dialogBox.setText("You don't have enough Gold for a Canoe!");
@@ -401,7 +486,11 @@ PirateFunctionsPlugin.prototype = {
             case "buySchoonerWGold":
                 if (Gold >= 50) {
                     Gold -= 50;
-                    playerShip = new BoatConstructor(15, 10, 40, 0, 0, 0, 0);;
+                    playerShip = new BoatConstructor(15, 10, 40, 0, 0, 0, 0);
+
+                    // update display
+                    this.sys.PirateFunctions.updateTortugaDisplay();
+
                 }
                 else {
                     this.dialogBox.setText("You don't have enough Gold for a Schooner!");
@@ -412,7 +501,11 @@ PirateFunctionsPlugin.prototype = {
             case "buyBrigWGold":
                 if (Gold >= 500) {
                     Gold -= 500;
-                    playerShip = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);;
+                    playerShip = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
+
+                    // update display
+                    this.sys.PirateFunctions.updateTortugaDisplay();
+
                 }
                 else {
                     this.dialogBox.setText("You don't have enough Gold for a Brig!");
@@ -423,7 +516,11 @@ PirateFunctionsPlugin.prototype = {
             case "buyFrigateWGold":
                 if (Gold >= 1000) {
                     Gold -= 1000;
-                    playerShip = new BoatConstructor(50, 60, 75,0, 0, 0, 0);
+                    playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
+
+                    // update display
+                    this.sys.PirateFunctions.updateTortugaDisplay();
+
                 }
                 else {
                     this.dialogBox.setText("You don't have enough Gold for a Frigate!");
@@ -455,6 +552,10 @@ PirateFunctionsPlugin.prototype = {
                     if (Gold >= cost) {
                         Gold -= cost;
                         playerShip.bIronPlate = true;
+
+                        // update display
+                        this.sys.PirateFunctions.updateTortugaDisplay();
+
                     }
                     else {
                         this.dialogBox.setText("You don't have enough Gold for Iron Plate!");
@@ -475,6 +576,10 @@ PirateFunctionsPlugin.prototype = {
                         // have gold and room. ok to buy.
                         Gold -= 5;
                         playerShip.cannon += 1;
+
+                        // update display
+                        this.sys.PirateFunctions.updateTortugaDisplay();
+
                     }
                     else {
                         this.dialogBox.setText("There isn't room for more cannon!");
@@ -506,11 +611,17 @@ PirateFunctionsPlugin.prototype = {
         this.sailingGoldText.setScrollFactor(0);
     },
 
-    tortugaGoldTextFunction: function () {
+    tortugaTextFunction: function () {
         TortugaStyle = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
 
         this.tortugaGoldText = this.scene.add.text(220, 20, "Gold: " + Gold, TortugaStyle);
         this.tortugaGoldText.setScrollFactor(0);
+
+        this.tortugaPlayerShipText = this.scene.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, TortugaStyle);
+        this.tortugaPlayerShipText.setScrollFactor(0);
+
+        this.tortugaShipCannonText = this.scene.add.text(20, 430, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), TortugaStyle);
+        this.tortugaShipCannonText.setScrollFactor(0);
 
     },
 
@@ -521,6 +632,9 @@ PirateFunctionsPlugin.prototype = {
     ************************************************************************************************************ */
     updateTortugaDisplay: function () {
         this.tortugaGoldText.setText("Gold: " + Gold);
+        this.tortugaPlayerShipText.setText('Current Ship: ' + playerShip.shipType);
+        this.tortugaShipCannonText.setText('Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon));
+
     },
 
     updateSailingDisplay: function () {

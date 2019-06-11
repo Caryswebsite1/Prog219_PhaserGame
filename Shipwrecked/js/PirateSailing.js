@@ -1,4 +1,5 @@
-// JavaScript source code
+/* eslint-disable indent */
+
 class PirateSailing extends Phaser.Scene {
     constructor() {
         super({ key: "PirateSailing" });
@@ -88,14 +89,16 @@ class PirateSailing extends Phaser.Scene {
         //  Input Events
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // note: gameobjectdown handler should be in global plug in now.
+        // note: bring in PirateFunctions..
         this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
 
+        // make player (pirate ship)
         this.player = this.physics.add.sprite(300, 100, "ship");
-        this.player.setCollideWorldBounds(true);
+        this.player.setScale(0.4);
 
         this.cameras.main.startFollow(this.player);
+
 
         this.anims.create({
             key: "shipDown",
@@ -177,7 +180,7 @@ class PirateSailing extends Phaser.Scene {
 
 
         // cargo ships group
-        this.cargoShips = this.physics.add.group();
+        //this.cargoShips = this.physics.add.group();
         //{
         //    key: "cargoShip",
         //    repeat: 6,
@@ -190,12 +193,12 @@ class PirateSailing extends Phaser.Scene {
         //        newChild.name = "cargoShip";
 
         // Pirate Hunters group
-        this.pirateHunters = this.physics.add.group();
+        //this.pirateHunters = this.physics.add.group();
 
 
-     /* ************************************************************
-      * ************** Colliders Section ***************************
-      * ************************************************************ */
+        /* ************************************************************
+         * ************** Colliders Section ***************************
+         * ************************************************************ */
 
         // collide with world:
         this.player.setCollideWorldBounds(true);
@@ -221,7 +224,7 @@ class PirateSailing extends Phaser.Scene {
         //this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
 
         //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
-       // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
+        // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
 
 
     } // end create
@@ -248,18 +251,18 @@ class PirateSailing extends Phaser.Scene {
         }
 
 
-        //console.log("Doing update 2");
+
         if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-100);
+            this.player.setVelocityX(-playerShip.speed);
             this.player.anims.play("shipleft", true);
         } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(100);
+            this.player.setVelocityX(playerShip.speed);
             this.player.anims.play("shipright", true);
         } else if (this.cursors.up.isDown) {
-            this.player.setVelocityY(-100);
+            this.player.setVelocityY(-playerShip.speed);
             this.player.anims.play("shipUp", true);
         } else if (this.cursors.down.isDown) {
-            this.player.setVelocityY(100);
+            this.player.setVelocityY(playerShip.speed);
             this.player.anims.play("shipDown", true);
         } else {
             this.player.setVelocityX(0);
@@ -269,6 +272,8 @@ class PirateSailing extends Phaser.Scene {
 
         this.checkForHunterSpawn();
         this.checkForCargoShipSpawn();
+
+        this.checkForHunterAttack();
 
     } // end update
 
@@ -281,23 +286,55 @@ class PirateSailing extends Phaser.Scene {
     // the hunter in a random location.
     // -----------------------------------------------------------
     checkForHunterSpawn() {
-        let currentTime = Date.now();
+        // let currentTime = Date.now();
 
-        if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
-            // spawn hunter!
-            let locX = Math.random() * 1000;
-            let locY = Math.random() * 1000;
+        // if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
+        //     // spawn hunter!
+        //     let locX = Math.random() * 1000;
+        //     let locY = Math.random() * 1000;
 
-            let newChild = "";
+        //     let newChild = "";
 
-            newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
-            newChild.name = "pirateHunter";
+        //     // newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
+        //     // newChild.name = "pirateHunter";
 
-            // reset timer.
-            this.hunterStartTime = Date.now();
-        }// end if time to spawn hunter.
+        //     // reset timer.
+        //     this.hunterStartTime = Date.now();
+        // }// end if time to spawn hunter.
 
     }// end check for hunter spawn.
+
+
+
+    // ---------------------------------------------------------
+    // checkForHunterAttack()
+    //
+    // Description: checks to see if a player is too close to a Hunter.  
+    // If so, HunterAttack timer starts and Hunter Attack flag set.
+    // If the Attack Flag is set, and timer is over 2 seconds (2000), 
+    // then calls HunterAttack().  
+    // If the player is not in range of a Hunter, then Attack Flag is set
+    // to false and timer cleared. 
+    // -----------------------------------------------------------
+    checkForHunterAttack() {
+        // let currentTime = Date.now();
+
+        // if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
+        //     // spawn hunter!
+        //     let locX = Math.random() * 1000;
+        //     let locY = Math.random() * 1000;
+
+        //     let newChild = "";
+
+        //     newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
+        //     newChild.name = "pirateHunter";
+
+        //     // reset timer.
+        //     this.hunterStartTime = Date.now();
+        // }// end if time to spawn hunter.
+
+    }// end check for hunter spawn.
+
 
 
     // ---------------------------------------------------------
@@ -309,6 +346,12 @@ class PirateSailing extends Phaser.Scene {
     // destination.
     // -----------------------------------------------------------
     checkForCargoShipSpawn() {
+
+        // if (
+        //     (Math.abs((this.player.x - hunter.x)) <= 150) &&
+        //     (Math.abs((this.player.y - hunter.y)) <= 150)
+        // ) {
+
         //let currentTime = Date.now();
 
         //if ((currentTime - hunterStartTime) >= this.hunterSpawnTime) {
@@ -326,7 +369,6 @@ class PirateSailing extends Phaser.Scene {
         //}// end if time to spawn hunter.
 
     }// end checkForCargoShipSpawn
-
 
 
 

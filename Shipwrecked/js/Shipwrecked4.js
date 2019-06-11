@@ -77,7 +77,7 @@ class Shipwrecked4 extends Phaser.Scene {
         this.load.audio('HeadChopSound', ['assets/audio/BloodyHeadChop.mp3']);
         this.load.audio('ChopWoodSound', ['assets/audio/ChopWood.mp3']);
         this.load.audio('JungleChopSound', ['assets/audio/JungleChop.mp3']);
-        this.load.audio('PickAxeSound', ['assets/audio/PickAxe.mp3']);
+        this.load.audio('PickAxeSound', ['assets/audio/Pickaxe.mp3']);
         this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
         this.load.audio('HallelujahSound', ['assets/audio/Hallelujah.mp3']);
 
@@ -163,9 +163,9 @@ class Shipwrecked4 extends Phaser.Scene {
         this.SizzlingAudio.pause();
 
 
-       /* *********************************************************************
-        * *********** Main Map Setup ******************************************* 
-        * *********************************************************************/
+        /* *********************************************************************
+         * *********** Main Map Setup ******************************************* 
+         * *********************************************************************/
 
         // loop variables
         let i = 0;
@@ -194,7 +194,7 @@ class Shipwrecked4 extends Phaser.Scene {
         this.Volcano.create(874, 236, "VolcanoB4");
         this.Volcano.create(831, 303, "VolcanoB5");
         this.Volcano.create(825, 373, "VolcanoB6");
-        
+
         // ****** rocky slope.. *******
         this.add.image(660, 470, "RockyImg");
 
@@ -218,7 +218,7 @@ class Shipwrecked4 extends Phaser.Scene {
             console.log("while map4 IronOre loop");
             while (tiles <= maxTiles) {
                 rand = Math.floor(Math.random() * 4);
-                
+
                 switch (rand) {
                     case 0:
                         console.log("Iron1");
@@ -250,19 +250,19 @@ class Shipwrecked4 extends Phaser.Scene {
 
                 // randomize x placement some.
                 if (rand < 1) { rand = 1 }
-                i += 32*rand;
+                i += 32 * rand;
                 tiles += 1;
                 // if we are now over the water... kick out of loop
                 if (i > 800) {
                     tiles = maxTiles + 1;
                 }
             } // end while tiles
-            
+
             tiles = 0;
 
             // shift Y placement slightly
             if (jRows === 1 || jRows === 3)
-            xStart += 20;
+                xStart += 20;
             i = xStart;
             j += 45;
             jRows += 1;
@@ -285,7 +285,7 @@ class Shipwrecked4 extends Phaser.Scene {
         // ********* Jungle ******************
         this.theJungle = this.physics.add.staticGroup();
 
-         // from top left to volcano on right with a tree of overlap or so.
+        // from top left to volcano on right with a tree of overlap or so.
         newChild = "";
         maxTiles = 7;
         tiles = 0;
@@ -295,7 +295,7 @@ class Shipwrecked4 extends Phaser.Scene {
         i = xStart;
         j = 0;
 
-       
+
         while (jRows < maxRows) {
             console.log("while top map4 loop");
             while (tiles <= maxTiles) {
@@ -359,7 +359,7 @@ class Shipwrecked4 extends Phaser.Scene {
                 i += 64;
                 tiles += 1;
                 // hole in last row..
-                if (jRows == (maxRows - 1 )) {
+                if (jRows == (maxRows - 1)) {
                     if (tiles == 2) {
                         tiles += 2;
                         i += 128;
@@ -377,7 +377,7 @@ class Shipwrecked4 extends Phaser.Scene {
 
 
 
-         // Left edge by sheep in map 1
+        // Left edge by sheep in map 1
         maxTiles = 1;
         tiles = 0;
         maxRows = 7;
@@ -517,7 +517,7 @@ class Shipwrecked4 extends Phaser.Scene {
         // no speed now. will give random speed and direction in update
 
 
-         //Sheep: try to restrict to green grass.
+        //Sheep: try to restrict to green grass.
         let newSheep = "";
         this.sheepHerd = this.physics.add.group();
         for (j = 280; j < 400; j += 60) {
@@ -579,7 +579,7 @@ class Shipwrecked4 extends Phaser.Scene {
             i = xStart;
             // shift starting x placement slightly for these rows
             if (jRows === 1 || jRows === 3)
-                i+= 20;
+                i += 20;
             j += 45;
             jRows += 1;
         } // end while j
@@ -782,7 +782,7 @@ class Shipwrecked4 extends Phaser.Scene {
         //  We -400 because the camera width is 800px and
         //  we want the center of the camera on the player, not the left-hand side of it
         //this.cameras.main.scrollX = this.player.x - 400;
-       // this.cameras.main.scrollY = this.player.y - 300;
+        // this.cameras.main.scrollY = this.player.y - 300;
 
 
         /* ***************************************************

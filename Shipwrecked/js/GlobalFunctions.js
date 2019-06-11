@@ -414,8 +414,9 @@ GlobalFunctionsPlugin.prototype = {
                 playerStartY = this.player.y;
 
 
-                this.scene.setActive(false);
+
                 this.scene.setVisible(false);
+                this.scene.setActive(false);
                 this.scene.sleep();
                 this.setSleepFlag(true);
 
@@ -699,11 +700,6 @@ GlobalFunctionsPlugin.prototype = {
                 this.ThunderStormAudio2.stop();
                 this.ThunderStormAudio3.stop();
 
-                // std close out code that doesn't hardly work...
-                this.scene.setActive(false);
-                this.scene.setVisible(false);
-                this.scene.sleep();
-
                 // use manager to remove us.
                 this.scene.manager.remove("ShipwreckedIntro");
 
@@ -908,7 +904,7 @@ GlobalFunctionsPlugin.prototype = {
 
                 this.ShipwreckedGameOver(this.scene, true);
                 // stop earthquake audio...
-           }
+            }
         }// end if game started. 
 
     }, // end VolcanoTimer

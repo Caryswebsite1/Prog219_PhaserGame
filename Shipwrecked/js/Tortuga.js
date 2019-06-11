@@ -67,7 +67,7 @@ class Tortuga extends Phaser.Scene {
         //####### FOR TESTING #######################
         //################################################
 
-        playerShip = fourMaster;
+        playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
         playerShip.gold = 600;
         playerShip.iron = 10;
         playerShip.wool = 10;
@@ -129,14 +129,14 @@ class Tortuga extends Phaser.Scene {
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-        this.sys.PirateFunctions.tortugaGoldTextFunction();
+        this.sys.PirateFunctions.tortugaTextFunction();
 
 
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
         console.log("in tortuga create, ship hitpoints are: " + playerShip.hitPoints);
-       // this.sys.globalFunctions.updateHearts();
+        // this.sys.globalFunctions.updateHearts();
 
 
         /* ************************************************************
@@ -157,7 +157,7 @@ class Tortuga extends Phaser.Scene {
 
         //heading
         this.text1 = this.add.text(20, 20, 'Tortuga Port: ', this.style);
-        this.text2 = this.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, this.style);
+        //this.text2 = this.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, this.style);
         this.text3 = this.add.text(20, 50, 'Buy a New Ship with Gold!', this.style);
 
         this.text4 = this.add.text(100, 90, 'Canoe', this.style);
@@ -167,7 +167,7 @@ class Tortuga extends Phaser.Scene {
         this.text8 = this.add.text(20, 110, "---------------------------------------------",
             this.style);
 
-        this.text9 =this.add.text(20, 130, 'Cost:', this.style);
+        this.text9 = this.add.text(20, 130, 'Cost:', this.style);
         this.text10 = this.add.text(120, 130, '3', this.style);
         this.text11 = this.add.text(240, 130, '50', this.style);
         this.text12 = this.add.text(350, 130, '500', this.style);
@@ -240,7 +240,7 @@ class Tortuga extends Phaser.Scene {
         this.text31 = this.add.text(20, 410, "---------------------------------------------",
             this.style);
 
-        this.text32 = this.add.text(20, 430, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), this.style);
+        //this.text32 = this.add.text(20, 430, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), this.style);
 
         // buy cannon button
         this.buyCannon = this.add.text(200, 460, 'Buy a Cannon', this.buyShipButton);
@@ -335,12 +335,32 @@ class Tortuga extends Phaser.Scene {
 
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
-        this.sys.PirateFunctions.updateTortugaDisplay();
+        //this.sys.PirateFunctions.updateTortugaDisplay();
 
         console.log('attempting to resume audio in tortuga.');
         // set island ambiance
         //this.OceanAudio.resume();
         //this.JungleAudio.resume();
+
+
+
+        // #########################################
+        //####### FOR TESTING #######################
+        //################################################
+
+        playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
+        playerShip.gold = 600;
+        playerShip.iron = 10;
+        playerShip.wool = 10;
+        playerShip.wood = 0;
+        playerShip.food = 0;
+
+        Gold = 620;
+
+        console.log("in Tortuga Wake.  Ship Type: " + playerShip.shipType);
+        // #################### End for testing ####################
+
+        this.sys.PirateFunctions.updateTortugaDisplay();
 
     }
 
