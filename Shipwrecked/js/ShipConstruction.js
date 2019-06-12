@@ -61,7 +61,7 @@ class ShipConstruction extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('GlobalFunctionsPlugin');
-        console.log("from ShipConstruction")
+        console.log("from ShipConstruction");
         console.log(this.sys.globalFunctions);
 
 

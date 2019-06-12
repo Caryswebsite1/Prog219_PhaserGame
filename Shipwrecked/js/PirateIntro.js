@@ -58,21 +58,21 @@ class PirateIntro extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('PirateFunctionsPlugin');
-        console.log("from PirateIntro")
+        console.log("from PirateIntro");
         console.log(this.sys.PirateFunctions);
 
         // #########################################
         //####### FOR TESTING #######################
         //################################################
 
-        playerShip = fourMaster;
-        playerShip.gold = 600;
-        playerShip.iron = 10;
-        playerShip.wool = 10;
-        playerShip.wood = 0;
-        playerShip.food = 0;
+        //playerShip = fourMaster;
+        //playerShip.gold = 600;
+        //playerShip.iron = 10;
+        //playerShip.wool = 10;
+        //playerShip.wood = 0;
+        //playerShip.food = 0;
 
-        Gold = 620;
+        //Gold = 620;
         // #################### End for testing ####################
 
 
@@ -149,29 +149,35 @@ class PirateIntro extends Phaser.Scene {
         //    "  Everything but the gold was sold to provide funds for this next adventure!  Your Gold total has been updated.", false);
 
 
+
+        // ##################### NOTE: ############################################
+        // ### IF STAND ALONE THIS SECTION SHOULD BE UNCOMMENTED AND ONWAKE PART COMMENTED OUT ######
+        //#############################################################################################
+
+
         // ******* Intro to Tortuga Texts  **************
-        this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+        //this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
 
-        //heading
-        this.text1 = this.add.text(20, 20, 'Welcome to Tortuga! ', this.style);
-        this.text1 = this.add.text(350, 20, 'Current Gold: ' + Gold, this.style);
-        this.text2 = this.add.text(20, 50, 'You have a ' + playerShip.shipType, this.style);
-        this.text2 = this.add.text(20, 70, 'You were able to bring the following to port:', this.style);
-        this.text3 = this.add.text(20, 90, 'Gold: ' + playerShip.gold, this.style);
+        ////heading
+        //this.text1 = this.add.text(20, 20, 'Welcome to Tortuga! ', this.style);
+        //this.text1 = this.add.text(350, 20, 'Current Gold: ' + Gold, this.style);
+        //this.text2 = this.add.text(20, 50, 'You have a ' + playerShip.shipType, this.style);
+        //this.text2 = this.add.text(20, 70, 'You were able to bring the following to port:', this.style);
+        //this.text3 = this.add.text(20, 90, 'Gold: ' + playerShip.gold, this.style);
 
-        this.text4 = this.add.text(20, 110, 'Iron: ' + playerShip.iron, this.style);
-        this.text5 = this.add.text(20, 130, 'Wool: ' + playerShip.wool, this.style);
-        this.text6 = this.add.text(20, 150, 'Wood: ' + playerShip.wood, this.style);
-        this.text7 = this.add.text(20, 170, 'Food: ' + playerShip.food, this.style);
-        this.text8 = this.add.text(20, 190, "---------------------------------------------",
-            this.style);
+        //this.text4 = this.add.text(20, 110, 'Iron: ' + playerShip.iron, this.style);
+        //this.text5 = this.add.text(20, 130, 'Wool: ' + playerShip.wool, this.style);
+        //this.text6 = this.add.text(20, 150, 'Wood: ' + playerShip.wood, this.style);
+        //this.text7 = this.add.text(20, 170, 'Food: ' + playerShip.food, this.style);
+        //this.text8 = this.add.text(20, 190, "---------------------------------------------",
+        //    this.style);
 
-        this.text9 = this.add.text(20, 210, 'Everything but your ship and the gold was sold', this.style);
-        this.text9 = this.add.text(20, 230, 'to provide funds for your next adventure!', this.style);
-        this.text10 = this.add.text(20, 250, 'Your Gold total has been updated.', this.style);
+        //this.text9 = this.add.text(20, 210, 'Everything but your ship and the gold was sold', this.style);
+        //this.text9 = this.add.text(20, 230, 'to provide funds for your next adventure!', this.style);
+        //this.text10 = this.add.text(20, 250, 'Your Gold total has been updated.', this.style);
 
-        this.text14 = this.add.text(20, 270, "---------------------------------------------",
-            this.style);
+        //this.text14 = this.add.text(20, 270, "---------------------------------------------",
+        //    this.style);
 
 
         // Continue to Tortuga!
@@ -300,11 +306,57 @@ class PirateIntro extends Phaser.Scene {
         //this.sys.PirateFunctions.updateGoldDisplay();
 
         console.log('attempting to resume audio in Pirate Intro.');
+
+        //checking whats going on here... player ship doesn't seem to make it.
+        console.log('In PirateIntro onWake. Player Ship Type: ' + playerShip.shipType);
+
         // set island ambiance
         //this.OceanAudio.resume();
         //this.JungleAudio.resume();
 
-    }
+
+        //############################  NOTE  ####################################################################
+        // because this scene is created before the player ship is set, we have to have the main dialog
+        // texts set up here in the onwake, which presumeably happens after the player ship is set.
+
+
+        // first calculate New player Gold total from ship contents:
+        Gold += playerShip.gold;
+        Gold += (playerShip.iron / 3);
+        Gold += (playerShip.wool / 5);
+        Gold += (playerShip.wood / 8);
+        Gold += (playerShip.food / 10);
+
+
+
+
+        // ******* Intro to Tortuga Texts  **************
+        this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+
+        //heading
+        this.text1 = this.add.text(20, 20, 'Welcome to Tortuga! ', this.style);
+        this.text1 = this.add.text(350, 20, 'Current Gold: ' + Gold, this.style);
+        this.text2 = this.add.text(20, 50, 'You have a ' + playerShip.shipType, this.style);
+        this.text2 = this.add.text(20, 70, 'You were able to bring the following to port:', this.style);
+        this.text3 = this.add.text(20, 90, 'Gold: ' + playerShip.gold, this.style);
+
+        this.text4 = this.add.text(20, 110, 'Iron: ' + playerShip.iron, this.style);
+        this.text5 = this.add.text(20, 130, 'Wool: ' + playerShip.wool, this.style);
+        this.text6 = this.add.text(20, 150, 'Wood: ' + playerShip.wood, this.style);
+        this.text7 = this.add.text(20, 170, 'Food: ' + playerShip.food, this.style);
+        this.text8 = this.add.text(20, 190, "---------------------------------------------",
+            this.style);
+
+        this.text9 = this.add.text(20, 210, 'Everything but your ship and the gold was sold', this.style);
+        this.text9 = this.add.text(20, 230, 'to provide funds for your next adventure!', this.style);
+        this.text10 = this.add.text(20, 250, 'Your Gold total has been updated.', this.style);
+
+        this.text14 = this.add.text(20, 270, "---------------------------------------------",
+            this.style);
+
+
+
+    }// end onwake.
 
 
 } // end class Tortuga

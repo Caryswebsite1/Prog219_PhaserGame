@@ -97,7 +97,7 @@ class Shipwrecked3 extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('GlobalFunctionsPlugin');
-        console.log("from 3")
+        console.log("from 3");
         console.log(this.sys.globalFunctions);
 
         this.events.on('wake', this.onWake, this);

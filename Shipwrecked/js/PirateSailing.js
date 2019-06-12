@@ -7,6 +7,12 @@ class PirateSailing extends Phaser.Scene {
         this.gameOver = false;
         this.hunterStartTime = Date.now();
         this.hunterSpawnTime = 60000;   // one hunter every min.
+        this.hunterAttackTime = 1000;  // if a hunter is in range for 1 second, they attack!
+
+        // sail times, actually based on number of update calls between, not actual miliseconds etc.
+        this.hunterSailTime = 150; // current elapsed hunter sail time.  Set to max to force move at start.
+        this.maxHunterSail = 150; // max allowed hunter sail time before new direction set.
+
     } // end constructor
 
 
@@ -24,7 +30,7 @@ class PirateSailing extends Phaser.Scene {
 
         // plugins:
         this.load.plugin('DialogModalPlugin', './js/dialog_plugin.js');
-        this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
+        //this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
 
         // main images
         this.load.image("island1", "assets/island1.png");
@@ -35,6 +41,9 @@ class PirateSailing extends Phaser.Scene {
 
         this.load.image("bigWater", "assets/ocean.jpg");
 
+        this.load.image("hunterImg", "assets/boarhit.png");
+
+
         this.load.spritesheet("ship", "assets/pirateShip.png", { frameWidth: 80, frameHeight: 95 });
 
 
@@ -42,6 +51,11 @@ class PirateSailing extends Phaser.Scene {
         // this.load.image("singleHeart", "assets/singleHeart16.png");
         // this.load.image("blankHeart", "assets/blankHeart16.png");
 
+        // Audio: 
+        //Really should have.ogg too.
+        // Notes: instances allows for the given number of multiple simultainous plays of the same item.
+        // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
+        this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
 
     } // end preload
 
@@ -62,10 +76,9 @@ class PirateSailing extends Phaser.Scene {
         this.sys.install('DialogModalPlugin');
         console.log(this.sys.dialogModal);
 
-        this.sys.install('PirateFunctionsPlugin');
-        console.log("from PirateSailing")
-        console.log(this.sys.PirateFunctions);
-
+        //this.sys.install('PirateFunctionsPlugin');
+        //console.log("from PirateSailing");
+        //console.log(this.sys.PirateFunctions);
 
         this.events.on('wake', this.onWake, this);
 
@@ -75,6 +88,17 @@ class PirateSailing extends Phaser.Scene {
         // set actual camera width and height for what we see.
         //this.cameras.main.setSize(1000, 1000);
         this.cameras.main.setSize(500, 400);
+
+
+
+        // Sailing audios
+        this.OceanAudio = this.sound.add('OceanSound');
+
+
+        // set Sailing ambiance
+        this.OceanAudio.volume = 0.4;
+        this.OceanAudio.play({ loop: true });
+        this.OceanAudio.pause();
 
 
         /* *********************************************************************
@@ -112,8 +136,7 @@ class PirateSailing extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // note: bring in PirateFunctions..
-        this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
-
+        //this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
         /* *********************************************************************
          * *********** Player (Pirate Ship) Setup ***************************** 
@@ -176,7 +199,7 @@ class PirateSailing extends Phaser.Scene {
         //    setXY: { x: 150, y: 50, stepX: 150, stepY: 150 }
         //});
 
-        //let newChild = "";
+        //newChild = "";
 
         //       newChild = this.cargoShips.create(i, j, "cargoShipImg");
         //        newChild.name = "cargoShip";
@@ -184,8 +207,23 @@ class PirateSailing extends Phaser.Scene {
 
 
         // Pirate Hunters group
-        //this.pirateHunters = this.physics.add.group();
+        this.pirateHunters = this.physics.add.group();
 
+        /* ######################  TEST CODE ##############################
+         * ###################################################################
+         */
+
+        // hunter ships all Brigs..
+        newChild = "";
+
+        newChild = this.pirateHunters.create(300, 300, "hunterImg");
+        newChild.name = "hunterShip";
+        newChild.Ship = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
+        newChild.Ship.cannon = 8;
+
+        /* ######################   END TEST CODE ##############################
+         * ###################################################################
+         */
 
 
 
@@ -194,7 +232,7 @@ class PirateSailing extends Phaser.Scene {
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-        this.sys.PirateFunctions.sailingTextFunction();
+        //this.sys.PirateFunctions.sailingTextFunction();
 
 
 
@@ -227,14 +265,14 @@ class PirateSailing extends Phaser.Scene {
         //this.physics.add.collider(this.player, this.cargoShips);
         //this.physics.add.collider(this.player, this.pirateHunters);
         this.physics.add.collider(this.player, this.islands);
-        //this.physics.add.collider(this.pirateHunter, this.islands);
+        this.physics.add.collider(this.pirateHunters, this.islands);
         //this.physics.add.collider(this.cargoShip, this.islands);
 
 
         //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
-        //this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
+       // this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
 
-        //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
+        //  Checks to see if the player overlaps with any of the cargo ships, if he does call the pirate cargoship combat function
         // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
 
 
@@ -261,6 +299,20 @@ class PirateSailing extends Phaser.Scene {
             return;
         }
 
+
+        // hunter movement:
+        if (this.hunterSailTime > this.maxHunterSail) {
+
+            this.pirateHunters.children.iterate(function (child) {
+                // set speed in random direction from -50 to +50.
+                child.setVelocityX(-50 + (Math.random() * 100));
+                child.setVelocityY(-50 + (Math.random() * 100));
+            });
+            this.hunterSailTime = 0;
+        }
+        else {
+            this.hunterSailTime += 1;
+        }
 
 
         if (this.cursors.left.isDown) {
@@ -294,7 +346,7 @@ class PirateSailing extends Phaser.Scene {
     //
     // Description: checks to see if enough time as elapse to 
     // cause another Pirate Hunter to spawn.  If so, it spawns
-    // the hunter in a random location.
+    // the hunter in a random port location.
     // -----------------------------------------------------------
     checkForHunterSpawn() {
         // let currentTime = Date.now();
@@ -321,30 +373,57 @@ class PirateSailing extends Phaser.Scene {
     // checkForHunterAttack()
     //
     // Description: checks to see if a player is too close to a Hunter.  
-    // If so, HunterAttack timer starts and Hunter Attack flag set.
-    // If the Attack Flag is set, and timer is over 2 seconds (2000), 
+    // If so, the specific Hunter's HunterAttack timer starts and Hunter Attack flag  is set.
+    // If the Attack Flag is set, and timer is over 1 seconds (1000), 
     // then calls HunterAttack().  
     // If the player is not in range of a Hunter, then Attack Flag is set
-    // to false and timer cleared. 
+    // to false and timer set to current time. 
+    // NOTE: it is possible for the player to get hit by multiple hunters
+    // in rapid succession if their are multiple hunters close.
     // -----------------------------------------------------------
     checkForHunterAttack() {
-        // let currentTime = Date.now();
 
-        // if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
-        //     // spawn hunter!
-        //     let locX = Math.random() * 1000;
-        //     let locY = Math.random() * 1000;
+        //let currentTime = "";
 
-        //     let newChild = "";
+        //// iterate over the hunter children to see if in range etc.
+        //this.pirateHunters.children.iterate(
+        //    function (child) {
 
-        //     newChild = this.pirateHunters.create(500, 500, "pirateHunterImg");
-        //     newChild.name = "pirateHunter";
+        //        // check for range.
+        //        if (
+        //            (Math.abs((this.player.x - child.x)) <= 150) &&
+        //            (Math.abs((this.player.y - child.y)) <= 150)
+        //        ) {
+        //            //In range, check if attack flage set.  if so check for elapsed time
+        //            if (child.AttackFlag === true) {
+        //                // check elapsed time.
+        //                currentTime = Date.now();
+        //                if ((currentTime - child.StartTime) >= this.hunterAttackTime) {
+        //                    // Attack!
+        //                    this.sys.PirateFunctions.HunterAttack(this.player, child);
 
-        //     // reset timer.
-        //     this.hunterStartTime = Date.now();
-        // }// end if time to spawn hunter.
+        //                    // reset attack time
+        //                    child.StartTime = currentTime;
+        //                }// end if enough time elapsed
 
-    }// end check for hunter spawn.
+        //            }// end if child AttackFlag set.
+        //            else {
+        //                // set Attack Flag and start timer
+        //                child.AttackFlag = true;
+        //                child.StartTime = Date.now();
+        //            }
+
+        //        }// end if in range.
+        //        else {
+        //            // make sure AttackFlag not set. Timer set to current time.
+        //            child.AttackFlag = false;
+        //            child.StartTime = Date.now();
+        //        }
+
+        //    }// end function for iteration
+        //); // end iterate
+
+    }// end checkForHunterAttack.
 
 
 
@@ -391,7 +470,16 @@ class PirateSailing extends Phaser.Scene {
     // -----------------------------------------------------------
     setSleepFlag(bSleep) {
         sleepPirate = bSleep;
-    }
+
+        if (bSleep === true) {
+            this.OceanAudio.pause();
+            //this.JungleAudio.pause();
+            //if (this.EarthQuakeAudio.isPlaying) {
+            //    this.EarthQuakeAudio.pause();
+            //}
+
+        }
+    }// end setSleepFlag
 
 
     // ---------------------------------------------------------
@@ -404,11 +492,23 @@ class PirateSailing extends Phaser.Scene {
     onWake() {
         console.log("in PirateSailing onWake");
 
+        // player always starts at Tortuga...
+        //this.player.x = playerStartX;
+        //this.player.y = playerStartY;
+        //console.log("Set player position to " + playerStartX + ", " + playerStartY);
+
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
         //this.sys.PirateFunctions.updateSailingDisplay();
 
-    }
+        //// call timer update:
+        //this.sys.globalFunctions.VolcanoTimer(true);
+
+        // set Sailing ambiance
+        this.OceanAudio.resume();
+        //this.JungleAudio.resume();
+
+    }// end onWake
 
 
 } // end class PirateSailing

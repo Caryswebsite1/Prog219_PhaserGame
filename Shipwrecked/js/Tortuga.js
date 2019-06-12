@@ -60,23 +60,8 @@ class Tortuga extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('PirateFunctionsPlugin');
-        console.log("from Tortuga")
+        console.log("from Tortuga");
         console.log(this.sys.PirateFunctions);
-
-        // #########################################
-        //####### FOR TESTING #######################
-        //################################################
-
-        playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
-        playerShip.gold = 600;
-        playerShip.iron = 10;
-        playerShip.wool = 10;
-        playerShip.wood = 0;
-        playerShip.food = 0;
-
-        Gold = 620;
-        // #################### End for testing ####################
-
 
         this.events.on('wake', this.onWake, this);
 
@@ -347,15 +332,17 @@ class Tortuga extends Phaser.Scene {
         // #########################################
         //####### FOR TESTING #######################
         //################################################
+        //if (playerShip.shipType === "Canoe") {
 
-        playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
-        playerShip.gold = 600;
-        playerShip.iron = 10;
-        playerShip.wool = 10;
-        playerShip.wood = 0;
-        playerShip.food = 0;
+        //    playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
+        //    playerShip.gold = 600;
+        //    playerShip.iron = 10;
+        //    playerShip.wool = 10;
+        //    playerShip.wood = 0;
+        //    playerShip.food = 0;
 
-        Gold = 620;
+        //    Gold = 620;
+        //}
 
         console.log("in Tortuga Wake.  Ship Type: " + playerShip.shipType);
         // #################### End for testing ####################

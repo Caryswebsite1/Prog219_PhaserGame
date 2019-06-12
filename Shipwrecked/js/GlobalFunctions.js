@@ -454,6 +454,7 @@ GlobalFunctionsPlugin.prototype = {
                     this.sys.globalFunctions.updateResourceDisplay();
 
                     playerShip = canoe;
+                    console.log('PlayerShip shiptype: ' + playerShip.shipType);
                     this.sys.globalFunctions.displaySailButton(this);       // Sail away!
 
                     //this.scene.start("PirateSailing");
@@ -564,6 +565,14 @@ GlobalFunctionsPlugin.prototype = {
                     cargoSpace -= Food;
                 }
 
+                // everything loaded that can be.  zero out the globals.
+                Gold = 0;
+                Wood = 0;
+                Iron = 0;
+                Wool = 0;
+                Food = 0;
+
+
                 // ****** shut down Shipwrecked stuff. ********
                 // stop all environment audios including volcano...
                 if (this.OceanAudio) {
@@ -645,14 +654,23 @@ GlobalFunctionsPlugin.prototype = {
                 }
 
 
+                //checking whats going on here... player ship doesn't seem to make it.
+                console.log('About to switch to PirateIntro. Player Ship Type: ' + playerShip.shipType);
+
+
                 // bring up Pirate Intro! 
                 var introScene = this.scene.manager.getScene("PirateIntro");
+                this.scene.wake("PirateIntro");
                 this.scene.bringToTop("PirateIntro");
                 this.scene.setActive("PirateIntro");
                 this.scene.setVisible("PirateIntro");
+                introScene.setSleepFlag(false);
 
                 // attempt to increase PirateIntro camera size..
                 introScene.cameras.main.setSize(800, 600);
+
+                //checking whats going on here... player ship doesn't seem to make it.
+                console.log('PirateIntro no active. Player Ship Type: ' + playerShip.shipType);
 
 
                 // shut down shipConstruction 
@@ -660,6 +678,10 @@ GlobalFunctionsPlugin.prototype = {
                 this.scene.setVisible(false);
                 this.scene.sleep();
                 this.setSleepFlag(true);
+
+                //checking whats going on here... player ship doesn't seem to make it.
+                console.log('Ship Construction now asleep. Player Ship Type: ' + playerShip.shipType);
+
 
                 // get manager to enable killing all the Shipwrecked scenes.
                 let manager = this.scene.manager;
@@ -670,6 +692,10 @@ GlobalFunctionsPlugin.prototype = {
                 manager.remove("Shipwreck2");
                 manager.remove("Shipwreck3");
                 manager.remove("Shipwreck4");
+
+                //checking whats going on here... player ship doesn't seem to make it.
+                console.log('All Shipwreck scenes removed... Player Ship Type: ' + playerShip.shipType);
+
 
                 break;
 

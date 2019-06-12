@@ -47,7 +47,7 @@ class DeathScene extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('GlobalFunctionsPlugin');
-        console.log("from ShipConstruction")
+        console.log("from DeathScene");
         console.log(this.sys.globalFunctions);
 
 

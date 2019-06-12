@@ -89,7 +89,7 @@ class Shipwrecked2 extends Phaser.Scene {
         console.log(this.sys.dialogModal);
 
         this.sys.install('GlobalFunctionsPlugin');
-        console.log("from 4")
+        console.log("from 2");
         console.log(this.sys.globalFunctions);
 
 

@@ -298,7 +298,7 @@ PirateFunctionsPlugin.prototype = {
     // 
     // --------------------------------------------------------------
     onGameObjectClicked: function (pointer, gameObject) {
-        console.log("made it into New onGameObjectClicked. ");
+        console.log("made it into PirateFunctions onGameObjectClicked. ");
 
         switch (gameObject.name) {
             case "pirateIntroContinueBtn":
@@ -427,7 +427,47 @@ PirateFunctionsPlugin.prototype = {
                     }
 
                 }// end else
-                break; // end sheep
+                break; // end cargoship
+
+
+
+            case "hunterShip":
+
+                if (playerShip.cannon <= 0) {
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                    ) {
+                        //this.SheepAudio.play();
+                        this.dialogBox.setText("I don't have any cannons!  I can't shoot that ship!");
+                        console.log("no cannons to shoot with");
+                    }
+                    else {
+                        //this.CannonShotsAudio.play();
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                    }
+                } // end if player doesn't have cannons
+                else {
+                    console.log("in else for hunterShip, Check to see if close enough!");
+
+                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    console.log("hunterShip x: " + gameObject.x + "  hunterShip y: " + gameObject.y);
+                    // if player close to ship piece then do battle!.
+                    if (
+                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                    ) {
+                        // close enough to shoot!
+                        this.sys.PirateFunctions.PirateHunterCombat(this.player, gameObject);
+                    }
+                    else {
+                        this.dialogBox.setText("I am too far away from that to do anything.");
+                        console.log("NOPE NOT close enough!");
+                    }
+
+                }// end else
+                break; // end hunterShip
+
 
 
             case "TortugaPort":
@@ -608,8 +648,25 @@ PirateFunctionsPlugin.prototype = {
     ***********  Text Display initalization functions:  All scenes must call these to enable their display *********
     ************************************************************************************************************ */
     sailingTextFunction: function () {
-        this.sailingGoldText = this.scene.add.text(50, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
+
+        SailingStyle = { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" };
+
+        //this.sailingGoldText = this.scene.add.text(50, 10, "Gold: " + Gold, { fontsize: "32px", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" });
+        //this.sailingGoldText.setScrollFactor(0);
+
+        this.sailingGoldText = this.scene.add.text(20, 10, "Gold: " + Gold, SailingStyle);
         this.sailingGoldText.setScrollFactor(0);
+
+        this.sailingShipText = this.scene.add.text(170, 10, 'Ship: ' + playerShip.shipType, SailingStyle);
+        this.sailingShipText.setScrollFactor(0);
+
+        this.sailingShipCannonText = this.scene.add.text(350, 10, 'Cannons: ' + playerShip.cannon, SailingStyle);
+        this.sailingShipCannonText.setScrollFactor(0);
+
+        this.sailingHitpointsText = this.scene.add.text(20, 40, 'Hull Strength: ' + playerShip.hitPoints, SailingStyle);
+        this.sailingHitpointsText.setScrollFactor(0);
+
+
     },
 
     tortugaTextFunction: function () {
@@ -639,7 +696,10 @@ PirateFunctionsPlugin.prototype = {
     },
 
     updateSailingDisplay: function () {
-        this.sailingText.setText("Gold: " + Gold);
+        this.sailingGoldText.setText("Gold: " + Gold);
+        this.sailingShipText.setText('Ship: ' + playerShip.shipType);
+        this.sailingShipCannonText.setText('Cannons: ' + playerShip.cannon);
+        this.sailingHitpointsText.setText('Hull Strength: ' + playerShip.hitPoints);
     },
 
 
@@ -676,147 +736,147 @@ PirateFunctionsPlugin.prototype = {
     /* **************************************************************
      * ***************** Pirate Hunter Spawn Timer ******************
      * *************************************************************** */
-    HunterSpawnTimer: function (bPrintNow) {
+    //HunterSpawnTimer: function (bPrintNow) {
 
-        // Dont do any time related stuff unless the game is started.
-        // Have to put this here because on launch, updates happen so this 
-        // would get started without the game started flag..
-        if (G_bGameStarted) {
+    //    // Dont do any time related stuff unless the game is started.
+    //    // Have to put this here because on launch, updates happen so this 
+    //    // would get started without the game started flag..
+    //    if (G_bGameStarted) {
 
-            let newTime = Date.now();
-            let newTimeLeft = 0;
+    //        let newTime = Date.now();
+    //        let newTimeLeft = 0;
 
-            // calculate time left:
-            newTimeLeft = explodeTime - (newTime - startTime);
+    //        // calculate time left:
+    //        newTimeLeft = explodeTime - (newTime - startTime);
 
-            if ((newTimeLeft < 20000) && !this.gameOver) {
-                G_bShake = true;
-                if (!(this.scene.EarthQuakeAudio.isPlaying)) {
-                    this.scene.EarthQuakeAudio.play({ loop: true });
-                }
-            }
+    //        if ((newTimeLeft < 20000) && !this.gameOver) {
+    //            G_bShake = true;
+    //            if (!(this.scene.EarthQuakeAudio.isPlaying)) {
+    //                this.scene.EarthQuakeAudio.play({ loop: true });
+    //            }
+    //        }
 
-            if (bPrintNow || (newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000)) {
-                // update timer display
+    //        if (bPrintNow || (newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000)) {
+    //            // update timer display
 
-                // calculate the global display values.
-                theMin = Math.floor((newTimeLeft / 1000) / 60);
-                theSec = Math.floor((newTimeLeft / 1000) % 60);
+    //            // calculate the global display values.
+    //            theMin = Math.floor((newTimeLeft / 1000) / 60);
+    //            theSec = Math.floor((newTimeLeft / 1000) % 60);
 
-                this.updateTimerDisplay();
+    //            this.updateTimerDisplay();
 
-                // update global timeLeft
-                timeLeft = newTimeLeft;
+    //            // update global timeLeft
+    //            timeLeft = newTimeLeft;
 
-            }
-            else if ((newTimeLeft > -1000) && (newTimeLeft <= 1000)) {
-                // volcano starts to blow..
-                if (!(this.scene.VolcanoAudio.isPlaying)) {
-                    this.scene.VolcanoAudio.play();
-                }
-            }
-            else if (newTimeLeft <= 0) {
-                this.scene.VolcanoAudio2.play();
+    //        }
+    //        else if ((newTimeLeft > -1000) && (newTimeLeft <= 1000)) {
+    //            // volcano starts to blow..
+    //            if (!(this.scene.VolcanoAudio.isPlaying)) {
+    //                this.scene.VolcanoAudio.play();
+    //            }
+    //        }
+    //        else if (newTimeLeft <= 0) {
+    //            this.scene.VolcanoAudio2.play();
 
-                if (this.scene.EarthQuakeAudio.isPlaying) {
-                    this.scene.EarthQuakeAudio.stop();
-                }
+    //            if (this.scene.EarthQuakeAudio.isPlaying) {
+    //                this.scene.EarthQuakeAudio.stop();
+    //            }
 
-                this.ShipwreckedGameOver(this.scene, true);
-                // stop earthquake audio...
-            }
-        }// end if game started. 
+    //            this.ShipwreckedGameOver(this.scene, true);
+    //            // stop earthquake audio...
+    //        }
+    //    }// end if game started. 
 
-    }, // end VolcanoTimer
+    //}, // end VolcanoTimer
 
 
     /* **************************************************************
-    * ********* Shipwrecked Game Over ******************************
+    * ********* Pirate Game Over ******************************
     * *************************************************************** */
-    ShipwreckedGameOver: function (callingScene, bVolcano) {
+    PirateGameOver: function (callingScene, bVolcano) {
 
         /* ------------------------------------------------------------------------------
-         * NOTE: transition function does not exist in our version.It does in the next but
-         * in the next, the dialog plug in code is broken.
+         * NOTE: transition function does not exist in our version.It does in the latest but
+         * in the latest, the dialog plug in code is broken.
          * ***************************************************************** */
-        // stop all environment audios except volcano...
+        // stop all environment audios...
         if (callingScene.OceanAudio) {
             if (callingScene.OceanAudio.isPlaying) {
                 callingScene.OceanAudio.stop();
             }
         }
-        if (callingScene.JungleAudio) {
-            if (callingScene.JungleAudio.isPlaying) {
-                callingScene.JungleAudio.stop();
-            }
-        }
-        if (callingScene.BoarAudio) {
-            if (callingScene.BoarAudio.isPlaying) {
-                callingScene.BoarAudio.stop();
-            }
-        }
-        if (callingScene.SheepAudio) {
-            if (callingScene.SheepAudio.isPlaying) {
-                callingScene.SheepAudio.stop();
-            }
-        }
-        if (callingScene.HeadChopAudio) {
-            if (callingScene.HeadChopAudio.isPlaying) {
-                callingScene.HeadChopAudio.stop();
-            }
-        }
-        if (callingScene.ChopWoodAudio) {
-            if (callingScene.ChopWoodAudio.isPlaying) {
-                callingScene.ChopWoodAudio.stop();
-            }
-        }
-        if (callingScene.JungleChopAudio) {
-            if (callingScene.JungleChopAudio.isPlaying) {
-                callingScene.JungleChopAudio.stop();
-            }
-        }
-        if (callingScene.PickAxeAudio) {
-            if (callingScene.PickAxeAudio.isPlaying) {
-                callingScene.PickAxeAudio.stop();
-            }
-        }
-        if (callingScene.HallelujahAudio) {
-            if (callingScene.HallelujahAudio.isPlaying) {
-                callingScene.HallelujahAudio.stop();
-            }
-        }
-        if (callingScene.EarthQuakeAudio) {
-            if (callingScene.EarthQuakeAudio.isPlaying) {
-                callingScene.EarthQuakeAudio.stop();
-            }
-        }
+        //if (callingScene.JungleAudio) {
+        //    if (callingScene.JungleAudio.isPlaying) {
+        //        callingScene.JungleAudio.stop();
+        //    }
+        //}
+        //if (callingScene.BoarAudio) {
+        //    if (callingScene.BoarAudio.isPlaying) {
+        //        callingScene.BoarAudio.stop();
+        //    }
+        //}
+        //if (callingScene.SheepAudio) {
+        //    if (callingScene.SheepAudio.isPlaying) {
+        //        callingScene.SheepAudio.stop();
+        //    }
+        //}
+        //if (callingScene.HeadChopAudio) {
+        //    if (callingScene.HeadChopAudio.isPlaying) {
+        //        callingScene.HeadChopAudio.stop();
+        //    }
+        //}
+        //if (callingScene.ChopWoodAudio) {
+        //    if (callingScene.ChopWoodAudio.isPlaying) {
+        //        callingScene.ChopWoodAudio.stop();
+        //    }
+        //}
+        //if (callingScene.JungleChopAudio) {
+        //    if (callingScene.JungleChopAudio.isPlaying) {
+        //        callingScene.JungleChopAudio.stop();
+        //    }
+        //}
+        //if (callingScene.PickAxeAudio) {
+        //    if (callingScene.PickAxeAudio.isPlaying) {
+        //        callingScene.PickAxeAudio.stop();
+        //    }
+        //}
+        //if (callingScene.HallelujahAudio) {
+        //    if (callingScene.HallelujahAudio.isPlaying) {
+        //        callingScene.HallelujahAudio.stop();
+        //    }
+        //}
+        //if (callingScene.EarthQuakeAudio) {
+        //    if (callingScene.EarthQuakeAudio.isPlaying) {
+        //        callingScene.EarthQuakeAudio.stop();
+        //    }
+        //}
 
 
 
-        // scene specific audios
-        if (callingScene.LavaAudio) {
+        //// scene specific audios
+        //if (callingScene.LavaAudio) {
 
-            if (callingScene.LavaAudio.isPlaying) {
-                callingScene.LavaAudio.stop();
-            }
+        //    if (callingScene.LavaAudio.isPlaying) {
+        //        callingScene.LavaAudio.stop();
+        //    }
 
-        }
+        //}
 
-        if (callingScene.SizzlingAudio) {
+        //if (callingScene.SizzlingAudio) {
 
-            if (callingScene.SizzlingAudio.isPlaying) {
-                callingScene.SizzlingAudio.stop();
-            }
+        //    if (callingScene.SizzlingAudio.isPlaying) {
+        //        callingScene.SizzlingAudio.stop();
+        //    }
 
-        }
+        //}
 
-        if (callingScene.ForestFireAudio) {
+        //if (callingScene.ForestFireAudio) {
 
-            if (callingScene.ForestFireAudio.isPlaying) {
-                callingScene.ForestFireAudio.stop();
-            }
+        //    if (callingScene.ForestFireAudio.isPlaying) {
+        //        callingScene.ForestFireAudio.stop();
+        //    }
 
-        }
+        //}
 
 
 
@@ -833,21 +893,17 @@ PirateFunctionsPlugin.prototype = {
         // get manager to enable killing old scenes.
         let manager = callingScene.scene.manager;
 
-        // set text box text for DeathScene if from volcano.
-        if (bVolcano) {
-            manager.getScene("DeathScene").dialogBox.setText("The Volcano blew up!  Alas!  You have died!");
-        }
+        // set text box text for DeathScene 
+        manager.getScene("DeathScene").dialogBox.setText("Your Ship has been Sunk!!  Arg!  You're sleeping with the fishes!");
 
         // now remove them.
-        manager.remove("ShipConstruction");
-        manager.remove("Shipwreck");
-        manager.remove("Shipwreck2");
-        manager.remove("Shipwreck3");
-        manager.remove("Shipwreck4");
+        manager.remove("Tortuga");
+        manager.remove("PirateSailing");
+        manager.remove("PirateRetire");
 
         this.gameOver = true;
 
-    } // end ShipwreckedGameOver
+        } // end PirateGameOver
 
 
 }// end plugin prototype
