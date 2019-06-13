@@ -68,8 +68,8 @@ PirateFunctionsPlugin.prototype = {
 
         // if player in range, shoot cannon!.
         if (
-            (Math.abs((this.player.x - cargoShip.x)) <= 150) &&
-            (Math.abs((this.player.y - cargoShip.y)) <= 150)
+            (Math.abs((this.player.x - cargoShip.x)) <= cannonRange) &&
+            (Math.abs((this.player.y - cargoShip.y)) <= cannonRange)
         ) {
 
             if (playerShip.cannon > 0) {
@@ -82,14 +82,14 @@ PirateFunctionsPlugin.prototype = {
                 if (cargoShip.hitpoints <= 0) {
                     // cargoShip sinks, player gets gold.
                     Gold += cargoShip.gold;
-                    cargoShip.disableBody(true, true);
+                    cargoShip.destroy();
                     this.updateSailingDisplay();
                 }
                 else {
                     // cargoShip returns fire!
                     // play cannon shot audio
                     //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
-                    let damageToPlayer = cargoShip.cannon * 10;
+                    let damageToPlayer = cargoShip.Ship.cannon * 10;
 
                     // check for ironplate.
                     if (playerShip.bIronPlate) {
@@ -103,10 +103,10 @@ PirateFunctionsPlugin.prototype = {
                         // sink ship..
 
                         //stop movement on screen
-                        this.physics.pause();
+                        this.scene.physics.pause();
 
                         this.updateSailingDisplay();
-                        this.gameOver = true;
+                        this.scene.gameOver = true;
                         this.dialogBox.setText("Alas! You have died!");
                         this.sys.PirateFunctions.PirateGameOver(this);
 
@@ -159,8 +159,8 @@ PirateFunctionsPlugin.prototype = {
 
         // if player in range, shoot cannon!.
         if (
-            (Math.abs((this.player.x - hunter.x)) <= 150) &&
-            (Math.abs((this.player.y - hunter.y)) <= 150)
+            (Math.abs((thePlayer.x - hunter.x)) <= cannonRange) &&
+            (Math.abs((thePlayer.y - hunter.y)) <= cannonRange)
         ) {
 
             if (playerShip.cannon > 0) {
@@ -170,17 +170,17 @@ PirateFunctionsPlugin.prototype = {
                 let damageToHunter = playerShip.cannon * 10;
                 hunter.hitPoints -= damageToHunter;
 
-                if (hunter.hitpoints <= 0) {
-                    // cargoShip sinks, player gets gold.
-                    Gold += hunter.gold;
-                    hunter.disableBody(true, true);
+                if (hunter.ship.hitpoints <= 0) {
+                    // hunter sinks, player gets gold.
+                    Gold += hunter.Ship.gold;
+                    hunter.destroy();;
                     this.updateSailingDisplay();
                 }
                 else {
                     // cargoShip returns fire!
                     // play cannon shot audio
                     //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
-                    let damageToPlayer = hunter.cannon * 10;
+                    let damageToPlayer = hunter.Ship.cannon * 10;
 
                     // check for ironplate.
                     if (playerShip.bIronPlate) {
@@ -194,10 +194,10 @@ PirateFunctionsPlugin.prototype = {
                         // sink ship..
 
                         //stop movement on screen
-                        this.physics.pause();
+                        this.scene.physics.pause();
 
                         this.updateSailingDisplay();
-                        this.gameOver = true;
+                        this.scene.gameOver = true;
                         this.dialogBox.setText("Alas! You have died!");
                         this.sys.PirateFunctions.PirateGameOver(this);
 
@@ -208,8 +208,8 @@ PirateFunctionsPlugin.prototype = {
             else {
                 // check for close range and if so, initiate hand to hand..
                 if (
-                    (Math.abs((this.player.x - hunter.x)) <= 25) &&
-                    (Math.abs((this.player.y - hunter.y)) <= 25)
+                    (Math.abs((thePlayer.x - hunter.x)) <= 25) &&
+                    (Math.abs((thePlayer.y - hunter.y)) <= 25)
                 ) {
                     // #### Implement hand to hand if desired here.. #####
 
@@ -228,9 +228,11 @@ PirateFunctionsPlugin.prototype = {
     // ---------------------------------------------------------
     // HunterAttack(thePlayer, hunter)
     //
-    // Description: Handler for when Pirate Hunter attacks the player
+    // Description: Function for when Pirate Hunter attacks the player
     // from range.  Started if the player gets too close to the
-    // Pirate Hunter and stays in range for 2 seconds.  
+    // Pirate Hunter and stays in range for 2 seconds.  Called by
+    // the PirateSailing Scene via a function call from its update
+    // function.
     // Will be active if the Pirate Hunter's ship overlaps
     // the player's. See also PirateHunterCombat.
     // -----------------------------------------------------------
@@ -252,33 +254,41 @@ PirateFunctionsPlugin.prototype = {
         // hunter fires on Player:
         // play cannon shot audio
         //###############  DISPLAY Hunter FIREING AND PLAYER GETTING HIT
-        let damageToPlayer = hunter.cannon * 10;
+        let damageToPlayer = 0;
+        console.log('hunter ship is: ' + hunter.Ship);
+        console.log('hunter Cannon are: ' + hunter.Ship.cannon);
+
+        damageToPlayer = hunter.Ship.cannon * 10;
+        console.log('initial damage to player: ' + damageToPlayer);
 
         // check for ironplate.
         if (playerShip.bIronPlate) {
             damageToPlayer = damageToPlayer * IronPlateModifier;
         }
+        console.log('After Iron Plate,  damage to player: ' + damageToPlayer);
 
         playerShip.hitPoints -= damageToPlayer;
+        console.log('After damage, playerShip hitpoints: ' + playerShip.hitPoints);
+
         if (playerShip.hitPoints <= 0) {
             // Player Sinks!! Game over!!
             // play drowning audio
             // sink ship..
 
             //stop movement on screen
-            this.physics.pause();
+            this.scene.physics.pause();
 
             this.updateSailingDisplay();
-            this.gameOver = true;
-            this.dialogBox.setText("Alas! You have died!");
-            this.sys.PirateFunctions.PirateGameOver(this);
+            this.scene.gameOver = true;
+            this.scene.dialogBox.setText("Alas! You have died!");
+            this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
         }// end if player sinks
 
         // check for close range and if so, initiate hand to hand..
         if (
-            (Math.abs((this.player.x - hunter.x)) <= 25) &&
-            (Math.abs((this.player.y - hunter.y)) <= 25)
+            (Math.abs((thePlayer.x - hunter.x)) <= 25) &&
+            (Math.abs((thePlayer.y - hunter.y)) <= 25)
         ) {
             // #### Implement hand to hand if desired here.. #####
 
@@ -396,8 +406,8 @@ PirateFunctionsPlugin.prototype = {
 
                 if (playerShip.cannon <= 0) {
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                        (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= cannonRange)
                     ) {
                         //this.SheepAudio.play();
                         this.dialogBox.setText("I don't have any cannons!  I can't shoot that ship!");
@@ -411,12 +421,12 @@ PirateFunctionsPlugin.prototype = {
                 else {
                     console.log("in else for cargoShip, Check to see if close enough!");
 
-                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    console.log("cargoship x: " + gameObject.x + "  cargoship y: " + gameObject.y);
+                    //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    //console.log("cargoship x: " + gameObject.x + "  cargoship y: " + gameObject.y);
                     // if player close to ship piece then do battle!.
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                        (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= cannonRange)
                     ) {
                         // close enough to shoot!
                         this.sys.PirateFunctions.cargoShipCombat(gameObject);
@@ -435,8 +445,8 @@ PirateFunctionsPlugin.prototype = {
 
                 if (playerShip.cannon <= 0) {
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                        (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= cannonRange)
                     ) {
                         //this.SheepAudio.play();
                         this.dialogBox.setText("I don't have any cannons!  I can't shoot that ship!");
@@ -450,12 +460,12 @@ PirateFunctionsPlugin.prototype = {
                 else {
                     console.log("in else for hunterShip, Check to see if close enough!");
 
-                    console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    console.log("hunterShip x: " + gameObject.x + "  hunterShip y: " + gameObject.y);
+                    //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    //console.log("hunterShip x: " + gameObject.x + "  hunterShip y: " + gameObject.y);
                     // if player close to ship piece then do battle!.
                     if (
-                        (Math.abs((this.player.x - gameObject.x)) <= 30) &&
-                        (Math.abs((this.player.y - gameObject.y)) <= 30)
+                        (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
+                        (Math.abs((this.player.y - gameObject.y)) <= cannonRange)
                     ) {
                         // close enough to shoot!
                         this.sys.PirateFunctions.PirateHunterCombat(this.player, gameObject);

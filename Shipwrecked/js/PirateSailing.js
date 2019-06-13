@@ -30,7 +30,7 @@ class PirateSailing extends Phaser.Scene {
 
         // plugins:
         this.load.plugin('DialogModalPlugin', './js/dialog_plugin.js');
-        //this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
+        this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
 
         // main images
         this.load.image("island1", "assets/island1.png");
@@ -76,9 +76,9 @@ class PirateSailing extends Phaser.Scene {
         this.sys.install('DialogModalPlugin');
         console.log(this.sys.dialogModal);
 
-        //this.sys.install('PirateFunctionsPlugin');
-        //console.log("from PirateSailing");
-        //console.log(this.sys.PirateFunctions);
+        this.sys.install('PirateFunctionsPlugin');
+        console.log("from PirateSailing");
+        console.log(this.sys.PirateFunctions);
 
         this.events.on('wake', this.onWake, this);
 
@@ -136,7 +136,7 @@ class PirateSailing extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // note: bring in PirateFunctions..
-        //this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
+        this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
         /* *********************************************************************
          * *********** Player (Pirate Ship) Setup ***************************** 
@@ -220,6 +220,7 @@ class PirateSailing extends Phaser.Scene {
         newChild.name = "hunterShip";
         newChild.Ship = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
         newChild.Ship.cannon = 8;
+        newChild.setInteractive();
 
         /* ######################   END TEST CODE ##############################
          * ###################################################################
@@ -232,7 +233,7 @@ class PirateSailing extends Phaser.Scene {
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-        //this.sys.PirateFunctions.sailingTextFunction();
+        this.sys.PirateFunctions.sailingTextFunction();
 
 
 
@@ -270,10 +271,20 @@ class PirateSailing extends Phaser.Scene {
 
 
         //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
-       // this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
+        this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
 
         //  Checks to see if the player overlaps with any of the cargo ships, if he does call the pirate cargoship combat function
         // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
+
+
+        /* ************************************************************
+         * ***************** Dialog Box Section ***********************
+         * ************************************************************ */
+
+        // Dialog box:
+        this.dialogBox = this.sys.dialogModal;
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 320 });
+        this.dialogBox.toggleWindow();
 
 
     } // end create
@@ -333,22 +344,22 @@ class PirateSailing extends Phaser.Scene {
             //this.player.anims.play("shipturn");
         }
 
-        this.checkForHunterSpawn();
-        this.checkForCargoShipSpawn();
+        this.checkForHunterSpawn(this);
+        this.checkForCargoShipSpawn(this);
 
-        this.checkForHunterAttack();
+        this.checkForHunterAttack(this);
 
     } // end update
 
 
     // ---------------------------------------------------------
-    // checkForHunterSpawn()
+    // checkForHunterSpawn(theScene)
     //
     // Description: checks to see if enough time as elapse to 
     // cause another Pirate Hunter to spawn.  If so, it spawns
     // the hunter in a random port location.
     // -----------------------------------------------------------
-    checkForHunterSpawn() {
+    checkForHunterSpawn(theScene) {
         // let currentTime = Date.now();
 
         // if ((currentTime - this.hunterStartTime) >= this.hunterSpawnTime) {
@@ -370,7 +381,7 @@ class PirateSailing extends Phaser.Scene {
 
 
     // ---------------------------------------------------------
-    // checkForHunterAttack()
+    // checkForHunterAttack(theScene)
     //
     // Description: checks to see if a player is too close to a Hunter.  
     // If so, the specific Hunter's HunterAttack timer starts and Hunter Attack flag  is set.
@@ -381,61 +392,61 @@ class PirateSailing extends Phaser.Scene {
     // NOTE: it is possible for the player to get hit by multiple hunters
     // in rapid succession if their are multiple hunters close.
     // -----------------------------------------------------------
-    checkForHunterAttack() {
+    checkForHunterAttack(theScene) {
 
-        //let currentTime = "";
+        let currentTime = "";
 
-        //// iterate over the hunter children to see if in range etc.
-        //this.pirateHunters.children.iterate(
-        //    function (child) {
+        // iterate over the hunter children to see if in range etc.
+        theScene.pirateHunters.children.iterate(
+            function (child) {
 
-        //        // check for range.
-        //        if (
-        //            (Math.abs((this.player.x - child.x)) <= 150) &&
-        //            (Math.abs((this.player.y - child.y)) <= 150)
-        //        ) {
-        //            //In range, check if attack flage set.  if so check for elapsed time
-        //            if (child.AttackFlag === true) {
-        //                // check elapsed time.
-        //                currentTime = Date.now();
-        //                if ((currentTime - child.StartTime) >= this.hunterAttackTime) {
-        //                    // Attack!
-        //                    this.sys.PirateFunctions.HunterAttack(this.player, child);
+                // check for range.
+                if (
+                    (Math.abs((theScene.player.x - child.x)) <= 150) &&
+                    (Math.abs((theScene.player.y - child.y)) <= 150)
+                ) {
+                    //In range, check if attack flage set.  if so check for elapsed time
+                    if (child.AttackFlag === true) {
+                        // check elapsed time.
+                        currentTime = Date.now();
+                        if ((currentTime - child.StartTime) >= theScene.hunterAttackTime) {
+                            // Attack!
+                            theScene.sys.PirateFunctions.HunterAttack(theScene.player, child);
 
-        //                    // reset attack time
-        //                    child.StartTime = currentTime;
-        //                }// end if enough time elapsed
+                            // reset attack time
+                            child.StartTime = currentTime;
+                        }// end if enough time elapsed
 
-        //            }// end if child AttackFlag set.
-        //            else {
-        //                // set Attack Flag and start timer
-        //                child.AttackFlag = true;
-        //                child.StartTime = Date.now();
-        //            }
+                    }// end if child AttackFlag set.
+                    else {
+                        // set Attack Flag and start timer
+                        child.AttackFlag = true;
+                        child.StartTime = Date.now();
+                    }
 
-        //        }// end if in range.
-        //        else {
-        //            // make sure AttackFlag not set. Timer set to current time.
-        //            child.AttackFlag = false;
-        //            child.StartTime = Date.now();
-        //        }
+                }// end if in range.
+                else {
+                    // make sure AttackFlag not set. Timer set to current time.
+                    child.AttackFlag = false;
+                    child.StartTime = Date.now();
+                }
 
-        //    }// end function for iteration
-        //); // end iterate
+            }// end function for iteration
+        ); // end iterate
 
     }// end checkForHunterAttack.
 
 
 
     // ---------------------------------------------------------
-    // checkForCargoShipSpawn()
+    // checkForCargoShipSpawn(theScene)
     //
     // Description: checks each island to see if enough time has 
     // elapse to cause another cargo ship to spawn.  If so, it spawns
     // a cargo ship just outside that island's port with another Island
     // destination.
     // -----------------------------------------------------------
-    checkForCargoShipSpawn() {
+    checkForCargoShipSpawn(theScene) {
 
         // if (
         //     (Math.abs((this.player.x - hunter.x)) <= 150) &&
@@ -499,14 +510,11 @@ class PirateSailing extends Phaser.Scene {
 
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
-        //this.sys.PirateFunctions.updateSailingDisplay();
+        this.sys.PirateFunctions.updateSailingDisplay();
 
-        //// call timer update:
-        //this.sys.globalFunctions.VolcanoTimer(true);
 
         // set Sailing ambiance
         this.OceanAudio.resume();
-        //this.JungleAudio.resume();
 
     }// end onWake
 

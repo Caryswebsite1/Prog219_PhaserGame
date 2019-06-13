@@ -314,6 +314,9 @@ class PirateIntro extends Phaser.Scene {
         //this.OceanAudio.resume();
         //this.JungleAudio.resume();
 
+        // change tab title to new game name:
+        G_Title.value = "Pirates!"
+
 
         //############################  NOTE  ####################################################################
         // because this scene is created before the player ship is set, we have to have the main dialog

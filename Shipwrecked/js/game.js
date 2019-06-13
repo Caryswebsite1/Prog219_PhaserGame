@@ -109,7 +109,7 @@ let fourMaster = new BoatConstructor(50, 60, 75, 80, 45, 35, 50);   // Base hit 
 
 let playerShip = "";  // to be filled in when player gets a ship!
 let IronPlateModifier = 0.1;   // damage taken multiplyer if player has Iron Plate.
-
+let cannonRange = 150;  // cannon range for in range checks.
 
 // volcano explode timer related
 let startTime = 0;
@@ -122,6 +122,7 @@ let theSec = 0;
 
 G_bShake = false;  // flag for camera shake.
 G_bGameStarted = false; // flag for if we are out of intro.
+G_Title = document.getElementById('mainTitle');
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);
