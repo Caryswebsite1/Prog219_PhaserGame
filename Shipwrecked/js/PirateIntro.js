@@ -315,7 +315,7 @@ class PirateIntro extends Phaser.Scene {
         //this.JungleAudio.resume();
 
         // change tab title to new game name:
-        G_Title.value = "Pirates!"
+        //G_Title.value = "Pirates!"
 
 
         //############################  NOTE  ####################################################################

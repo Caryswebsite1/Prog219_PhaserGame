@@ -7,11 +7,12 @@ class PirateSailing extends Phaser.Scene {
         this.gameOver = false;
         this.hunterStartTime = Date.now();
         this.hunterSpawnTime = 60000;   // one hunter every min.
-        this.hunterAttackTime = 1000;  // if a hunter is in range for 1 second, they attack!
+        this.hunterAttackTime = 1500;  // if a hunter is in range for 1 second, they attack!
 
         // sail times, actually based on number of update calls between, not actual miliseconds etc.
         this.hunterSailTime = 150; // current elapsed hunter sail time.  Set to max to force move at start.
         this.maxHunterSail = 150; // max allowed hunter sail time before new direction set.
+        this.muzzleFlash = '';
 
     } // end constructor
 
@@ -42,6 +43,7 @@ class PirateSailing extends Phaser.Scene {
         this.load.image("bigWater", "assets/ocean.jpg");
 
         this.load.image("hunterImg", "assets/boarhit.png");
+        this.load.image("flashImg", "assets/Flash1.png");
 
 
         this.load.spritesheet("ship", "assets/pirateShip.png", { frameWidth: 80, frameHeight: 95 });
@@ -56,6 +58,7 @@ class PirateSailing extends Phaser.Scene {
         // Notes: instances allows for the given number of multiple simultainous plays of the same item.
         // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
         this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
+        this.load.audio('CannonSound', ['assets/audio/multiCannon.mp3'], { instances: 2 });
 
     } // end preload
 
@@ -93,6 +96,8 @@ class PirateSailing extends Phaser.Scene {
 
         // Sailing audios
         this.OceanAudio = this.sound.add('OceanSound');
+        this.CannonAudio1 = this.sound.add('CannonSound');
+        this.CannonAudio2 = this.sound.add('CannonSound');
 
 
         // set Sailing ambiance
@@ -108,6 +113,8 @@ class PirateSailing extends Phaser.Scene {
 
         // to only add an image someplace, you would say:
         this.add.image(500, 500, "bigWater");
+        this.muzzleFlash = this.add.image(100, 100, "flashImg");
+        this.muzzleFlash.setVisible(false);
 
 
         // islands group
@@ -221,6 +228,7 @@ class PirateSailing extends Phaser.Scene {
         newChild.Ship = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
         newChild.Ship.cannon = 8;
         newChild.setInteractive();
+        newChild.setCollideWorldBounds(true);
 
         /* ######################   END TEST CODE ##############################
          * ###################################################################
@@ -271,7 +279,7 @@ class PirateSailing extends Phaser.Scene {
 
 
         //  Checks to see if the player overlaps with any of the Pirate Hunters, if he does call the pirate hunter combat function
-        this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
+        //this.physics.add.overlap(this.player, this.pirateHunters, this.sys.PirateFunctions.PirateHunterCombat, null, this);
 
         //  Checks to see if the player overlaps with any of the cargo ships, if he does call the pirate cargoship combat function
         // this.physics.add.overlap(this.player, this.cargoShips, this.sys.PirateFunctions.cargoShipCombat, null, this);
@@ -503,6 +511,14 @@ class PirateSailing extends Phaser.Scene {
     onWake() {
         console.log("in PirateSailing onWake");
 
+        //##################### TEST CODE #########################
+        playerShip.hitPoints = 1000;
+        playerShip.bIronPlate = true;
+        playerShip.cannon = 20;
+        playerShip.speed = 150;
+        //##################### END TEST CODE #########################
+
+
         // player always starts at Tortuga...
         //this.player.x = playerStartX;
         //this.player.y = playerStartY;
@@ -515,6 +531,8 @@ class PirateSailing extends Phaser.Scene {
 
         // set Sailing ambiance
         this.OceanAudio.resume();
+
+
 
     }// end onWake
 

@@ -670,7 +670,7 @@ GlobalFunctionsPlugin.prototype = {
                 introScene.cameras.main.setSize(800, 600);
 
                 //checking whats going on here... player ship doesn't seem to make it.
-                console.log('PirateIntro no active. Player Ship Type: ' + playerShip.shipType);
+                console.log('PirateIntro now active. Player Ship Type: ' + playerShip.shipType);
 
 
                 // shut down shipConstruction 

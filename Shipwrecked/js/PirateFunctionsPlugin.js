@@ -97,6 +97,8 @@ PirateFunctionsPlugin.prototype = {
                     }
 
                     playerShip.hitPoints -= damageToPlayer;
+                    this.updateSailingDisplay();
+
                     if (playerShip.hitPoints <= 0) {
                         // Player Sinks!! Game over!!
                         // play drowning audio
@@ -105,10 +107,9 @@ PirateFunctionsPlugin.prototype = {
                         //stop movement on screen
                         this.scene.physics.pause();
 
-                        this.updateSailingDisplay();
                         this.scene.gameOver = true;
-                        this.dialogBox.setText("Alas! You have died!");
-                        this.sys.PirateFunctions.PirateGameOver(this);
+                        this.scene.dialogBox.setText("Alas! You have died!");
+                        this.PirateGameOver(this);
 
                     }// end if player sinks
                 }// end cargoship returns fire
@@ -127,7 +128,7 @@ PirateFunctionsPlugin.prototype = {
             }// end else hand to hand 
         }// end if in cannon range
         else {
-            this.dialogBox.setText("I am too far away from that to do anything.");
+            this.scene.dialogBox.setText("I am too far away from that to do anything.");
             console.log("NOPE NOT close enough!");
         }
 
@@ -165,21 +166,32 @@ PirateFunctionsPlugin.prototype = {
 
             if (playerShip.cannon > 0) {
                 // #############  NEED TO DISPLAY PLAYER SHOOTING AND 
-                // play cannon shot audio
-                //############## Cargo Ship getting hit..
-                let damageToHunter = playerShip.cannon * 10;
-                hunter.hitPoints -= damageToHunter;
+                this.scene.CannonAudio1.volume = 0.7;
+                this.scene.CannonAudio2.volume = 0.7;
 
-                if (hunter.ship.hitpoints <= 0) {
+                this.scene.CannonAudio1.play();
+                this.scene.CannonAudio2.play({ delay: 0.5 });
+
+                //############## Hunter Ship getting hit..
+                let damageToHunter = playerShip.cannon * 10;
+                hunter.Ship.hitPoints -= damageToHunter;
+
+                if (hunter.Ship.hitPoints <= 0) {
                     // hunter sinks, player gets gold.
                     Gold += hunter.Ship.gold;
-                    hunter.destroy();;
+                    hunter.destroy();
                     this.updateSailingDisplay();
+                    this.scene.dialogBox.setText("ARG! We sank the scurvy Pirate Hunters we did!");
                 }
                 else {
-                    // cargoShip returns fire!
-                    // play cannon shot audio
-                    //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
+                    // hunter returns fire!
+                    this.scene.CannonAudio1.volume = 0.7;
+                    this.scene.CannonAudio2.volume = 0.7;
+
+                    this.scene.CannonAudio1.play();
+                    this.scene.CannonAudio2.play({ delay: 0.25 });
+
+                    //###############  DISPLAY HUNTER SHIP FIREING AND PLAYER GETTING HIT
                     let damageToPlayer = hunter.Ship.cannon * 10;
 
                     // check for ironplate.
@@ -188,6 +200,9 @@ PirateFunctionsPlugin.prototype = {
                     }
 
                     playerShip.hitPoints -= damageToPlayer;
+
+                    this.updateSailingDisplay();
+
                     if (playerShip.hitPoints <= 0) {
                         // Player Sinks!! Game over!!
                         // play drowning audio
@@ -196,10 +211,9 @@ PirateFunctionsPlugin.prototype = {
                         //stop movement on screen
                         this.scene.physics.pause();
 
-                        this.updateSailingDisplay();
                         this.scene.gameOver = true;
-                        this.dialogBox.setText("Alas! You have died!");
-                        this.sys.PirateFunctions.PirateGameOver(this);
+                        this.scene.dialogBox.setText("Alas! You have died!");
+                        this.PirateGameOver(this);
 
                     }// end if player sinks
                 }// end hunter returns fire
@@ -254,6 +268,25 @@ PirateFunctionsPlugin.prototype = {
         // hunter fires on Player:
         // play cannon shot audio
         //###############  DISPLAY Hunter FIREING AND PLAYER GETTING HIT
+
+       //Hunter fireing display:
+        this.scene.muzzleFlash.x = hunter.x;
+        this.scene.muzzleFlash.y = hunter.y;
+        this.scene.muzzleFlash.setVisible(true);
+        this.wait(150);
+        this.scene.muzzleFlash.setVisible(false);
+
+        this.scene.CannonAudio1.volume = 0.7;
+        this.scene.CannonAudio2.volume = 0.7;
+
+        this.scene.CannonAudio1.play();
+        this.scene.CannonAudio2.play({ delay: 0.25 });
+
+        console.log("hunter Fires!");
+        // Player getting hit display
+
+
+        // damage determination
         let damageToPlayer = 0;
         console.log('hunter ship is: ' + hunter.Ship);
         console.log('hunter Cannon are: ' + hunter.Ship.cannon);
@@ -269,6 +302,7 @@ PirateFunctionsPlugin.prototype = {
 
         playerShip.hitPoints -= damageToPlayer;
         console.log('After damage, playerShip hitpoints: ' + playerShip.hitPoints);
+        this.updateSailingDisplay();
 
         if (playerShip.hitPoints <= 0) {
             // Player Sinks!! Game over!!
@@ -278,7 +312,6 @@ PirateFunctionsPlugin.prototype = {
             //stop movement on screen
             this.scene.physics.pause();
 
-            this.updateSailingDisplay();
             this.scene.gameOver = true;
             this.scene.dialogBox.setText("Alas! You have died!");
             this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
@@ -798,6 +831,20 @@ PirateFunctionsPlugin.prototype = {
     //    }// end if game started. 
 
     //}, // end VolcanoTimer
+
+
+    /* **************************************************************
+    * ********* wait  utility function ******************************
+    * timeToWait in milliseconds
+    * *************************************************************** */
+    wait: function (timeToWait) {
+        startTime = Date.now();
+        while ((Date.now() - startTime) < timeToWait) {
+            // freeze, do nada
+        }
+    },// end wait.
+
+
 
 
     /* **************************************************************
