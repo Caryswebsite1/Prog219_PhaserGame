@@ -44,14 +44,13 @@ PirateFunctionsPlugin.prototype = {
 
 
     // ---------------------------------------------------------
-    // cargoShipCombat(cargoShip)
+    // cargoShipCombat(thePlayer, cargoShip)
     //
     // Description: Handler for when player and cargo ship fight.
-    // Can be called due to a player click OR due to the player's
-    // ship and the cargo ship overlapping.  In the later case,
-    // we go to hand to hand combat...
+    // Can be called due to a player click if player is within
+    // cannon range.
     // -----------------------------------------------------------
-    cargoShipCombat(cargoShip) {
+    cargoShipCombat(thePlayer, cargoShip) {
 
         // Check if player is in range.  If so then check if player
         // has any cannon.  If so always get a shot with cannon.  
@@ -66,28 +65,36 @@ PirateFunctionsPlugin.prototype = {
         // cargo ship will only return fire, never auto fire on player.
         //
 
+        console.log("in cargoshipcombat.  Cargoship hit points: " + cargoShip.Ship.hitPoints);
         // if player in range, shoot cannon!.
         if (
-            (Math.abs((this.player.x - cargoShip.x)) <= cannonRange) &&
-            (Math.abs((this.player.y - cargoShip.y)) <= cannonRange)
+            (Math.abs((thePlayer.x - cargoShip.x)) <= cannonRange) &&
+            (Math.abs((thePlayer.y - cargoShip.y)) <= cannonRange)
         ) {
-
             if (playerShip.cannon > 0) {
                 // #############  NEED TO DISPLAY PLAYER SHOOTING AND 
-                // play cannon shot audio
+                this.scene.CannonAudio1.volume = 0.7;
+                this.scene.CannonAudio2.volume = 0.7;
+
+                this.scene.CannonAudio1.play();
+                this.scene.CannonAudio2.play({ delay: 0.5 });
                 //############## Cargo Ship getting hit..
                 let damageToCargoShip = playerShip.cannon * 10;
-                cargoShip.hitPoints -= damageToCargoShip;
+                cargoShip.Ship.hitPoints -= damageToCargoShip;
 
-                if (cargoShip.hitpoints <= 0) {
+                if (cargoShip.Ship.hitPoints <= 0) {
                     // cargoShip sinks, player gets gold.
-                    Gold += cargoShip.gold;
+                    Gold += cargoShip.Ship.gold;
                     cargoShip.destroy();
                     this.updateSailingDisplay();
                 }
                 else {
                     // cargoShip returns fire!
-                    // play cannon shot audio
+                    this.scene.CannonAudio1.volume = 0.7;
+                    this.scene.CannonAudio2.volume = 0.7;
+
+                    this.scene.CannonAudio1.play();
+                    this.scene.CannonAudio2.play({ delay: 0.5 });
                     //###############  DISPLAY CARGOSHIP FIREING AND PLAYER GETTING HIT
                     let damageToPlayer = cargoShip.Ship.cannon * 10;
 
@@ -118,8 +125,8 @@ PirateFunctionsPlugin.prototype = {
             else {
                 // check for close range and if so, initiate hand to hand..
                 if (
-                    (Math.abs((this.player.x - cargoShip.x)) <= 25) &&
-                    (Math.abs((this.player.y - cargoShip.y)) <= 25)
+                    (Math.abs((thePlayer.x - cargoShip.x)) <= 25) &&
+                    (Math.abs((thePlayer.y - cargoShip.y)) <= 25)
                 ) {
                     // #### Implement hand to hand if desired here.. #####
 
@@ -452,7 +459,7 @@ PirateFunctionsPlugin.prototype = {
                     }
                 }
                 else {
-                    console.log("in else for cargoShip, Check to see if close enough!");
+                    //console.log("in else for cargoShip, Check to see if close enough!");
 
                     //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
                     //console.log("cargoship x: " + gameObject.x + "  cargoship y: " + gameObject.y);
@@ -462,7 +469,7 @@ PirateFunctionsPlugin.prototype = {
                         (Math.abs((this.player.y - gameObject.y)) <= cannonRange)
                     ) {
                         // close enough to shoot!
-                        this.sys.PirateFunctions.cargoShipCombat(gameObject);
+                        this.sys.PirateFunctions.cargoShipCombat(this.player, gameObject);
                     }
                     else {
                         this.dialogBox.setText("I am too far away from that to do anything.");
@@ -521,8 +528,8 @@ PirateFunctionsPlugin.prototype = {
                 console.log("port x: " + gameObject.x + "  port y: " + gameObject.y);
 
                 if (
-                    (Math.abs((this.player.x - gameObject.x)) <= 60) &&
-                    (Math.abs((this.player.y - gameObject.y)) <= 60)
+                    (Math.abs((this.player.x - gameObject.x)) <= 40) &&
+                    (Math.abs((this.player.y - gameObject.y)) <= 40)
                 ) {
                     // close enough to go to port!
                     var portScene = this.scene.manager.getScene("Tortuga");
@@ -678,6 +685,31 @@ PirateFunctionsPlugin.prototype = {
                 break;
 
 
+            // ******* Repair Ship ********
+            case "repairShipBtn":
+                // repair the players ship for as much gold as they have or however much it takes.
+                let cost = (playerShip.maxHitPoints - playerShip.hitPoints) * 2;
+                console.log("cost for repair is: " + cost);
+
+                if (Gold >= cost) {
+                    playerShip.hitPoints = playerShip.maxHitPoints;
+                    Gold -= cost;
+                    this.dialogBox.setText("Ship fully repaired for: " + cost + " gold.");
+                }
+                else {
+                    let ptsRepairable = Gold / 2;
+                    playerShip.hitPoints += ptsRepairable;
+                    Gold = 0;
+                    this.dialogBox.setText("Repaired as much as you had gold for.");
+                }
+
+                // update display
+                this.sys.PirateFunctions.updateTortugaDisplay();
+
+                break; // end repair ship.
+
+
+                
             default:
                 break;
 
@@ -713,16 +745,22 @@ PirateFunctionsPlugin.prototype = {
     },
 
     tortugaTextFunction: function () {
-        TortugaStyle = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+        TortugaStyle = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
 
-        this.tortugaGoldText = this.scene.add.text(220, 20, "Gold: " + Gold, TortugaStyle);
+        this.tortugaGoldText = this.scene.add.text(290, 20, "Gold: ", TortugaStyle);
         this.tortugaGoldText.setScrollFactor(0);
 
-        this.tortugaPlayerShipText = this.scene.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, TortugaStyle);
+        this.tortugaGoldAmountText = this.scene.add.text(360, 20,  Gold, { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", tabs: [60, 60, 60] });
+        this.tortugaGoldText.setScrollFactor(0);
+
+        this.tortugaPlayerShipText = this.scene.add.text(420, 20, 'Current Ship: ' + playerShip.shipType, TortugaStyle);
         this.tortugaPlayerShipText.setScrollFactor(0);
 
-        this.tortugaShipCannonText = this.scene.add.text(20, 430, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), TortugaStyle);
+        this.tortugaShipCannonText = this.scene.add.text(90, 355, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), TortugaStyle);
         this.tortugaShipCannonText.setScrollFactor(0);
+
+        this.tortugaShipRepairText = this.scene.add.text(370, 415, 'Max Cost: ' + ((playerShip.maxHitPoints - playerShip.hitPoints) * 2), TortugaStyle);
+        this.tortugaShipRepairText.setScrollFactor(0);
 
     },
 
@@ -732,9 +770,11 @@ PirateFunctionsPlugin.prototype = {
     ***********  Text Display update function:  All scenes should call this on wake to update their displays. *********
     ************************************************************************************************************ */
     updateTortugaDisplay: function () {
-        this.tortugaGoldText.setText("Gold: " + Gold);
+        this.tortugaGoldText.setText("Gold: ");
+        this.tortugaGoldAmountText.setText(Gold);
         this.tortugaPlayerShipText.setText('Current Ship: ' + playerShip.shipType);
         this.tortugaShipCannonText.setText('Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon));
+        this.tortugaShipRepairText.setText('Max Cost: ' + ((playerShip.maxHitPoints - playerShip.hitPoints) * 2), TortugaStyle);
 
     },
 

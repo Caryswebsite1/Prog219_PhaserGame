@@ -1,5 +1,3 @@
-
-
 // our game's configuration
 // note the width and height are just the viewport sizes. 
 // they don't have to be the "world" sizes.  See setBounds..
@@ -15,8 +13,10 @@ let config = {
     }
   },
 
-    scene: [ShipwreckedIntro, Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene, PirateIntro, Tortuga, PirateSailing, PirateRetire]
-};
+    scene: [ShipwreckedIntro,
+        Shipwrecked, Shipwrecked2, Shipwrecked3, Shipwrecked4, ShipConstruction, DeathScene,
+        PirateIntro, Tortuga, PirateSailing, PirateRetire
+    ]};
 
 console.log("in game.js");
 let playerStartX = 200;
@@ -51,48 +51,54 @@ let Food = 1;
 
 //boats related.
 let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFood) {
-  this.crew = pCrew;
-  this.cargo = pCargo;
-  this.speed = pSpeed;
-  this.iron = pIron;
-  this.wool = pWool;
-  this.wood = pWood;
-  this.food = pFood;
-  this.gold = 0;
-  this.hitPoints = 0;
-  this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
-  this.maxCannon = 0;
-  this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
-  this.shipType = "";
+    this.crew = pCrew;
+    this.cargo = pCargo;
+    this.speed = pSpeed;
+    this.iron = pIron;
+    this.wool = pWool;
+    this.wood = pWood;
+    this.food = pFood;
+    this.gold = 0;
+    this.hitPoints = 0;
+    this.maxHitPoints = 0;
+    this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
+    this.maxCannon = 0;
+    this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
+    this.shipType = "";
 
 
   switch (pCrew) {
     case 1:
       this.hitPoints = 10;
+      this.maxHitPoints = 10;
       this.maxCannon = 1;
       this.shipType = "Canoe";
       break;
 
     case 15:
       this.hitPoints = 150;
+      this.maxHitPoints = 150;
       this.maxCannon = 3;
       this.shipType = "Schooner";
       break;
 
     case 30:
       this.hitPoints = 300;
+      this.maxHitPoints = 300;
       this.maxCannon = 8;
       this.shipType = "Brig";
       break;
 
     case 50:
       this.hitPoints = 500;
+      this.maxHitPoints = 500;
       this.maxCannon = 20;
       this.shipType = "Frigate";
       break;
 
     default:
       this.hitPoints = 10;
+      this.maxHitPoints = 10;
       this.shipType = "Default Error";
       break;
 
@@ -126,5 +132,3 @@ G_Title = document.getElementById('mainTitle');
 
 // create the game, and pass it the configuration
 let game = new Phaser.Game(config);
-
-

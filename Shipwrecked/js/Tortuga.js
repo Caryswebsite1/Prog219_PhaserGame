@@ -138,107 +138,126 @@ class Tortuga extends Phaser.Scene {
 
 
         // ******* Boat Construction and Selection Texts  **************
-        this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+        this.style = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
 
         //heading
-        this.text1 = this.add.text(20, 20, 'Tortuga Port: ', this.style);
+        this.text1 = this.add.text(90, 20, 'Tortuga Port: ', this.style);
         //this.text2 = this.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, this.style);
-        this.text3 = this.add.text(20, 50, 'Buy a New Ship with Gold!', this.style);
+        this.text3 = this.add.text(90, 50, 'Buy a New Ship with Gold!', this.style);
 
-        this.text4 = this.add.text(100, 90, 'Canoe', this.style);
-        this.text5 = this.add.text(200, 90, 'Schooner', this.style);
-        this.text6 = this.add.text(345, 90, 'Brig', this.style);
-        this.text7 = this.add.text(460, 90, 'Frigate', this.style);
-        this.text8 = this.add.text(20, 110, "---------------------------------------------",
+        this.text4 = this.add.text(170, 90, 'Canoe', this.style);
+        this.text5 = this.add.text(270, 90, 'Schooner', this.style);
+        this.text6 = this.add.text(415, 90, 'Brig', this.style);
+        this.text7 = this.add.text(530, 90, 'Frigate', this.style);
+        this.text8 = this.add.text(90, 100, "---------------------------------------------",
             this.style);
 
-        this.text9 = this.add.text(20, 130, 'Cost:', this.style);
-        this.text10 = this.add.text(120, 130, '3', this.style);
-        this.text11 = this.add.text(240, 130, '50', this.style);
-        this.text12 = this.add.text(350, 130, '500', this.style);
-        this.text13 = this.add.text(480, 130, '1000', this.style);
+        this.text9 = this.add.text(90, 120, 'Cost:', this.style);
+        this.text10 = this.add.text(190, 120, '3', this.style);
+        this.text11 = this.add.text(310, 120, '50', this.style);
+        this.text12 = this.add.text(420, 120, '500', this.style);
+        this.text13 = this.add.text(550, 120, '1000', this.style);
 
-        this.text14 = this.add.text(20, 160, "---------------------------------------------",
+        this.text14 = this.add.text(90, 140, "---------------------------------------------",
             this.style);
 
 
         // ***********  BUY BUTTON ETC..  **********
         this.buyShipButton = {
             font: "20px Courier",
+            strokeThickness: 1,
+            stroke: "#0a0",
             fill: "#0a0",
             border: "5px solid red"
         };
 
         //buy canoe
-        this.buyCanoe = this.add.text(110, 180, 'Buy', this.buyShipButton);
+        this.buyCanoe = this.add.text(180, 160, 'Buy', this.buyShipButton);
         this.buyCanoe.name = "buyCanoeWGold";
         this.buyCanoe.setInteractive();
 
         // buy schooner
-        this.buySchooner = this.add.text(220, 180, 'Buy', this.buyShipButton);
+        this.buySchooner = this.add.text(290, 160, 'Buy', this.buyShipButton);
         this.buySchooner.name = "buySchoonerWGold";
         this.buySchooner.setInteractive();
 
         // buy two master
-        this.buyTwoMaster = this.add.text(350, 180, 'Buy', this.buyShipButton);
+        this.buyTwoMaster = this.add.text(420, 160, 'Buy', this.buyShipButton);
         this.buyTwoMaster.name = "buyBrigWGold";
         this.buyTwoMaster.setInteractive();
 
         // buy Four master
-        this.buyFourMaster = this.add.text(500, 180, 'Buy', this.buyShipButton);
+        this.buyFourMaster = this.add.text(570, 160, 'Buy', this.buyShipButton);
         this.buyFourMaster.name = "buyFrigateWGold";
         this.buyFourMaster.setInteractive();
 
-        this.text15 = this.add.text(20, 210, "---------------------------------------------",
+        this.text15 = this.add.text(90, 240, "---------------------------------------------",
             this.style);
 
         // upgrade with Iron plating.
-        this.text16 = this.add.text(20, 230, 'Upgrade your ship with Iron Plating!', this.style);
-        this.text17 = this.add.text(20, 260, 'Cost:', this.style);
-        this.text18 = this.add.text(120, 260, '2', this.style);
-        this.text19 = this.add.text(240, 260, '10', this.style);
-        this.text20 = this.add.text(350, 260, '50', this.style);
-        this.text21 = this.add.text(480, 260, '100', this.style);
+        this.text16 = this.add.text(90, 200, 'Upgrade your ship with Iron Plating!', this.style);
+        this.text17 = this.add.text(90, 225, 'Cost:', this.style);
+        this.text18 = this.add.text(190, 225, '2', this.style);
+        this.text19 = this.add.text(310, 225, '10', this.style);
+        this.text20 = this.add.text(420, 225, '50', this.style);
+        this.text21 = this.add.text(550, 225, '100', this.style);
 
-        this.text22 = this.add.text(20, 280, "---------------------------------------------",
+        this.text22 = this.add.text(90, 240, "---------------------------------------------",
             this.style);
 
         // add buy IronPlating button
-        this.buyIronPlate = this.add.text(200, 300, 'Buy Iron Plate', this.buyShipButton);
+        this.buyIronPlate = this.add.text(270, 260, 'Buy Iron Plate', this.buyShipButton);
         this.buyIronPlate.name = "buyIronPlateBtn";
         this.buyIronPlate.setInteractive();
 
-        this.text23 = this.add.text(20, 330, "---------------------------------------------",
+        this.text23 = this.add.text(90, 280, "---------------------------------------------",
             this.style);
 
 
         // Buy Cannons!.
-        this.text24 = this.add.text(20, 360, 'Buy Cannons! ', this.style);
-        this.text26 = this.add.text(300, 360, 'Cost: 5 Gold per Cannon', this.style);
-        this.text25 = this.add.text(20, 390, 'Max:', this.style);
-        this.text27 = this.add.text(120, 390, '1', this.style);
-        this.text28 = this.add.text(240, 390, '3', this.style);
-        this.text29 = this.add.text(350, 390, '8', this.style);
-        this.text30 = this.add.text(480, 390, '20', this.style);
+        this.text24 = this.add.text(90, 300, 'Buy Cannons! ', this.style);
+        this.text26 = this.add.text(370, 300, 'Cost: 5 Gold per Cannon', this.style);
+        this.text25 = this.add.text(90, 320, 'Max:', this.style);
+        this.text27 = this.add.text(190, 320, '1', this.style);
+        this.text28 = this.add.text(310, 320, '3', this.style);
+        this.text29 = this.add.text(420, 320, '8', this.style);
+        this.text30 = this.add.text(550, 320, '20', this.style);
 
 
-        this.text31 = this.add.text(20, 410, "---------------------------------------------",
+        this.text31 = this.add.text(90, 335, "---------------------------------------------",
             this.style);
 
-        //this.text32 = this.add.text(20, 430, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), this.style);
+        // the following put in by buy cannon button handler.
+        //this.text32 = this.add.text(80, 355, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), this.style);
 
         // buy cannon button
-        this.buyCannon = this.add.text(200, 460, 'Buy a Cannon', this.buyShipButton);
+        this.buyCannon = this.add.text(270, 380, 'Buy A Cannon', this.buyShipButton);
         this.buyCannon.name = "buyCannonBtn";
         this.buyCannon.setInteractive();
 
-        this.text33 = this.add.text(20, 490, "---------------------------------------------",
+        this.text33 = this.add.text(90, 395, "---------------------------------------------",
             this.style);
+
+        // ship repair
+        this.text34 = this.add.text(90, 415, 'Repair Your Ship! ', this.style);
+
+        // next line is from pirateFunctions because of update.
+        //this.text36 = this.add.text(360, 415, 'Max Cost: ' + ((playerShip.maxHitPoints - playerShip.hitPoints) * 2), this.style);
+
+        this.text36 = this.add.text(90, 435, "---------------------------------------------",
+            this.style);
+
+        // repair Ship button
+        this.repairShip = this.add.text(270, 455, 'Repair Ship', this.buyShipButton);
+        this.repairShip.name = "repairShipBtn";
+        this.repairShip.setInteractive();
 
 
         // set sail!
         this.setSail = this.add.text(50, 560, 'Set Sail!', {
             font: "30px Courier",
+            strokeThickness: 1,
+            stroke: "#00a",
             fill: "#00a",
             border: "5px solid red"
         });
@@ -246,9 +265,11 @@ class Tortuga extends Phaser.Scene {
         this.setSail.setInteractive();
 
         // Retire
-        this.retire = this.add.text(400, 560, 'Retire!', {
+        this.retire = this.add.text(600, 560, 'Retire!', {
             font: "30px Courier",
-            fill: "#a00",
+            strokeThickness: 1,
+            stroke: "#a00",
+           fill: "#a00",
             border: "5px solid red"
         });
         this.retire.name = "pirateRetireBtn";
