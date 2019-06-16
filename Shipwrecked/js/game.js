@@ -47,7 +47,8 @@ let Wood = 0;
 let Iron = 0;
 let Wool = 0;
 let Food = 1;
-
+let ShipwreckedScore = 0;
+let PiratesScore = 0;
 
 //boats related.
 let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFood) {
@@ -63,7 +64,7 @@ let BoatConstructor = function (pCrew, pCargo, pSpeed, pWood, pWool, pIron, pFoo
     this.maxHitPoints = 0;
     this.cannon = 0;  // each cannon does 10 pts damage, takes 3 cargo spaces
     this.maxCannon = 0;
-    this.bIronPlate = false;  // Iron plate => *50% hitpoints, -10% speed.
+    this.bIronPlate = false;  // Iron plate => reduces damage taken by a factor.  see below.
     this.shipType = "";
 
 
@@ -114,7 +115,7 @@ let twoMaster = new BoatConstructor(30, 25, 50, 40, 25, 15, 30);    // Base hit 
 let fourMaster = new BoatConstructor(50, 60, 75, 80, 45, 35, 50);   // Base hit points: 500;
 
 let playerShip = "";  // to be filled in when player gets a ship!
-let IronPlateModifier = 0.1;   // damage taken multiplyer if player has Iron Plate.
+let IronPlateModifier = 0.5;   // damage taken multiplyer if player has Iron Plate.
 let cannonRange = 150;  // cannon range for in range checks.
 
 // volcano explode timer related

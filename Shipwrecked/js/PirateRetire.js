@@ -4,6 +4,17 @@ class PirateRetire extends Phaser.Scene {
         super({ key: "PirateRetire" });
 
         this.gameOver = false;
+
+        this.RetiredSummary = [];
+        this.RetiredSummary[0] = "Well, you survived.  Not that you have any gold to speak of.  You exist as a beggar in the streets, doomed to a miserable existance and  a disease ridden death.";
+        this.RetiredSummary[1] = "You survived and have a very small bit to show for it.  You manage to rent a small hovel in a rather bad part of town.  You live very simply with no luxuries except a bottle of rum once a year.";
+        this.RetiredSummary[2] = "You survived and have a bit to show for it.  You rent an appartment in town and live a simple life with few luxuries.";
+        this.RetiredSummary[3] = "You survived and have something to show for it!  You buy a nice little cottage in town and live a normal life with a few parties every year.";
+        this.RetiredSummary[4] = "You have done reasonably well!  You buy a nice house in town, have a servant and live a good life with some parties every year.";
+        this.RetiredSummary[5] = "You have done well!  You buy a small estate outside of town. You have a few servants, live a good life and celebrate with fairly nice parties every year.";
+        this.RetiredSummary[6] = "You have done Very well!  You have amassed a large amount of wealth.  You buy a large estate outside of town. You have a lots of servants, live a great life and celebrate with very nice parties every year.";
+        this.RetiredSummary[7] = "Who says Piracy doesn't Pay?  You have amassed a huge fortune.  You buy your way into the Governership of Tortuga.  You buy multiple large estates and have lots of servants. You live a fairytale life and host wild fantasic parties year round which are the talk of the caribbean!";
+
     } // end constructor
 
 
@@ -24,13 +35,22 @@ class PirateRetire extends Phaser.Scene {
         this.load.plugin('PirateFunctionsPlugin', './js/PirateFunctionsPlugin.js');
 
         // main images
-        this.load.image("Port", "assets/PortScene800.jpg");
-        this.load.image("SailBtn", "assets/TallShip45.jpg");
-        this.load.image("IronBtn", "assets/IronOre4.png");
+        this.load.image("PortSceneImg", "assets/PortScene800.jpg");
+        this.load.image("BeggarImg", "assets/BeggarInPort.jpg");
+        this.load.image("HovelImg", "assets/Hovel.jpg");
+        this.load.image("ApartmentImg", "assets/Apartment.jpg");
+        this.load.image("CottageImg", "assets/Cottage.jpg");
+        this.load.image("HouseImg", "assets/House.jpg");
+        this.load.image("EstateImg", "assets/Estate1.jpg");
+        this.load.image("LargeEstateImg", "assets/Estate2.jpg");
+        this.load.image("GovernorImg", "assets/Governor.jpg");
+
+        //this.load.image("SailBtn", "assets/TallShip45.jpg");
+        //this.load.image("IronBtn", "assets/IronOre4.png");
 
         // status icons will be on top of anything else.
-        this.load.image("singleHeart", "assets/singleHeart16.png");
-        this.load.image("blankHeart", "assets/blankHeart16.png");
+        //this.load.image("singleHeart", "assets/singleHeart16.png");
+        //this.load.image("blankHeart", "assets/blankHeart16.png");
 
 
         // Audio:  Needed all incase of game end while in this scene.
@@ -113,8 +133,16 @@ class PirateRetire extends Phaser.Scene {
 
         //NOTE: add in order from bottom layer to top.
 
-        // to only add an image someplace, you would say:
-        this.add.image(400, 400, "Port");
+        // Adding all images to try to get them to readd onwake.
+       // this.add.image(400, 200, "BeggarImg");
+       // this.add.image(400, 300, "HovelImg");
+        //this.add.image(400, 375, "ApartmentImg");
+        //this.add.image(450, 300, "CottageImg");
+        //this.add.image(400, 400, "HouseImg");
+        //this.add.image(450, 300, "EstateImg");
+        //this.add.image(450, 300, "LargeEstateImg");
+        //this.add.image(400, 300, "GovernorImg");
+        //this.add.image(400, 200, "PortSceneImg");
         //this.add.image(250, 200, "Hull");
 
 
@@ -122,14 +150,14 @@ class PirateRetire extends Phaser.Scene {
 
         //  Input Events
         // note: gameobjectdown handler should be in global plug in now.
-        this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
+        //this.input.on('gameobjectdown', this.sys.PirateFunctions.onGameObjectClicked, this);
 
 
         /* *****************************************************************************************
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-        this.sys.PirateFunctions.tortugaTextFunction();
+       // this.sys.PirateFunctions.retiredTextFunction();
 
 
         /* **************************************************************
@@ -144,21 +172,21 @@ class PirateRetire extends Phaser.Scene {
          * ************************************************************ */
 
         // Dialog box:
-        this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 60, windowWidth: 560, locationX: 20, locationY: 390 });
-        this.dialogBox.toggleWindow();
+        //this.dialogBox = this.sys.dialogModal;
+        //this.dialogBox.init({ windowHeight: 150, windowWidth: 560, locationX: 120, locationY: 110 });
+        //this.dialogBox.toggleWindow();
         //this.dialogBox.addTextLine(20, 20, "Welcome to Tortuga!  You have a " + playerShip.shipType + " and you were able to bring the following to port: " +
         //    "Gold: " + playerShip.gold + " Iron: " + playerShip.iron + " Wool: " + playerShip.wool + " Wood: " + playerShip.wood + " Food: " + playerShip.food  + " ." +
         //    "  Everything but the gold was sold to provide funds for this next adventure!  Your Gold total has been updated.", false);
 
 
         // ******* Boat Construction and Selection Texts  **************
-        this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+        //this.style = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
 
         //heading
-        this.text1 = this.add.text(20, 20, 'Tortuga Port: ', this.style);
-        //this.text2 = this.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, this.style);
-        this.text3 = this.add.text(20, 50, 'Retired!', this.style);
+        //this.text1 = this.add.text(20, 20, 'Tortuga Port: ', this.style);
+        ////this.text2 = this.add.text(350, 20, 'Current Ship: ' + playerShip.shipType, this.style);
+        //this.text3 = this.add.text(20, 50, 'Retired!', this.style);
 
         //this.text4 = this.add.text(100, 90, 'Canoe', this.style);
         //this.text5 = this.add.text(200, 90, 'Schooner', this.style);
@@ -285,7 +313,7 @@ class PirateRetire extends Phaser.Scene {
     // Std functionality handles most everything else.
     // -----------------------------------------------------------
     update() {
-        //console.log("in update shipConstruction");
+       
         if (this.gameOver) {
             console.log("game is over??");
             return;
@@ -344,25 +372,148 @@ class PirateRetire extends Phaser.Scene {
 
 
 
-        // #########################################
-        //####### FOR TESTING #######################
-        //################################################
-
-        //playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
-        //playerShip.gold = 600;
-        //playerShip.iron = 10;
-        //playerShip.wool = 10;
-        //playerShip.wood = 0;
-        //playerShip.food = 0;
-
-        //Gold = 620;
-
         console.log("in PirateRetire Wake.  Ship Type: " + playerShip.shipType);
-        // #################### End for testing ####################
 
-        this.sys.PirateFunctions.updateTortugaDisplay();
+        // calculate pirate score
+        PiratesScore = 0;
+        PiratesScore += Gold;
+        switch (playerShip.shipType) {
 
-    }
+            case "Canoe":
+                PiratesScore += 3;
+                break;
+
+            case "Schooner":
+                PiratesScore += 50;
+                break;
+
+            case "Brig":
+                PiratesScore += 500;
+                break;
+
+            case "Frigate":
+                PiratesScore += 1000;
+                break;
+
+            default:
+                PiratesScore += 0;
+                break;
+        }// end switch
+
+
+        // ############################################################################
+        // ############ IMPORTANT! #####################################################
+        // # Because almost all of our display, including the background image, depends 
+        // on the players final score, and because we must be created at the very beginning
+        // of the game then just hidden and slept till now, ALL the normal create stuff must
+        // happen here, in the proper order, if we want our text etc to show up correctly and 
+        // not be hidden by the background image.
+        // #####################################################################################
+
+
+        // set up background image based on player Score:
+        if (PiratesScore > 6000) {
+            this.add.image(400, 300, "GovernorImg");
+            console.log("governor");
+        }
+
+        else if (PiratesScore > 3500) {
+            this.add.image(450, 300, "LargeEstateImg");
+            console.log("large estate");
+        }
+
+        else if (PiratesScore > 2500) {
+            this.add.image(450, 300, "EstateImg");
+            console.log("estate");
+        }
+
+        else if (PiratesScore > 1200) {
+            this.add.image(400, 400, "HouseImg");
+            console.log("house");
+        }
+
+        else if (PiratesScore > 700) {
+            this.add.image(450, 300, "CottageImg");
+            console.log("cottage");
+        }
+
+        else if (PiratesScore > 300) {
+            this.add.image(400, 375, "ApartmentImg");
+            console.log("apartment");
+        }
+
+        else if (PiratesScore > 100) {
+            this.add.image(475, 300, "HovelImg");
+            console.log("hovel");
+        }
+
+        else {
+            this.add.image(400, 200, "BeggarImg");
+            console.log("Beggar");
+        }
+
+
+        // main Retired text display
+        this.retiredStyle = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
+
+        // set up the dialog box and everything else:
+
+        console.log("in retire, setting up dialog box");
+        this.dialogBox = this.sys.dialogModal;
+        this.dialogBox.init({ windowHeight: 150, windowWidth: 560, locationX: 120, locationY: 110 });
+
+        /* *****************************************************************************************
+         * ********************* PirateFunctions Texts.. *******************************************
+         * ***************************************************************************************** */
+
+        this.sys.PirateFunctions.retiredTextFunction();
+
+
+
+        //this text AFTER the image has been loaded.
+        this.text0 = this.add.text(20, 20, 'Tortuga Port: ', this.retiredStyle);
+        this.text1 = this.add.text(20, 50, 'Retired!', this.retiredStyle);
+
+        this.sys.PirateFunctions.updateRetiredDisplay();
+
+
+
+
+        // set up main text based on player Score:
+        if (PiratesScore > 5000) {
+            this.dialogBox.setText(this.RetiredSummary[7], true);
+        }
+
+        else if (PiratesScore > 3000) {
+            this.dialogBox.setText(this.RetiredSummary[6], true);
+        }
+
+        else if (PiratesScore > 2000) {
+            this.dialogBox.setText(this.RetiredSummary[5], true);
+        }
+
+        else if (PiratesScore > 1000) {
+            this.dialogBox.setText(this.RetiredSummary[4], true);
+        }
+
+        else if (PiratesScore > 800) {
+            this.dialogBox.setText(this.RetiredSummary[3], true);
+        }
+
+        else if (PiratesScore > 300) {
+            this.dialogBox.setText(this.RetiredSummary[2], true);
+        }
+
+        else if (PiratesScore > 100) {
+            this.dialogBox.setText(this.RetiredSummary[1], true);
+        }
+
+        else {
+            this.dialogBox.setText(this.RetiredSummary[0], true);
+        }
+
+        console.log("end of onwake for retire");
+    } // end on wake
 
 
 } // end class PirateRetire

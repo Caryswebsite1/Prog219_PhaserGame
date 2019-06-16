@@ -130,7 +130,7 @@ class Tortuga extends Phaser.Scene {
 
         // Dialog box:
         this.dialogBox = this.sys.dialogModal;
-        this.dialogBox.init({ windowHeight: 60, windowWidth: 560, locationX: 20, locationY: 390 });
+        this.dialogBox.init({ windowHeight: 60, windowWidth: 560, locationX: 90, locationY: 390 });
         this.dialogBox.toggleWindow();
         //this.dialogBox.addTextLine(20, 20, "Welcome to Tortuga!  You have a " + playerShip.shipType + " and you were able to bring the following to port: " +
         //    "Gold: " + playerShip.gold + " Iron: " + playerShip.iron + " Wool: " + playerShip.wool + " Wood: " + playerShip.wood + " Food: " + playerShip.food  + " ." +

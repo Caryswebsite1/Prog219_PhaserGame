@@ -236,7 +236,7 @@ DialogModalPlugin.prototype = {
 
         if (animate) {
             this.timedEvent = this.scene.time.addEvent({
-                delay: 150 - (this.dialogSpeed * 30),
+                delay: 150 - (this.dialogSpeed * 40),
                 callback: this._animateText,
                 callbackScope: this,
                 loop: true

@@ -116,7 +116,7 @@ PirateFunctionsPlugin.prototype = {
 
                         this.scene.gameOver = true;
                         this.scene.dialogBox.setText("Alas! You have died!");
-                        this.PirateGameOver(this);
+                        this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
                     }// end if player sinks
                 }// end cargoship returns fire
@@ -220,7 +220,7 @@ PirateFunctionsPlugin.prototype = {
 
                         this.scene.gameOver = true;
                         this.scene.dialogBox.setText("Alas! You have died!");
-                        this.PirateGameOver(this);
+                        this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
                     }// end if player sinks
                 }// end hunter returns fire
@@ -401,7 +401,7 @@ PirateFunctionsPlugin.prototype = {
             case "pirateRetireBtn":
 
                 var retireScene = this.scene.manager.getScene("PirateRetire");
-                console.log("in ConstructBtn Handler. getScene Results: " + retireScene.scene.key);
+                console.log("in pirateRetireBtn Handler. getScene Results: " + retireScene.scene.key);
                 this.scene.wake("PirateRetire");
                 this.scene.bringToTop("PirateRetire");
                 this.scene.setActive(true, "PirateRetire");
@@ -438,7 +438,9 @@ PirateFunctionsPlugin.prototype = {
                 manager.remove("PirateIntro");
                 manager.remove("Tortuga");
                 manager.remove("PirateSailing");
+                manager.remove("DeathScene");
 
+                console.log("just leaving of PirateRetire handler.");
                 break; // end pirateRetireBtn
 
 
@@ -765,6 +767,25 @@ PirateFunctionsPlugin.prototype = {
     },
 
 
+    retiredTextFunction: function () {
+        RetiredStyle = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
+
+        this.retiredGoldText = this.scene.add.text(250, 20, "Gold: ", RetiredStyle);
+        this.retiredGoldText.setScrollFactor(0);
+
+        this.retiredGoldAmountText = this.scene.add.text(320, 20, Gold, { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", tabs: [60, 60, 60] });
+        this.retiredGoldText.setScrollFactor(0);
+
+        this.retiredPlayerShipText = this.scene.add.text(420, 20, 'Current Ship: ' + playerShip.shipType, RetiredStyle);
+        this.retiredPlayerShipText.setScrollFactor(0);
+
+        this.retiredScoreText = this.scene.add.text(140, 50, 'Pirates Score: ' + PiratesScore, RetiredStyle);
+        this.retiredScoreText.setScrollFactor(0);
+
+    },
+
+
+   
 
     /* **********************************************************************************************************
     ***********  Text Display update function:  All scenes should call this on wake to update their displays. *********
@@ -785,6 +806,13 @@ PirateFunctionsPlugin.prototype = {
         this.sailingHitpointsText.setText('Hull Strength: ' + playerShip.hitPoints);
     },
 
+
+    updateRetiredDisplay: function () {
+        this.retiredGoldText.setText("Gold: ");
+        this.retiredGoldAmountText.setText(Gold);
+        this.retiredPlayerShipText.setText('Current Ship: ' + playerShip.shipType);
+        this.retiredScoreText.setText('Pirates Score: ' + PiratesScore);
+    },
 
     /* **************************************************************
     * ********* Initial making of Life bar... Might not need now.. **
@@ -891,6 +919,7 @@ PirateFunctionsPlugin.prototype = {
     * ********* Pirate Game Over ******************************
     * *************************************************************** */
     PirateGameOver: function (callingScene, bVolcano) {
+        console.log("just entered PirateGameOver function");
 
         /* ------------------------------------------------------------------------------
          * NOTE: transition function does not exist in our version.It does in the latest but

@@ -179,10 +179,12 @@ class PirateIntro extends Phaser.Scene {
         //this.text14 = this.add.text(20, 270, "---------------------------------------------",
         //    this.style);
 
-
+        
         // Continue to Tortuga!
-        this.continue = this.add.text(250, 300, 'Press to Continue', {
+        this.continue = this.add.text(250, 380, 'Press to Continue', {
             font: "30px Courier",
+            strokeThickness: 1,
+            stroke: "#a00",
             fill: "#a00",
             border: "5px solid red"
         });
@@ -330,11 +332,35 @@ class PirateIntro extends Phaser.Scene {
         Gold += (playerShip.wood / 8);
         Gold += (playerShip.food / 10);
 
+        ShipwreckedScore += Gold;
+        ShipwreckedScore += (playerShip.crew * 100);
+        switch (playerShip.shipType) {
+
+            case "Canoe":
+                ShipwreckedScore += 3;
+                break;
+
+            case "Schooner":
+                ShipwreckedScore += 50;
+                break;
+
+            case "Brig":
+                ShipwreckedScore += 500;
+                break;
+
+            case "Frigate":
+                ShipwreckedScore += 1000;
+                break;
+
+            default:
+                ShipwreckedScore += 0;
+                break;
+        }// end switch
 
 
 
         // ******* Intro to Tortuga Texts  **************
-        this.style = { font: "20px Courier", fill: "#000", tabs: [60, 60, 60] };
+        this.style = { font: "20px Courier", strokeThickness: 1, stroke: "#000", fill: "#000", tabs: [60, 60, 60] };
 
         //heading
         this.text1 = this.add.text(20, 20, 'Welcome to Tortuga! ', this.style);
@@ -357,6 +383,16 @@ class PirateIntro extends Phaser.Scene {
         this.text14 = this.add.text(20, 270, "---------------------------------------------",
             this.style);
 
+        if (playerShip.crew > 1) {
+            this.text10 = this.add.text(20, 290, 'You saved ' + playerShip.crew + ' people including yourself.', this.style);
+        }
+        else {
+            this.text10 = this.add.text(20, 290, 'You saved only yourself...', this.style);
+        }
+            
+
+
+        this.text10 = this.add.text(20, 320, 'Your Score for Shipwrecked: ' + ShipwreckedScore, this.style);
 
 
     }// end onwake.
