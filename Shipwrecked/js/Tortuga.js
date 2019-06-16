@@ -29,16 +29,16 @@ class Tortuga extends Phaser.Scene {
         this.load.image("IronBtn", "assets/IronOre4.png");
 
         // status icons will be on top of anything else.
-        this.load.image("singleHeart", "assets/singleHeart16.png");
-        this.load.image("blankHeart", "assets/blankHeart16.png");
+        //this.load.image("singleHeart", "assets/singleHeart16.png");
+        //this.load.image("blankHeart", "assets/blankHeart16.png");
 
 
         // Audio:  Needed all incase of game end while in this scene.
         //Really should have.ogg too.
         // Notes: instances allows for the given number of multiple simultainous plays of the same item.
         // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
-        //this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
-        //this.load.audio('JungleSound', ['assets/audio/rainforest.mp3']);
+        this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
+        this.load.audio('MarketSound', ['assets/audio/ShoppingMallAmbiance.mp3']);
         //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
         //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
 
@@ -73,21 +73,21 @@ class Tortuga extends Phaser.Scene {
         this.cameras.main.setSize(500, 400);
 
         // island audios
-        //this.OceanAudio = this.sound.add('OceanSound');
-        //this.JungleAudio = this.sound.add('JungleSound');
+        this.OceanAudio = this.sound.add('OceanSound');
+        this.MarketAudio = this.sound.add('MarketSound');
         //this.VolcanoAudio = this.sound.add('VolcanoSound');
         //this.VolcanoAudio2 = this.sound.add('VolcanoSound');
         //this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
 
 
-        // set island ambiance and pause so it doesn't override all the other maps
-        //this.OceanAudio.volume = 0.2;
-        //this.OceanAudio.play({ loop: true });
-        //this.OceanAudio.pause();
+        // set Tortuga ambiance and pause so it doesn't override all the other maps
+        this.OceanAudio.volume = 0.2;
+        this.OceanAudio.play({ loop: true });
+        this.OceanAudio.pause();
 
-        //this.JungleAudio.volume = 0.5;
-        //this.JungleAudio.play({ loop: true });
-        //this.JungleAudio.pause();
+        this.MarketAudio.volume = 0.5;
+        this.MarketAudio.play({ loop: true });
+        this.MarketAudio.pause();
 
 
 
@@ -132,9 +132,6 @@ class Tortuga extends Phaser.Scene {
         this.dialogBox = this.sys.dialogModal;
         this.dialogBox.init({ windowHeight: 60, windowWidth: 560, locationX: 90, locationY: 390 });
         this.dialogBox.toggleWindow();
-        //this.dialogBox.addTextLine(20, 20, "Welcome to Tortuga!  You have a " + playerShip.shipType + " and you were able to bring the following to port: " +
-        //    "Gold: " + playerShip.gold + " Iron: " + playerShip.iron + " Wool: " + playerShip.wool + " Wood: " + playerShip.wood + " Food: " + playerShip.food  + " ." +
-        //    "  Everything but the gold was sold to provide funds for this next adventure!  Your Gold total has been updated.", false);
 
 
         // ******* Boat Construction and Selection Texts  **************
@@ -318,16 +315,22 @@ class Tortuga extends Phaser.Scene {
         if (bSleep === true) {
             // shut down this maps ambience audio
             console.log("shutting down audio in Tortuga.");
-            //this.OceanAudio.pause();
-            //this.JungleAudio.pause();
-            //if (this.EarthQuakeAudio.isPlaying) {
-            //    this.EarthQuakeAudio.pause();
-            //}
-
+            this.OceanAudio.pause();
+            this.MarketAudio.pause();
         }
 
     }
 
+
+    // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepTortuga;
+    }
 
     // ---------------------------------------------------------
     // onWake()
@@ -344,9 +347,9 @@ class Tortuga extends Phaser.Scene {
         //this.sys.PirateFunctions.updateTortugaDisplay();
 
         console.log('attempting to resume audio in tortuga.');
-        // set island ambiance
-        //this.OceanAudio.resume();
-        //this.JungleAudio.resume();
+        // set Tortuga ambiance
+        this.OceanAudio.resume();
+        this.MarketAudio.resume();
 
 
 

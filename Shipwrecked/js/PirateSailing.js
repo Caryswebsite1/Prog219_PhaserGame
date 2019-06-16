@@ -658,6 +658,18 @@ class PirateSailing extends Phaser.Scene {
     }// end setSleepFlag
 
 
+
+    // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepPirate;
+    }
+
+
     // ---------------------------------------------------------
     // onWake()
     //
@@ -702,7 +714,7 @@ class PirateSailing extends Phaser.Scene {
                 break;
 
             case "Frigate":
-                this.player.setScale(0.6);
+                this.player.setScale(0.5);
                 break;
 
             default:

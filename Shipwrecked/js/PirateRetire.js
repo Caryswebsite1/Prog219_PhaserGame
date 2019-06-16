@@ -57,10 +57,13 @@ class PirateRetire extends Phaser.Scene {
         //Really should have.ogg too.
         // Notes: instances allows for the given number of multiple simultainous plays of the same item.
         // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
-        //this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
-        //this.load.audio('JungleSound', ['assets/audio/rainforest.mp3']);
-        //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
-        //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
+        this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
+        this.load.audio('MarketSound', ['assets/audio/ShoppingMallAmbiance.mp3']);
+        this.load.audio('CryingSound', ['assets/audio/Sad_Male.mp3']);
+        this.load.audio('CarnivalSound', ['assets/audio/CrowdAtCarnival.mp3']);
+        this.load.audio('PartyCrowdSound', ['assets/audio/party-crowd.mp3']);
+        this.load.audio('PartyHornSound', ['assets/audio/party-horn.mp3'], { instances: 3 });
+        this.load.audio('FireworksSound', ['assets/audio/Fireworks.mp3']);
 
     }// end preload
 
@@ -107,18 +110,30 @@ class PirateRetire extends Phaser.Scene {
         //this.cameras.main.setSize(1000, 1000);
         this.cameras.main.setSize(500, 400);
 
-        // island audios
-        //this.OceanAudio = this.sound.add('OceanSound');
-        //this.JungleAudio = this.sound.add('JungleSound');
-        //this.VolcanoAudio = this.sound.add('VolcanoSound');
-        //this.VolcanoAudio2 = this.sound.add('VolcanoSound');
-        //this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
+
+        // possible Retirement Audios
+        this.OceanAudio = this.sound.add('OceanSound');
+        this.MarketAudio = this.sound.add('MarketSound');
+        this.CryingAudio = this.sound.add('CryingSound');
+        this.CarnivalAudio = this.sound.add('CarnivalSound');
+        this.PartyCrowdAudio = this.sound.add('PartyCrowdSound');
+        this.PartyHornAudio = this.sound.add('PartyHornSound');
+        this.FireworksAudio = this.sound.add('FireworksSound');
 
 
-        // set island ambiance and pause so it doesn't override all the other maps
-        //this.OceanAudio.volume = 0.2;
-        //this.OceanAudio.play({ loop: true });
-        //this.OceanAudio.pause();
+
+        // set possible Retired ambiance volumes.  Actual play will be done on wake. 
+        this.OceanAudio.volume = 0.2;
+        this.MarketAudio.volume = 0.4;
+        this.CryingAudio.volume = 0.8;
+        this.CarnivalAudio.volume = 0.4;
+        this.PartyCrowdAudio.volume = 0.5;
+        this.PartyHornAudio.volume = 0.5;
+        this.FireworksAudio.volume = 0.7;
+
+
+        ////this.OceanAudio.play({ loop: true });
+        ////this.OceanAudio.pause();
 
         //this.JungleAudio.volume = 0.5;
         //this.JungleAudio.play({ loop: true });
@@ -352,6 +367,17 @@ class PirateRetire extends Phaser.Scene {
 
 
     // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepRetire;
+    }
+
+
+    // ---------------------------------------------------------
     // onWake()
     //
     // Description: Handler for when scene wakes.  Sets the current
@@ -479,37 +505,85 @@ class PirateRetire extends Phaser.Scene {
 
 
 
-        // set up main text based on player Score:
+        // set up main text and audio based on player Score:
         if (PiratesScore > 5000) {
+            // Governor
             this.dialogBox.setText(this.RetiredSummary[7], true);
+            this.CarnivalAudio.volume = 0.2;
+            this.PartyCrowdAudio.volume = 0.6;
+            this.PartyHornAudio.volume = 0.3;
+            this.FireworksAudio.volume = 0.7;
+            this.CarnivalAudio.play({ loop: true });
+            this.PartyCrowdAudio.play({ loop: true });
+            this.FireworksAudio.play({ loop: true });
+            this.PartyHornAudio.play({ delay: 1 });
+            this.PartyHornAudio.play({ delay: 2 });
+            this.PartyHornAudio.play({ delay: 3 });
         }
 
         else if (PiratesScore > 3000) {
+            // large estate
             this.dialogBox.setText(this.RetiredSummary[6], true);
-        }
+            this.CarnivalAudio.volume = 0.2;
+            this.PartyCrowdAudio.volume = 0.4;
+            this.PartyHornAudio.volume = 0.3;
+            this.CarnivalAudio.play({ loop: true });
+            this.PartyCrowdAudio.play({ loop: true });
+            this.PartyHornAudio.play({ delay: 1 });
+            this.PartyHornAudio.play({ delay: 2 });
+            this.PartyHornAudio.play({ delay: 3 });        }
 
         else if (PiratesScore > 2000) {
+            // estate
             this.dialogBox.setText(this.RetiredSummary[5], true);
+            this.CarnivalAudio.volume = 0.2;
+            this.PartyCrowdAudio.volume = 0.4;
+            this.PartyHornAudio.volume = 0.3;
+            this.CarnivalAudio.play({ loop: true });
+            this.PartyCrowdAudio.play({ loop: true });
+            this.PartyHornAudio.play({ delay: 1 });
+
         }
 
         else if (PiratesScore > 1000) {
+            // house
             this.dialogBox.setText(this.RetiredSummary[4], true);
+            this.CarnivalAudio.volume = 0.4;
+            this.PartyCrowdAudio.volume = 0.2;
+            this.CarnivalAudio.play({ loop: true });
+            this.PartyCrowdAudio.play({ loop: true });
+
         }
 
         else if (PiratesScore > 800) {
+            // cottage
             this.dialogBox.setText(this.RetiredSummary[3], true);
+            this.MarketAudio.volume = 0.2;
+            this.MarketAudio.play({ loop: true });
+            this.CarnivalAudio.play({ loop: true });
         }
 
         else if (PiratesScore > 300) {
+            // appartment in town, lower end
             this.dialogBox.setText(this.RetiredSummary[2], true);
+            this.MarketAudio.play({ loop: true });
         }
 
         else if (PiratesScore > 100) {
+            // hovel
             this.dialogBox.setText(this.RetiredSummary[1], true);
-        }
+            this.OceanAudio.play({ loop: true });
+            this.MarketAudio.play({ loop: true });
+            this.CryingAudio.volume = 0.3;  // lower crying 
+            this.CryingAudio.play({ loop: true });
+       }
 
         else {
+            // beggar in the streets.
             this.dialogBox.setText(this.RetiredSummary[0], true);
+            this.OceanAudio.play({ loop: true });
+            this.MarketAudio.play({ loop: true });
+            this.CryingAudio.play({ loop: true });
         }
 
         console.log("end of onwake for retire");

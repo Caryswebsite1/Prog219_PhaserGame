@@ -61,7 +61,7 @@ class Shipwrecked2 extends Phaser.Scene {
         this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
         this.load.audio('BoarSound', ['assets/audio/BoarOink.mp3']);
         this.load.audio('SheepSound', ['assets/audio/Sheep.mp3']);
-        this.load.audio('HeadChopSound', ['assets/audio/BloodyHeadChop.mp3']);
+        this.load.audio('HeadChopSound', ['assets/audio/Decapitation.mp3']);
         this.load.audio('ChopWoodSound', ['assets/audio/ChopWood.mp3']);
         this.load.audio('JungleChopSound', ['assets/audio/JungleChop.mp3']);
         this.load.audio('PickAxeSound', ['assets/audio/Pickaxe.mp3']);
@@ -749,6 +749,18 @@ class Shipwrecked2 extends Phaser.Scene {
     setSleepFlag(bSleep) {
         sleep2 = bSleep;
     }
+
+
+    // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleep2;
+    }
+
 
 
 

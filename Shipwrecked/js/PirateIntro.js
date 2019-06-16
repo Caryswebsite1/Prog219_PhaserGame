@@ -36,7 +36,7 @@ class PirateIntro extends Phaser.Scene {
         // Notes: instances allows for the given number of multiple simultainous plays of the same item.
         // so instances :4 allows 4 copies of that sound to play simultainiously or overlapping if desired.
         //this.load.audio('OceanSound', ['assets/audio/Waves.mp3']);
-        //this.load.audio('JungleSound', ['assets/audio/rainforest.mp3']);
+        this.load.audio('CarnivalSound', ['assets/audio/CrowdAtCarnival.mp3']);
         //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
         //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
 
@@ -87,7 +87,7 @@ class PirateIntro extends Phaser.Scene {
 
         // island audios
         //this.OceanAudio = this.sound.add('OceanSound');
-        //this.JungleAudio = this.sound.add('JungleSound');
+        this.CarnivalAudio = this.sound.add('CarnivalSound');
         //this.VolcanoAudio = this.sound.add('VolcanoSound');
         //this.VolcanoAudio2 = this.sound.add('VolcanoSound');
         //this.EarthQuakeAudio = this.sound.add('EarthQuakeSound');
@@ -98,9 +98,9 @@ class PirateIntro extends Phaser.Scene {
         //this.OceanAudio.play({ loop: true });
         //this.OceanAudio.pause();
 
-        //this.JungleAudio.volume = 0.5;
-        //this.JungleAudio.play({ loop: true });
-        //this.JungleAudio.pause();
+        this.CarnivalAudio.volume = 0.5;
+        this.CarnivalAudio.play({ loop: true });
+        this.CarnivalAudio.pause();
 
 
 
@@ -283,13 +283,20 @@ class PirateIntro extends Phaser.Scene {
             // shut down this maps ambience audio
             console.log("shutting down audio in Pirate Intro.");
             //this.OceanAudio.pause();
-            //this.JungleAudio.pause();
-            //if (this.EarthQuakeAudio.isPlaying) {
-            //    this.EarthQuakeAudio.pause();
-            //}
-
+            this.CarnivalAudio.pause();
         }
 
+    }
+
+
+    // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepPirateIntro;
     }
 
 
@@ -314,7 +321,7 @@ class PirateIntro extends Phaser.Scene {
 
         // set island ambiance
         //this.OceanAudio.resume();
-        //this.JungleAudio.resume();
+        this.CarnivalAudio.resume();
 
         // change tab title to new game name:
         //G_Title.value = "Pirates!"
@@ -331,6 +338,8 @@ class PirateIntro extends Phaser.Scene {
         Gold += (playerShip.wool / 5);
         Gold += (playerShip.wood / 8);
         Gold += (playerShip.food / 10);
+
+        Gold = Math.floor(Gold);
 
         ShipwreckedScore += Gold;
         ShipwreckedScore += (playerShip.crew * 100);

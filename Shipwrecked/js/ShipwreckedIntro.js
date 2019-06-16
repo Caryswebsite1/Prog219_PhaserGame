@@ -232,7 +232,22 @@ class ShipwreckedIntro extends Phaser.Scene {
         this.scene.setVisible(false, "PirateSailing");
         this.scene.setVisible(false, "PirateRetire");
 
-        
+
+
+        this.scene.setActive(true, "Shipwrecked");
+        this.scene.setActive(false, "Shipwrecked");
+        this.scene.setActive(false, "Shipwrecked2");
+        this.scene.setActive(false, "Shipwrecked3");
+        this.scene.setActive(false, "Shipwrecked4");
+        this.scene.setActive(false, "ShipConstruction");
+        this.scene.setActive(false, "DeathScene");
+
+        // these are required here because we are merging our Pirate and Shipwrecked.
+        this.scene.setActive(false, "PirateIntro");
+        this.scene.setActive(false, "Tortuga");
+        this.scene.setActive(false, "PirateSailing");
+        this.scene.setActive(false, "PirateRetire");
+       
 
         // bring this intro scene up for input and display.
         this.scene.bringToTop("ShipwreckedIntro");

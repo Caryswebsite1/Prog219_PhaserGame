@@ -27,6 +27,10 @@ class DeathScene extends Phaser.Scene {
         //this.load.image("bigSand", "assets/island_sand_d.jpg");
         this.load.image("Death", "assets/DeathSkull545.jpg");
 
+        // Audios
+        this.load.audio('DrowningSound', ['assets/audio/Drowning.mp3']);
+        this.load.audio('DeathSound', ['assets/audio/DeathScream.mp3']);
+
     }// end preload
 
 
@@ -82,6 +86,11 @@ class DeathScene extends Phaser.Scene {
         this.dialogBox.init({ windowHeight: 60, windowWidth: 450, locationX: 20, locationY: 320 });
         this.dialogBox.setText("Alas! You have died!");
 
+
+        // audios
+        this.DrowningAudio = this.sound.add('DrowningSound');
+        this.DeathScreamAudio = this.sound.add('DeathSound');
+
     } // end create
 
 
@@ -112,5 +121,15 @@ class DeathScene extends Phaser.Scene {
         sleepDeath = bSleep;
     }
 
+
+    // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepDeath;
+    }
 
 } // end class DeathScene

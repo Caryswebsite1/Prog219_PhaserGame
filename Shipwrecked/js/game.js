@@ -46,7 +46,7 @@ let Gold = 0;
 let Wood = 0;
 let Iron = 0;
 let Wool = 0;
-let Food = 1;
+let Food = 0;
 let ShipwreckedScore = 0;
 let PiratesScore = 0;
 

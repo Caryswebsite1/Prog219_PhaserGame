@@ -51,6 +51,13 @@ PirateFunctionsPlugin.prototype = {
     // cannon range.
     // -----------------------------------------------------------
     cargoShipCombat(thePlayer, cargoShip) {
+        // use manager to get current scene and check if sleeping.
+        var callingScene = this.scene.scene.manager.getScene(this.scene.scene.key);
+        // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+        if (callingScene.isSleepFlagSet()) {
+            return;
+        }
+
 
         // Check if player is in range.  If so then check if player
         // has any cannon.  If so always get a shot with cannon.  
@@ -151,6 +158,12 @@ PirateFunctionsPlugin.prototype = {
     // we go to hand to hand combat...
     // -----------------------------------------------------------
     PirateHunterCombat: function (thePlayer, hunter) {
+        // use manager to get current scene and check if sleeping.
+        var callingScene = this.scene.scene.manager.getScene(this.scene.scene.key);
+        // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+        if (callingScene.isSleepFlagSet()) {
+            return;
+        }
 
         // Check if player is in range.  If so then check if player
         // has any cannon.  If so always get a shot with cannon.  
@@ -258,6 +271,13 @@ PirateFunctionsPlugin.prototype = {
     // the player's. See also PirateHunterCombat.
     // -----------------------------------------------------------
     HunterAttack: function (thePlayer, hunter) {
+        // use manager to get current scene and check if sleeping.
+        var callingScene = this.scene.scene.manager.getScene(this.scene.scene.key);
+        // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+        if (callingScene.isSleepFlagSet()) {
+            return;
+        }
+
 
         // Hunter shoots player at range.  
         // Then if player not sunk, check if this overlap, if so
@@ -352,6 +372,13 @@ PirateFunctionsPlugin.prototype = {
 
         switch (gameObject.name) {
             case "pirateIntroContinueBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 var portScene = this.scene.manager.getScene("Tortuga");
                 console.log("in pirateIntroContinueBtn Handler. getScene Results: " + portScene.scene.key);
@@ -376,6 +403,13 @@ PirateFunctionsPlugin.prototype = {
 
 
             case "pirateSetSailBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 var sailScene = this.scene.manager.getScene("PirateSailing");
                 console.log("in pirateSetSailBtn Handler. getScene Results: " + sailScene.scene.key);
@@ -399,6 +433,13 @@ PirateFunctionsPlugin.prototype = {
 
 
             case "pirateRetireBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 var retireScene = this.scene.manager.getScene("PirateRetire");
                 console.log("in pirateRetireBtn Handler. getScene Results: " + retireScene.scene.key);
@@ -445,6 +486,13 @@ PirateFunctionsPlugin.prototype = {
 
 
             case "cargoShip":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 if (playerShip.cannon <= 0) {
                     if (
@@ -484,6 +532,13 @@ PirateFunctionsPlugin.prototype = {
 
 
             case "hunterShip":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 if (playerShip.cannon <= 0) {
                     if (
@@ -523,6 +578,13 @@ PirateFunctionsPlugin.prototype = {
 
 
             case "TortugaPort":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
 
                 console.log("TortugaPort Clicked.. Check to see if close enough!");
 
@@ -562,6 +624,14 @@ PirateFunctionsPlugin.prototype = {
 
             // ******* buy a ship with gold: ********
             case "buyCanoeWGold":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (Gold >= 3) {
                     Gold -= 3;
                     playerShip = new BoatConstructor(1, 5, 25, 0, 0, 0, 0);
@@ -577,6 +647,14 @@ PirateFunctionsPlugin.prototype = {
                 break;
 
             case "buySchoonerWGold":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (Gold >= 50) {
                     Gold -= 50;
                     playerShip = new BoatConstructor(15, 10, 40, 0, 0, 0, 0);
@@ -592,6 +670,14 @@ PirateFunctionsPlugin.prototype = {
                 break;
 
             case "buyBrigWGold":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (Gold >= 500) {
                     Gold -= 500;
                     playerShip = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
@@ -607,6 +693,14 @@ PirateFunctionsPlugin.prototype = {
                 break;
 
             case "buyFrigateWGold":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (Gold >= 1000) {
                     Gold -= 1000;
                     playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
@@ -624,6 +718,14 @@ PirateFunctionsPlugin.prototype = {
 
             // ******* Buy Iron Plate ********
             case "buyIronPlateBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (playerShip.bIronPlate === false) {
                     let cost = 0;
                     switch (playerShip.shipType) {
@@ -664,6 +766,14 @@ PirateFunctionsPlugin.prototype = {
 
             // ******* Buy Cannon ********
             case "buyCannonBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
+
                 if (Gold >= 5) {
                     if ((playerShip.maxCannon - playerShip.cannon) > 0) {
                         // have gold and room. ok to buy.
@@ -689,6 +799,13 @@ PirateFunctionsPlugin.prototype = {
 
             // ******* Repair Ship ********
             case "repairShipBtn":
+                // use manager to get current scene and check if sleeping.
+                var callingScene = this.scene.manager.getScene(this.scene.key);
+                // nothing seems to keep scenes from getting input.. have to check in click handlers too!
+                if (callingScene.isSleepFlagSet()) {
+                    return;
+                }
+
                 // repair the players ship for as much gold as they have or however much it takes.
                 let cost = (playerShip.maxHitPoints - playerShip.hitPoints) * 2;
                 console.log("cost for repair is: " + cost);
@@ -1019,8 +1136,16 @@ PirateFunctionsPlugin.prototype = {
         // get manager to enable killing old scenes.
         let manager = callingScene.scene.manager;
 
+        // handle on deathScene.
+        let Death = manager.getScene("DeathScene");
+
         // set text box text for DeathScene 
-        manager.getScene("DeathScene").dialogBox.setText("Your Ship has been Sunk!!  Arg!  You're sleeping with the fishes!");
+        Death.dialogBox.setText("Your Ship has been Sunk!!  Arg!  You're sleeping with the fishes!");
+
+        // Play drowning audio from DeathScene
+        Death.DrowningAudio.volume = 0.7;
+        Death.DrowningAudio.play();
+
 
         // now remove them.
         manager.remove("Tortuga");

@@ -324,6 +324,17 @@ class ShipConstruction extends Phaser.Scene {
 
 
     // ---------------------------------------------------------
+    // isSleepFlagSet()
+    //
+    // Description: Override to some extent. Returns our global flag 
+    // on if this scene is supposed to be sleeping.
+    // -----------------------------------------------------------
+    isSleepFlagSet() {
+        return sleepShip;
+    }
+
+
+    // ---------------------------------------------------------
     // onWake()
     //
     // Description: Handler for when scene wakes.  Sets the current
