@@ -42,7 +42,7 @@ class Tortuga extends Phaser.Scene {
         //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
         //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
 
-    }// end preload
+    } // end preload
 
 
 
@@ -57,11 +57,11 @@ class Tortuga extends Phaser.Scene {
 
         // plugins:
         this.sys.install('DialogModalPlugin');
-        console.log(this.sys.dialogModal);
+        //console.log(this.sys.dialogModal);
 
         this.sys.install('PirateFunctionsPlugin');
-        console.log("from Tortuga");
-        console.log(this.sys.PirateFunctions);
+        //console.log("from Tortuga");
+        //console.log(this.sys.PirateFunctions);
 
         this.events.on('wake', this.onWake, this);
 
@@ -120,7 +120,7 @@ class Tortuga extends Phaser.Scene {
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
-        console.log("in tortuga create, ship hitpoints are: " + playerShip.hitPoints);
+        //console.log("in tortuga create, ship hitpoints are: " + playerShip.hitPoints);
         // this.sys.globalFunctions.updateHearts();
 
 
@@ -213,12 +213,7 @@ class Tortuga extends Phaser.Scene {
 
         // Buy Cannons!.
         this.text24 = this.add.text(90, 300, 'Buy Cannons! ', this.style);
-        this.text26 = this.add.text(370, 300, 'Cost: 5 Gold per Cannon', this.style);
-        this.text25 = this.add.text(90, 320, 'Max:', this.style);
-        this.text27 = this.add.text(190, 320, '1', this.style);
-        this.text28 = this.add.text(310, 320, '3', this.style);
-        this.text29 = this.add.text(420, 320, '8', this.style);
-        this.text30 = this.add.text(550, 320, '20', this.style);
+        this.text26 = this.add.text(90, 320, 'Cost: 5 Gold per Cannon', this.style);
 
 
         this.text31 = this.add.text(90, 335, "---------------------------------------------",
@@ -266,7 +261,7 @@ class Tortuga extends Phaser.Scene {
             font: "30px Courier",
             strokeThickness: 1,
             stroke: "#a00",
-           fill: "#a00",
+            fill: "#a00",
             border: "5px solid red"
         });
         this.retire.name = "pirateRetireBtn";
@@ -288,9 +283,9 @@ class Tortuga extends Phaser.Scene {
     // Std functionality handles most everything else.
     // -----------------------------------------------------------
     update() {
-        //console.log("in update shipConstruction");
+        ////console.log("in update shipConstruction");
         if (this.gameOver) {
-            console.log("game is over??");
+            //console.log("game is over??");
             return;
         }
 
@@ -300,7 +295,7 @@ class Tortuga extends Phaser.Scene {
         }
 
 
-    }// end update
+    } // end update
 
 
     // ---------------------------------------------------------
@@ -314,7 +309,7 @@ class Tortuga extends Phaser.Scene {
 
         if (bSleep === true) {
             // shut down this maps ambience audio
-            console.log("shutting down audio in Tortuga.");
+            //console.log("shutting down audio in Tortuga.");
             this.OceanAudio.pause();
             this.MarketAudio.pause();
         }
@@ -340,13 +335,13 @@ class Tortuga extends Phaser.Scene {
     // to provide consistency.  Std handler does everything else.
     // -----------------------------------------------------------
     onWake() {
-        console.log("in Tortuga onWake");
+        //console.log("in Tortuga onWake");
 
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
         //this.sys.PirateFunctions.updateTortugaDisplay();
 
-        console.log('attempting to resume audio in tortuga.');
+        //console.log('attempting to resume audio in tortuga.');
         // set Tortuga ambiance
         this.OceanAudio.resume();
         this.MarketAudio.resume();
@@ -368,7 +363,7 @@ class Tortuga extends Phaser.Scene {
         //    Gold = 620;
         //}
 
-        console.log("in Tortuga Wake.  Ship Type: " + playerShip.shipType);
+        //console.log("in Tortuga Wake.  Ship Type: " + playerShip.shipType);
         // #################### End for testing ####################
 
         this.sys.PirateFunctions.updateTortugaDisplay();

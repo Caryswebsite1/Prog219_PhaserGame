@@ -40,7 +40,7 @@ class PirateIntro extends Phaser.Scene {
         //this.load.audio('VolcanoSound', ['assets/audio/Atomic_Bomb.mp3'], { instances: 2 });
         //this.load.audio('EarthQuakeSound', ['assets/audio/EarthQuake.mp3']);
 
-    }// end preload
+    } // end preload
 
 
 
@@ -55,11 +55,11 @@ class PirateIntro extends Phaser.Scene {
 
         // plugins:
         this.sys.install('DialogModalPlugin');
-        console.log(this.sys.dialogModal);
+        //console.log(this.sys.dialogModal);
 
         this.sys.install('PirateFunctionsPlugin');
-        console.log("from PirateIntro");
-        console.log(this.sys.PirateFunctions);
+        //console.log("from PirateIntro");
+        //console.log(this.sys.PirateFunctions);
 
         // #########################################
         //####### FOR TESTING #######################
@@ -127,13 +127,13 @@ class PirateIntro extends Phaser.Scene {
          * *********************  Header and Hearts ************************************************
          * ***************************************************************************************** */
 
-       // this.sys.globalFunctions.pirateGoldTextFunction();
+        // this.sys.globalFunctions.pirateGoldTextFunction();
 
 
         /* **************************************************************
          * ********* Life heart bar  ******************************
          * *************************************************************** */
-        console.log("in PirateIntro create, ship hitpoints are: " + playerShip.hitPoints);
+        //console.log("in PirateIntro create, ship hitpoints are: " + playerShip.hitPoints);
         // this.sys.globalFunctions.updateHearts();
 
 
@@ -179,9 +179,9 @@ class PirateIntro extends Phaser.Scene {
         //this.text14 = this.add.text(20, 270, "---------------------------------------------",
         //    this.style);
 
-        
+
         // Continue to Tortuga!
-        this.continue = this.add.text(250, 380, 'Press to Continue', {
+        this.continue = this.add.text(250, 400, 'Press to Continue', {
             font: "30px Courier",
             strokeThickness: 1,
             stroke: "#a00",
@@ -257,7 +257,7 @@ class PirateIntro extends Phaser.Scene {
     // -----------------------------------------------------------
     update() {
         if (this.gameOver) {
-            console.log("game is over??");
+            //console.log("game is over??");
             return;
         }
 
@@ -267,7 +267,7 @@ class PirateIntro extends Phaser.Scene {
         }
 
 
-    }// end update
+    } // end update
 
 
     // ---------------------------------------------------------
@@ -281,7 +281,7 @@ class PirateIntro extends Phaser.Scene {
 
         if (bSleep === true) {
             // shut down this maps ambience audio
-            console.log("shutting down audio in Pirate Intro.");
+            //console.log("shutting down audio in Pirate Intro.");
             //this.OceanAudio.pause();
             this.CarnivalAudio.pause();
         }
@@ -308,16 +308,16 @@ class PirateIntro extends Phaser.Scene {
     // to provide consistency.  Std handler does everything else.
     // -----------------------------------------------------------
     onWake() {
-        console.log("in Pirate Intro onWake");
+        //console.log("in Pirate Intro onWake");
 
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
         //this.sys.PirateFunctions.updateGoldDisplay();
 
-        console.log('attempting to resume audio in Pirate Intro.');
+        //console.log('attempting to resume audio in Pirate Intro.');
 
         //checking whats going on here... player ship doesn't seem to make it.
-        console.log('In PirateIntro onWake. Player Ship Type: ' + playerShip.shipType);
+        //console.log('In PirateIntro onWake. Player Ship Type: ' + playerShip.shipType);
 
         // set island ambiance
         //this.OceanAudio.resume();
@@ -331,6 +331,8 @@ class PirateIntro extends Phaser.Scene {
         // because this scene is created before the player ship is set, we have to have the main dialog
         // texts set up here in the onwake, which presumeably happens after the player ship is set.
 
+        // add a cannon to player ship:
+        playerShip.cannon = 1;
 
         // first calculate New player Gold total from ship contents:
         Gold += playerShip.gold;
@@ -364,7 +366,7 @@ class PirateIntro extends Phaser.Scene {
             default:
                 ShipwreckedScore += 0;
                 break;
-        }// end switch
+        } // end switch
 
 
 
@@ -394,17 +396,16 @@ class PirateIntro extends Phaser.Scene {
 
         if (playerShip.crew > 1) {
             this.text10 = this.add.text(20, 290, 'You saved ' + playerShip.crew + ' people including yourself.', this.style);
-        }
-        else {
+        } else {
             this.text10 = this.add.text(20, 290, 'You saved only yourself...', this.style);
         }
-            
+
 
 
         this.text10 = this.add.text(20, 320, 'Your Score for Shipwrecked: ' + ShipwreckedScore, this.style);
 
 
-    }// end onwake.
+    } // end onwake.
 
 
 } // end class Tortuga

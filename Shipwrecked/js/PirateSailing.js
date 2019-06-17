@@ -6,19 +6,19 @@ class PirateSailing extends Phaser.Scene {
 
         this.gameOver = false;
         this.hunterStartTime = 0;
-        this.hunterSpawnTimer = 30000;   // one hunter every 30 seconds
-        this.hunterSpawn = 0;    // used for clearing setInterval for hunter spawning
-        this.hunterAttackTime = 1500;  // if a hunter is in range for 1 second, they attack!
-        this.hunterIncreaseSpawn = 60000;  // rate of hunter spawn increases every minute. 
-        
+        this.hunterSpawnTimer = 60000; // one hunter every 60 seconds
+        this.hunterSpawn = 0; // used for clearing setInterval for hunter spawning
+        this.hunterAttackTime = 1500; // if a hunter is in range for 1 second, they attack!
+        this.hunterIncreaseSpawn = 60000; // rate of hunter spawn increases every minute. 
+
 
         // sail times, actually based on number of update calls between, not actual miliseconds etc.
         this.hunterSailTime = 150; // current elapsed hunter sail time.  Set to max to force move at start.
         this.maxHunterSail = 150; // max allowed hunter sail time before new direction set.
         this.muzzleFlash = '';
 
-        this.cargoShipTimer = 5000;  // time for a new cargo ship to spawn
-        this.cargoSpawn = 0;  // used for clearing setInterval for cargo spawning
+        this.cargoShipTimer = 5000; // time for a new cargo ship to spawn
+        this.cargoSpawn = 0; // used for clearing setInterval for cargo spawning
     } // end constructor
 
 
@@ -48,7 +48,7 @@ class PirateSailing extends Phaser.Scene {
         this.load.image("TortugaIMG", "assets/TortugaPort.png");
         this.load.image("bigWater", "assets/ocean.jpg");
 
-        this.load.image("hunterImg", "assets/HunterShipWCOA16.png");
+        this.load.image("hunterImg", "assets/HunterShipWCOA25.png");
         this.load.image("flashImg", "assets/Flash1.png");
 
         // cargo ships:
@@ -93,11 +93,11 @@ class PirateSailing extends Phaser.Scene {
 
         // plugins:
         this.sys.install('DialogModalPlugin');
-        console.log(this.sys.dialogModal);
+        //console.log(this.sys.dialogModal);
 
         this.sys.install('PirateFunctionsPlugin');
-        console.log("from PirateSailing");
-        console.log(this.sys.PirateFunctions);
+        //console.log("from PirateSailing");
+        //console.log(this.sys.PirateFunctions);
 
         this.events.on('wake', this.onWake, this);
 
@@ -180,7 +180,7 @@ class PirateSailing extends Phaser.Scene {
 
         newChild = this.port.create(20, 500, "TortugaIMG")
         newChild.name = "TortugaPort";
-        newChild.setInteractive();  // make it clickable!
+        newChild.setInteractive(); // make it clickable!
 
 
 
@@ -327,9 +327,9 @@ class PirateSailing extends Phaser.Scene {
     // Std functionality handles most everything else.
     // -----------------------------------------------------------
     update() {
-        //console.log("in update shipConstruction");
+        ////console.log("in update shipConstruction");
         if (this.gameOver) {
-            console.log("game is over??");
+            //console.log("game is over??");
             return;
         }
 
@@ -348,8 +348,7 @@ class PirateSailing extends Phaser.Scene {
                 child.setVelocityY(-50 + (Math.random() * 100));
             });
             this.hunterSailTime = 0;
-        }
-        else {
+        } else {
             this.hunterSailTime += 1;
         }
 
@@ -375,12 +374,23 @@ class PirateSailing extends Phaser.Scene {
         this.checkForHunterAttack(this);
 
         // set up advancing hunter spawns over time.
-        if ((Date.now() - this.hunterStartTime) > this.hunterIncreaseSpawn) {
-            this.hunterSpawn -= 10000;
-            if (this.hunterSpawn < 2000) {
-                this.hunterSpawn = 2000;
+        if ((Date.now() - this.hunterStartTime) > this.hunterIncreaseSpawn && (this.hunterSpawnTimer > 2000)) {
+
+            console.log("increaseing hunter spawn rate now.  Current rate: " + this.hunterSpawnTimer);
+            this.hunterSpawnTimer -= 10000;
+            if (this.hunterSpawnTimer < 2000) {
+                this.hunterSpawnTimer = 2000;
             }
-        }
+
+            // shut down the hunter spawn set interval function.
+            clearInterval(this.hunterSpawn);
+
+            // start up the Hunter ships again with new interval
+            this.hunterSpawn = setInterval(this.spawnHunter, this.hunterSpawnTimer, this);
+
+            this.hunterStartTime = Date.now();
+
+        }// end if changing hunter spawn interval.
 
     } // end update
 
@@ -410,13 +420,13 @@ class PirateSailing extends Phaser.Scene {
 
         // randomize starting port and insure it doesn't start and 
         // end at same port!
-        console.log("making a ship");
+        //console.log("making a ship");
         this.newFrom = getRandomNumber();
         do {
             this.newTo = getRandomNumber();
         } while (this.newFrom == this.newTo);
         this.cargoShip = new CargoShipConstructor(this.newFrom, this.newTo);
-        let myShip = "";  // the new cargoship
+        let myShip = ""; // the new cargoship
 
         // port locations..
         let location = [{ x: 210, y: 130 }, { x: 825, y: 175 }, { x: 480, y: 420 }, { x: 155, y: 835 }, { x: 840, y: 890 }];
@@ -437,18 +447,20 @@ class PirateSailing extends Phaser.Scene {
         }
 
         // actual cargo ship creation
-//        myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "singleShip");
+        //        myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "singleShip");
 
         // create random size and gold load...
         // would like weighted average though..
-        let size = Math.floor(Math.random() * 4);
+        let randomShip = [0, 0, 1, 1, 2, 3];
+        let size = randomShip[Math.floor(Math.random() * 6)];
+
         switch (size) {
             case 0:
                 // cannoe?!!
                 myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "cargoDinghy");
                 myShip.Ship = new BoatConstructor(1, 5, 25, 0, 0, 0, 0);
                 myShip.Ship.cannon = 0;
-                myShip.Ship.gold = 5;
+                myShip.Ship.gold = 10;
                 myShip.Ship.speed = 1; // NOTE: since we are using the accelerate to function the speed factors are different
                 break;
 
@@ -457,7 +469,7 @@ class PirateSailing extends Phaser.Scene {
                 myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "cargoSchooner");
                 myShip.Ship = new BoatConstructor(15, 10, 40, 0, 0, 0, 0);
                 myShip.Ship.cannon = 1;
-                myShip.Ship.gold = 10;
+                myShip.Ship.gold = 25;
                 myShip.Ship.speed = 2; // NOTE: since we are using the accelerate to function the speed factors are different
                 break;
 
@@ -466,7 +478,7 @@ class PirateSailing extends Phaser.Scene {
                 myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "cargoFluyt");
                 myShip.Ship = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
                 myShip.Ship.cannon = 4;
-                myShip.Ship.gold = 25;
+                myShip.Ship.gold = 50;
                 myShip.Ship.speed = 3; // NOTE: since we are using the accelerate to function the speed factors are different
                 break;
 
@@ -475,13 +487,13 @@ class PirateSailing extends Phaser.Scene {
                 myShip = theScene.cargoShips.create(location[this.cargoShip.from - 1].x + changeX, location[this.cargoShip.from - 1].y + changeY, "cargoGalleon");
                 myShip.Ship = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
                 myShip.Ship.cannon = 10;
-                myShip.Ship.gold = 60;
+                myShip.Ship.gold = 100;
                 myShip.Ship.speed = 5; // NOTE: since we are using the accelerate to function the speed factors are different
                 break;
 
             default:
 
-        }// end switch
+        } // end switch
 
         // set other cargoship properties
         myShip.to = this.cargoShip.to;
@@ -499,13 +511,13 @@ class PirateSailing extends Phaser.Scene {
 
         // using accellerateTo function to send ships to their way points
         // or destinations.
-        console.log(`From: ${myShip.from}    To:${myShip.to}`)
+        //console.log(`From: ${myShip.from}    To:${myShip.to}`)
         if ((myShip.to === 2 && myShip.from === 4) || (myShip.to === 4 && myShip.from === 2) || (myShip.to === 3 && myShip.from === 4) || (myShip.to === 4 && myShip.from === 3)) {
 
             theScene.physics.accelerateTo(myShip, 300, 300, myShip.Ship.speed);
-            //console.log("going to left way point");
+            ////console.log("going to left way point");
         } else if ((myShip.to === 5 && myShip.from === 1) || (myShip.to === 1 && myShip.from === 5) || (myShip.to === 3 && myShip.from === 5) || (myShip.to === 5 && myShip.from === 3)) {
-            //console.log("going to right way point");
+            ////console.log("going to right way point");
             theScene.physics.accelerateTo(myShip, 700, 300, myShip.Ship.speed);
 
         } else {
@@ -513,7 +525,7 @@ class PirateSailing extends Phaser.Scene {
         }
 
 
-    }// end create cargo ship
+    } // end create cargo ship
 
 
     // ---------------------------------------------------------
@@ -537,7 +549,7 @@ class PirateSailing extends Phaser.Scene {
             }
         }
 
-    }// end wayPoint
+    } // end wayPoint
 
 
 
@@ -549,14 +561,17 @@ class PirateSailing extends Phaser.Scene {
     // Starts the hunter moveing in a random direction.
     // -----------------------------------------------------------
     spawnHunter(theScene) {
-        // port locations for reference..
+        // port locations for reference.. ports are 30 by 30 centered on locations below. Must spawn so there is no overlap
         // location = [{ x: 210, y: 130 }, { x: 825, y: 175 }, { x: 480, y: 420 }, { x: 155, y: 835 }, { x: 840, y: 890 }];
+        // hunter 25 are  25 wide, 50 high..
 
         //corrisponding hunter ship spawn locations:
-        let hunterSpawnLocations = [{ x: 230, y: 150 }, { x: 805, y: 155 }, { x: 480, y: 400 }, { x: 175, y: 815 }, { x: 820, y: 870 }];
+        let hunterSpawnLocations = [{ x: 210, y: 200 }, { x: 825, y: 250 }, { x: 480, y: 345 }, { x: 155, y: 760 }, { x: 770, y: 890 }];
 
         // get random port
-        let portIndex = Math.floor(Math.random() * 4);
+        let portIndex = Math.floor(Math.random() * 5);
+        if (portIndex > 4) { portIndex = 4 };
+
         // hunter ships are all Brigs..
         let newChild = "";
 
@@ -569,7 +584,7 @@ class PirateSailing extends Phaser.Scene {
         newChild.setCollideWorldBounds(true);
 
 
-    }// end spawnHunter
+    } // end spawnHunter
 
 
 
@@ -608,26 +623,26 @@ class PirateSailing extends Phaser.Scene {
 
                             // reset attack time
                             child.StartTime = currentTime;
-                        }// end if enough time elapsed
+                        } // end if enough time elapsed
 
-                    }// end if child AttackFlag set.
+                    } // end if child AttackFlag set.
                     else {
                         // set Attack Flag and start timer
                         child.AttackFlag = true;
                         child.StartTime = Date.now();
                     }
 
-                }// end if in range.
+                } // end if in range.
                 else {
                     // make sure AttackFlag not set. Timer set to current time.
                     child.AttackFlag = false;
                     child.StartTime = Date.now();
                 }
 
-            }// end function for iteration
+            } // end function for iteration
         ); // end iterate
 
-    }// end checkForHunterAttack.
+    } // end checkForHunterAttack.
 
 
     // ---------------------------------------------------------
@@ -655,7 +670,7 @@ class PirateSailing extends Phaser.Scene {
             this.hunterStartTime = 0;
 
         }
-    }// end setSleepFlag
+    } // end setSleepFlag
 
 
 
@@ -678,21 +693,21 @@ class PirateSailing extends Phaser.Scene {
     // to provide consistency.  Std handler does everything else.
     // -----------------------------------------------------------
     onWake() {
-        console.log("in PirateSailing onWake");
+        //console.log("in PirateSailing onWake");
 
         //##################### TEST CODE #########################
         //playerShip.hitPoints = 1000;
         //playerShip.bIronPlate = true;
         //playerShip.cannon = 20;
         //playerShip.speed = 150;
-        Gold += 100;
+        //Gold += 100;
         //##################### END TEST CODE #########################
 
 
         // player always starts at Tortuga...
         //this.player.x = playerStartX;
         //this.player.y = playerStartY;
-        //console.log("Set player position to " + playerStartX + ", " + playerStartY);
+        ////console.log("Set player position to " + playerStartX + ", " + playerStartY);
 
         // update life and resource displays.
         //this.sys.PirateFunctions.updateHearts();
@@ -720,7 +735,7 @@ class PirateSailing extends Phaser.Scene {
             default:
                 this.player.setScale(0.4);
                 break;
-        }// end switch
+        } // end switch
 
 
 
@@ -734,9 +749,9 @@ class PirateSailing extends Phaser.Scene {
         // start up the Hunter ships again
         this.hunterSpawn = setInterval(this.spawnHunter, this.hunterSpawnTimer, this);
 
-        this.hunterStartTime = Date.now();  // start up hunter spawn rate increase timer.
+        this.hunterStartTime = Date.now(); // start up hunter spawn rate increase timer.
 
-    }// end onWake
+    } // end onWake
 
 
 } // end class PirateSailing

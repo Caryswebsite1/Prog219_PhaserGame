@@ -72,7 +72,7 @@ PirateFunctionsPlugin.prototype = {
         // cargo ship will only return fire, never auto fire on player.
         //
 
-        console.log("in cargoshipcombat.  Cargoship hit points: " + cargoShip.Ship.hitPoints);
+        //console.log("in cargoshipcombat.  Cargoship hit points: " + cargoShip.Ship.hitPoints);
         // if player in range, shoot cannon!.
         if (
             (Math.abs((thePlayer.x - cargoShip.x)) <= cannonRange) &&
@@ -94,8 +94,7 @@ PirateFunctionsPlugin.prototype = {
                     Gold += cargoShip.Ship.gold;
                     cargoShip.destroy();
                     this.updateSailingDisplay();
-                }
-                else {
+                } else {
                     // cargoShip returns fire!
                     this.scene.CannonAudio1.volume = 0.7;
                     this.scene.CannonAudio2.volume = 0.7;
@@ -107,7 +106,7 @@ PirateFunctionsPlugin.prototype = {
 
                     // check for ironplate.
                     if (playerShip.bIronPlate) {
-                        damageToPlayer = damageToPlayer * IronPlateModifier;
+                        damageToPlayer = Math.floor(damageToPlayer * IronPlateModifier);
                     }
 
                     playerShip.hitPoints -= damageToPlayer;
@@ -125,10 +124,10 @@ PirateFunctionsPlugin.prototype = {
                         this.scene.dialogBox.setText("Alas! You have died!");
                         this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
-                    }// end if player sinks
-                }// end cargoship returns fire
+                    } // end if player sinks
+                } // end cargoship returns fire
 
-            }// end if player has cannon.
+            } // end if player has cannon.
             else {
                 // check for close range and if so, initiate hand to hand..
                 if (
@@ -139,11 +138,11 @@ PirateFunctionsPlugin.prototype = {
 
                 }
 
-            }// end else hand to hand 
-        }// end if in cannon range
+            } // end else hand to hand 
+        } // end if in cannon range
         else {
             this.scene.dialogBox.setText("I am too far away from that to do anything.");
-            console.log("NOPE NOT close enough!");
+            //console.log("NOPE NOT close enough!");
         }
 
     }, // end cargoShipCombat
@@ -202,8 +201,7 @@ PirateFunctionsPlugin.prototype = {
                     hunter.destroy();
                     this.updateSailingDisplay();
                     this.scene.dialogBox.setText("ARG! We sank the scurvy Pirate Hunters we did!");
-                }
-                else {
+                } else {
                     // hunter returns fire!
                     this.scene.CannonAudio1.volume = 0.7;
                     this.scene.CannonAudio2.volume = 0.7;
@@ -216,7 +214,7 @@ PirateFunctionsPlugin.prototype = {
 
                     // check for ironplate.
                     if (playerShip.bIronPlate) {
-                        damageToPlayer = damageToPlayer * IronPlateModifier;
+                        damageToPlayer = Math.floor(damageToPlayer * IronPlateModifier);
                     }
 
                     playerShip.hitPoints -= damageToPlayer;
@@ -235,10 +233,10 @@ PirateFunctionsPlugin.prototype = {
                         this.scene.dialogBox.setText("Alas! You have died!");
                         this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
-                    }// end if player sinks
-                }// end hunter returns fire
+                    } // end if player sinks
+                } // end hunter returns fire
 
-            }// end if player has cannon.
+            } // end if player has cannon.
             else {
                 // check for close range and if so, initiate hand to hand..
                 if (
@@ -249,11 +247,11 @@ PirateFunctionsPlugin.prototype = {
 
                 }
 
-            }// end else hand to hand 
-        }// end if in cannon range
+            } // end else hand to hand 
+        } // end if in cannon range
         else {
             this.dialogBox.setText("I am too far away from that to do anything.");
-            console.log("NOPE NOT close enough!");
+            //console.log("NOPE NOT close enough!");
         }
 
     }, // end PirateHunterCombat
@@ -296,7 +294,7 @@ PirateFunctionsPlugin.prototype = {
         // play cannon shot audio
         //###############  DISPLAY Hunter FIREING AND PLAYER GETTING HIT
 
-       //Hunter fireing display:
+        //Hunter fireing display:
         this.scene.muzzleFlash.x = hunter.x;
         this.scene.muzzleFlash.y = hunter.y;
         this.scene.muzzleFlash.setVisible(true);
@@ -309,26 +307,26 @@ PirateFunctionsPlugin.prototype = {
         this.scene.CannonAudio1.play();
         this.scene.CannonAudio2.play({ delay: 0.25 });
 
-        console.log("hunter Fires!");
+        //console.log("hunter Fires!");
         // Player getting hit display
 
 
         // damage determination
         let damageToPlayer = 0;
-        console.log('hunter ship is: ' + hunter.Ship);
-        console.log('hunter Cannon are: ' + hunter.Ship.cannon);
+        //console.log('hunter ship is: ' + hunter.Ship);
+        //console.log('hunter Cannon are: ' + hunter.Ship.cannon);
 
         damageToPlayer = hunter.Ship.cannon * 10;
-        console.log('initial damage to player: ' + damageToPlayer);
+        //console.log('initial damage to player: ' + damageToPlayer);
 
         // check for ironplate.
         if (playerShip.bIronPlate) {
-            damageToPlayer = damageToPlayer * IronPlateModifier;
+            damageToPlayer = Math.floor(damageToPlayer * IronPlateModifier);
         }
-        console.log('After Iron Plate,  damage to player: ' + damageToPlayer);
+        //console.log('After Iron Plate,  damage to player: ' + damageToPlayer);
 
         playerShip.hitPoints -= damageToPlayer;
-        console.log('After damage, playerShip hitpoints: ' + playerShip.hitPoints);
+        //console.log('After damage, playerShip hitpoints: ' + playerShip.hitPoints);
         this.updateSailingDisplay();
 
         if (playerShip.hitPoints <= 0) {
@@ -343,7 +341,7 @@ PirateFunctionsPlugin.prototype = {
             this.scene.dialogBox.setText("Alas! You have died!");
             this.scene.sys.PirateFunctions.PirateGameOver(this.scene);
 
-        }// end if player sinks
+        } // end if player sinks
 
         // check for close range and if so, initiate hand to hand..
         if (
@@ -368,7 +366,7 @@ PirateFunctionsPlugin.prototype = {
     // 
     // --------------------------------------------------------------
     onGameObjectClicked: function (pointer, gameObject) {
-        console.log("made it into PirateFunctions onGameObjectClicked. ");
+        //console.log("made it into PirateFunctions onGameObjectClicked. ");
 
         switch (gameObject.name) {
             case "pirateIntroContinueBtn":
@@ -381,7 +379,7 @@ PirateFunctionsPlugin.prototype = {
 
 
                 var portScene = this.scene.manager.getScene("Tortuga");
-                console.log("in pirateIntroContinueBtn Handler. getScene Results: " + portScene.scene.key);
+                //console.log("in pirateIntroContinueBtn Handler. getScene Results: " + portScene.scene.key);
                 this.scene.wake("Tortuga");
                 this.scene.bringToTop("Tortuga");
                 this.scene.setActive(true, "Tortuga");
@@ -412,7 +410,7 @@ PirateFunctionsPlugin.prototype = {
 
 
                 var sailScene = this.scene.manager.getScene("PirateSailing");
-                console.log("in pirateSetSailBtn Handler. getScene Results: " + sailScene.scene.key);
+                //console.log("in pirateSetSailBtn Handler. getScene Results: " + sailScene.scene.key);
                 this.scene.wake("PirateSailing");
                 this.scene.bringToTop("PirateSailing");
                 this.scene.setActive(true, "PirateSailing");
@@ -423,7 +421,7 @@ PirateFunctionsPlugin.prototype = {
                 // attempt to decrease camera size for Tortuga..
                 this.cameras.main.setSize(500, 400);
 
-                console.log("in SetsailBtn handler. the this is scene: " + this.scene.key);
+                //console.log("in SetsailBtn handler. the this is scene: " + this.scene.key);
                 this.scene.setActive(false);
                 this.scene.setVisible(false);
                 this.scene.sleep();
@@ -442,7 +440,7 @@ PirateFunctionsPlugin.prototype = {
 
 
                 var retireScene = this.scene.manager.getScene("PirateRetire");
-                console.log("in pirateRetireBtn Handler. getScene Results: " + retireScene.scene.key);
+                //console.log("in pirateRetireBtn Handler. getScene Results: " + retireScene.scene.key);
                 this.scene.wake("PirateRetire");
                 this.scene.bringToTop("PirateRetire");
                 this.scene.setActive(true, "PirateRetire");
@@ -481,7 +479,7 @@ PirateFunctionsPlugin.prototype = {
                 manager.remove("PirateSailing");
                 manager.remove("DeathScene");
 
-                console.log("just leaving of PirateRetire handler.");
+                //console.log("just leaving of PirateRetire handler.");
                 break; // end pirateRetireBtn
 
 
@@ -501,18 +499,16 @@ PirateFunctionsPlugin.prototype = {
                     ) {
                         //this.SheepAudio.play();
                         this.dialogBox.setText("I don't have any cannons!  I can't shoot that ship!");
-                        console.log("no cannons to shoot with");
-                    }
-                    else {
+                        //console.log("no cannons to shoot with");
+                    } else {
                         //this.CannonShotsAudio.play();
                         this.dialogBox.setText("I am too far away from that to do anything.");
                     }
-                }
-                else {
-                    //console.log("in else for cargoShip, Check to see if close enough!");
+                } else {
+                    ////console.log("in else for cargoShip, Check to see if close enough!");
 
-                    //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    //console.log("cargoship x: " + gameObject.x + "  cargoship y: " + gameObject.y);
+                    ////console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    ////console.log("cargoship x: " + gameObject.x + "  cargoship y: " + gameObject.y);
                     // if player close to ship piece then do battle!.
                     if (
                         (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
@@ -520,13 +516,12 @@ PirateFunctionsPlugin.prototype = {
                     ) {
                         // close enough to shoot!
                         this.sys.PirateFunctions.cargoShipCombat(this.player, gameObject);
-                    }
-                    else {
+                    } else {
                         this.dialogBox.setText("I am too far away from that to do anything.");
-                        console.log("NOPE NOT close enough!");
+                        //console.log("NOPE NOT close enough!");
                     }
 
-                }// end else
+                } // end else
                 break; // end cargoship
 
 
@@ -547,18 +542,17 @@ PirateFunctionsPlugin.prototype = {
                     ) {
                         //this.SheepAudio.play();
                         this.dialogBox.setText("I don't have any cannons!  I can't shoot that ship!");
-                        console.log("no cannons to shoot with");
-                    }
-                    else {
+                        //console.log("no cannons to shoot with");
+                    } else {
                         //this.CannonShotsAudio.play();
                         this.dialogBox.setText("I am too far away from that to do anything.");
                     }
                 } // end if player doesn't have cannons
                 else {
-                    console.log("in else for hunterShip, Check to see if close enough!");
+                    //console.log("in else for hunterShip, Check to see if close enough!");
 
-                    //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                    //console.log("hunterShip x: " + gameObject.x + "  hunterShip y: " + gameObject.y);
+                    ////console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                    ////console.log("hunterShip x: " + gameObject.x + "  hunterShip y: " + gameObject.y);
                     // if player close to ship piece then do battle!.
                     if (
                         (Math.abs((this.player.x - gameObject.x)) <= cannonRange) &&
@@ -566,13 +560,12 @@ PirateFunctionsPlugin.prototype = {
                     ) {
                         // close enough to shoot!
                         this.sys.PirateFunctions.PirateHunterCombat(this.player, gameObject);
-                    }
-                    else {
+                    } else {
                         this.dialogBox.setText("I am too far away from that to do anything.");
-                        console.log("NOPE NOT close enough!");
+                        //console.log("NOPE NOT close enough!");
                     }
 
-                }// end else
+                } // end else
                 break; // end hunterShip
 
 
@@ -586,10 +579,10 @@ PirateFunctionsPlugin.prototype = {
                 }
 
 
-                console.log("TortugaPort Clicked.. Check to see if close enough!");
+                //console.log("TortugaPort Clicked.. Check to see if close enough!");
 
-                console.log("player x: " + this.player.x + "  player y: " + this.player.y);
-                console.log("port x: " + gameObject.x + "  port y: " + gameObject.y);
+                //console.log("player x: " + this.player.x + "  player y: " + this.player.y);
+                //console.log("port x: " + gameObject.x + "  port y: " + gameObject.y);
 
                 if (
                     (Math.abs((this.player.x - gameObject.x)) <= 40) &&
@@ -597,7 +590,7 @@ PirateFunctionsPlugin.prototype = {
                 ) {
                     // close enough to go to port!
                     var portScene = this.scene.manager.getScene("Tortuga");
-                    console.log("in TortugaPort click Handler. getScene Results: " + portScene.scene.key);
+                    //console.log("in TortugaPort click Handler. getScene Results: " + portScene.scene.key);
                     this.scene.wake("Tortuga");
                     this.scene.bringToTop("Tortuga");
                     this.scene.setActive(true, "Tortuga");
@@ -613,10 +606,9 @@ PirateFunctionsPlugin.prototype = {
                     this.scene.sleep();
                     this.setSleepFlag(true);
 
-                }
-                else {
+                } else {
                     this.dialogBox.setText("I am too far away from that to do anything.");
-                    console.log("NOPE NOT close enough!");
+                    //console.log("NOPE NOT close enough!");
                 }
 
                 break; // TortugaPort
@@ -634,15 +626,18 @@ PirateFunctionsPlugin.prototype = {
 
                 if (Gold >= 3) {
                     Gold -= 3;
+
+                    // update gold for trade in at 25%
+                    Gold += this.sys.PirateFunctions.tradeInRebate();
+
                     playerShip = new BoatConstructor(1, 5, 25, 0, 0, 0, 0);
 
                     // update display
                     this.sys.PirateFunctions.updateTortugaDisplay();
 
-                }
-                else {
+                } else {
                     this.dialogBox.setText("You don't have enough Gold for a Canoe!");
-                    console.log("No gold for canoe!");
+                    //console.log("No gold for canoe!");
                 }
                 break;
 
@@ -657,15 +652,18 @@ PirateFunctionsPlugin.prototype = {
 
                 if (Gold >= 50) {
                     Gold -= 50;
+
+                    // update gold for trade in at 25%
+                    Gold += this.sys.PirateFunctions.tradeInRebate();
+
                     playerShip = new BoatConstructor(15, 10, 40, 0, 0, 0, 0);
 
                     // update display
                     this.sys.PirateFunctions.updateTortugaDisplay();
 
-                }
-                else {
+                } else {
                     this.dialogBox.setText("You don't have enough Gold for a Schooner!");
-                    console.log("No gold for schooner!");
+                    //console.log("No gold for schooner!");
                 }
                 break;
 
@@ -680,15 +678,18 @@ PirateFunctionsPlugin.prototype = {
 
                 if (Gold >= 500) {
                     Gold -= 500;
+
+                    // update gold for trade in at 25%
+                    Gold += this.sys.PirateFunctions.tradeInRebate();
+
                     playerShip = new BoatConstructor(30, 25, 50, 0, 0, 0, 0);
 
                     // update display
                     this.sys.PirateFunctions.updateTortugaDisplay();
 
-                }
-                else {
+                } else {
                     this.dialogBox.setText("You don't have enough Gold for a Brig!");
-                    console.log("No gold for brig!");
+                    //console.log("No gold for brig!");
                 }
                 break;
 
@@ -703,15 +704,18 @@ PirateFunctionsPlugin.prototype = {
 
                 if (Gold >= 1000) {
                     Gold -= 1000;
+
+                    // update gold for trade in at 25%
+                    Gold += this.sys.PirateFunctions.tradeInRebate();
+
                     playerShip = new BoatConstructor(50, 60, 75, 0, 0, 0, 0);
 
                     // update display
                     this.sys.PirateFunctions.updateTortugaDisplay();
 
-                }
-                else {
+                } else {
                     this.dialogBox.setText("You don't have enough Gold for a Frigate!");
-                    console.log("No gold for frigate!");
+                    //console.log("No gold for frigate!");
                 }
                 break;
 
@@ -751,15 +755,14 @@ PirateFunctionsPlugin.prototype = {
                         // update display
                         this.sys.PirateFunctions.updateTortugaDisplay();
 
-                    }
-                    else {
+                    } else {
                         this.dialogBox.setText("You don't have enough Gold for Iron Plate!");
-                        console.log("No gold for iron plate!");
+                        //console.log("No gold for iron plate!");
                     }
-                }// end if no iron plate yet
+                } // end if no iron plate yet
                 else {
                     this.dialogBox.setText("Your ship already has Iron Plate");
-                    console.log("ship already has iron plate");
+                    //console.log("ship already has iron plate");
                 }
                 break;
 
@@ -783,15 +786,13 @@ PirateFunctionsPlugin.prototype = {
                         // update display
                         this.sys.PirateFunctions.updateTortugaDisplay();
 
-                    }
-                    else {
+                    } else {
                         this.dialogBox.setText("There isn't room for more cannon!");
-                        console.log("No room for cannon!");
+                        //console.log("No room for cannon!");
                     }
-                }
-                else {
+                } else {
                     this.dialogBox.setText("You don't have enough Gold for a cannon!");
-                    console.log("No gold for cannon!");
+                    //console.log("No gold for cannon!");
 
                 }
                 break;
@@ -807,16 +808,15 @@ PirateFunctionsPlugin.prototype = {
                 }
 
                 // repair the players ship for as much gold as they have or however much it takes.
-                let cost = (playerShip.maxHitPoints - playerShip.hitPoints) * 2;
-                console.log("cost for repair is: " + cost);
+                let cost = Math.floor((playerShip.maxHitPoints - playerShip.hitPoints) / 5);
+                //console.log("cost for repair is: " + cost);
 
                 if (Gold >= cost) {
                     playerShip.hitPoints = playerShip.maxHitPoints;
                     Gold -= cost;
                     this.dialogBox.setText("Ship fully repaired for: " + cost + " gold.");
-                }
-                else {
-                    let ptsRepairable = Gold / 2;
+                } else {
+                    let ptsRepairable = Gold * 5;
                     playerShip.hitPoints += ptsRepairable;
                     Gold = 0;
                     this.dialogBox.setText("Repaired as much as you had gold for.");
@@ -828,19 +828,19 @@ PirateFunctionsPlugin.prototype = {
                 break; // end repair ship.
 
 
-                
+
             default:
                 break;
 
-        }// end switch
+        } // end switch
 
 
     }, // end onGameObjectClicked
 
 
     /* **********************************************************************************************************
-    ***********  Text Display initalization functions:  All scenes must call these to enable their display *********
-    ************************************************************************************************************ */
+     ***********  Text Display initalization functions:  All scenes must call these to enable their display *********
+     ************************************************************************************************************ */
     sailingTextFunction: function () {
 
         SailingStyle = { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", shadowStroke: true, shadowFill: true, shadowColor: "#000", shadowOffsetX: 1, shadowOffsetY: 1, align: "center" };
@@ -869,7 +869,7 @@ PirateFunctionsPlugin.prototype = {
         this.tortugaGoldText = this.scene.add.text(290, 20, "Gold: ", TortugaStyle);
         this.tortugaGoldText.setScrollFactor(0);
 
-        this.tortugaGoldAmountText = this.scene.add.text(360, 20,  Gold, { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", tabs: [60, 60, 60] });
+        this.tortugaGoldAmountText = this.scene.add.text(360, 20, Gold, { font: "20px Courier", strokeThickness: 1, stroke: "#fe0", fill: "#fe0", tabs: [60, 60, 60] });
         this.tortugaGoldText.setScrollFactor(0);
 
         this.tortugaPlayerShipText = this.scene.add.text(420, 20, 'Current Ship: ' + playerShip.shipType, TortugaStyle);
@@ -878,7 +878,7 @@ PirateFunctionsPlugin.prototype = {
         this.tortugaShipCannonText = this.scene.add.text(90, 355, 'Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon), TortugaStyle);
         this.tortugaShipCannonText.setScrollFactor(0);
 
-        this.tortugaShipRepairText = this.scene.add.text(370, 415, 'Max Cost: ' + ((playerShip.maxHitPoints - playerShip.hitPoints) * 2), TortugaStyle);
+        this.tortugaShipRepairText = this.scene.add.text(370, 415, 'Max Cost: ' + Math.floor((playerShip.maxHitPoints - playerShip.hitPoints) / 5), TortugaStyle);
         this.tortugaShipRepairText.setScrollFactor(0);
 
     },
@@ -902,17 +902,17 @@ PirateFunctionsPlugin.prototype = {
     },
 
 
-   
+
 
     /* **********************************************************************************************************
-    ***********  Text Display update function:  All scenes should call this on wake to update their displays. *********
-    ************************************************************************************************************ */
+     ***********  Text Display update function:  All scenes should call this on wake to update their displays. *********
+     ************************************************************************************************************ */
     updateTortugaDisplay: function () {
         this.tortugaGoldText.setText("Gold: ");
         this.tortugaGoldAmountText.setText(Gold);
         this.tortugaPlayerShipText.setText('Current Ship: ' + playerShip.shipType);
         this.tortugaShipCannonText.setText('Cannons on Board: ' + playerShip.cannon + '  Available Space: ' + (playerShip.maxCannon - playerShip.cannon));
-        this.tortugaShipRepairText.setText('Max Cost: ' + ((playerShip.maxHitPoints - playerShip.hitPoints) * 2), TortugaStyle);
+        this.tortugaShipRepairText.setText('Max Cost: ' + Math.floor((playerShip.maxHitPoints - playerShip.hitPoints) / 5), TortugaStyle);
 
     },
 
@@ -932,8 +932,8 @@ PirateFunctionsPlugin.prototype = {
     },
 
     /* **************************************************************
-    * ********* Initial making of Life bar... Might not need now.. **
-    * *************************************************************** */
+     * ********* Initial making of Life bar... Might not need now.. **
+     * *************************************************************** */
     makeHearts: function () {
         for (i = 0; i < 10; i++) {
 
@@ -943,15 +943,14 @@ PirateFunctionsPlugin.prototype = {
     },
 
     /* **************************************************************
-    * ********* Life heart bar update ******************************
-    * *************************************************************** */
+     * ********* Life heart bar update ******************************
+     * *************************************************************** */
     updateHearts: function () {
-        console.log("in updateHearts: Life is: " + playerLife);
+        //console.log("in updateHearts: Life is: " + playerLife);
         for (i = 0; i < 10; i++) {
             if (i <= playerLife - 1) {
                 hearts[i] = this.scene.add.image((20 + (i * 18)), 50, 'singleHeart');
-            }
-            else {
+            } else {
                 hearts[i] = this.scene.add.image((20 + (i * 18)), 50, 'blankHeart');
             }
             hearts[i].setScrollFactor(0);
@@ -959,84 +958,120 @@ PirateFunctionsPlugin.prototype = {
     },
 
 
-
-
     /* **************************************************************
-     * ***************** Pirate Hunter Spawn Timer ******************
+     * tradeInRebate() 
+     * 
+     * Returns gold value of traded in ship (original cost * 25%)
      * *************************************************************** */
-    //HunterSpawnTimer: function (bPrintNow) {
+    tradeInRebate: function () {
 
-    //    // Dont do any time related stuff unless the game is started.
-    //    // Have to put this here because on launch, updates happen so this 
-    //    // would get started without the game started flag..
-    //    if (G_bGameStarted) {
+        let tradeValue = 0;
+        switch (playerShip.shipType) {
 
-    //        let newTime = Date.now();
-    //        let newTimeLeft = 0;
+            case "Canoe":
+                tradeValue += 3;
+                break;
 
-    //        // calculate time left:
-    //        newTimeLeft = explodeTime - (newTime - startTime);
+            case "Schooner":
+                tradeValue += 50;
+                break;
 
-    //        if ((newTimeLeft < 20000) && !this.gameOver) {
-    //            G_bShake = true;
-    //            if (!(this.scene.EarthQuakeAudio.isPlaying)) {
-    //                this.scene.EarthQuakeAudio.play({ loop: true });
-    //            }
-    //        }
+            case "Brig":
+                tradeValue += 500;
+                break;
 
-    //        if (bPrintNow || (newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000)) {
-    //            // update timer display
+            case "Frigate":
+                tradeValue += 1000;
+                break;
 
-    //            // calculate the global display values.
-    //            theMin = Math.floor((newTimeLeft / 1000) / 60);
-    //            theSec = Math.floor((newTimeLeft / 1000) % 60);
+            default:
+                tradeValue += 0;
+                break;
+        } // end switch
 
-    //            this.updateTimerDisplay();
+        tradeValue = Math.floor(tradeValue * .25);
 
-    //            // update global timeLeft
-    //            timeLeft = newTimeLeft;
-
-    //        }
-    //        else if ((newTimeLeft > -1000) && (newTimeLeft <= 1000)) {
-    //            // volcano starts to blow..
-    //            if (!(this.scene.VolcanoAudio.isPlaying)) {
-    //                this.scene.VolcanoAudio.play();
-    //            }
-    //        }
-    //        else if (newTimeLeft <= 0) {
-    //            this.scene.VolcanoAudio2.play();
-
-    //            if (this.scene.EarthQuakeAudio.isPlaying) {
-    //                this.scene.EarthQuakeAudio.stop();
-    //            }
-
-    //            this.ShipwreckedGameOver(this.scene, true);
-    //            // stop earthquake audio...
-    //        }
-    //    }// end if game started. 
-
-    //}, // end VolcanoTimer
+        return tradeValue;
+    },// end trade in rebate
 
 
-    /* **************************************************************
-    * ********* wait  utility function ******************************
-    * timeToWait in milliseconds
-    * *************************************************************** */
-    wait: function (timeToWait) {
+
+        /* **************************************************************
+         * ***************** Pirate Hunter Spawn Timer ******************
+         * *************************************************************** */
+        //HunterSpawnTimer: function (bPrintNow) {
+
+        //    // Dont do any time related stuff unless the game is started.
+        //    // Have to put this here because on launch, updates happen so this 
+        //    // would get started without the game started flag..
+        //    if (G_bGameStarted) {
+
+        //        let newTime = Date.now();
+        //        let newTimeLeft = 0;
+
+        //        // calculate time left:
+        //        newTimeLeft = explodeTime - (newTime - startTime);
+
+        //        if ((newTimeLeft < 20000) && !this.gameOver) {
+        //            G_bShake = true;
+        //            if (!(this.scene.EarthQuakeAudio.isPlaying)) {
+        //                this.scene.EarthQuakeAudio.play({ loop: true });
+        //            }
+        //        }
+
+        //        if (bPrintNow || (newTimeLeft > 0 && (timeLeft - newTimeLeft) >= 1000)) {
+        //            // update timer display
+
+        //            // calculate the global display values.
+        //            theMin = Math.floor((newTimeLeft / 1000) / 60);
+        //            theSec = Math.floor((newTimeLeft / 1000) % 60);
+
+        //            this.updateTimerDisplay();
+
+        //            // update global timeLeft
+        //            timeLeft = newTimeLeft;
+
+        //        }
+        //        else if ((newTimeLeft > -1000) && (newTimeLeft <= 1000)) {
+        //            // volcano starts to blow..
+        //            if (!(this.scene.VolcanoAudio.isPlaying)) {
+        //                this.scene.VolcanoAudio.play();
+        //            }
+        //        }
+        //        else if (newTimeLeft <= 0) {
+        //            this.scene.VolcanoAudio2.play();
+
+        //            if (this.scene.EarthQuakeAudio.isPlaying) {
+        //                this.scene.EarthQuakeAudio.stop();
+        //            }
+
+        //            this.ShipwreckedGameOver(this.scene, true);
+        //            // stop earthquake audio...
+        //        }
+        //    }// end if game started. 
+
+        //}, // end VolcanoTimer
+
+
+        /* **************************************************************
+         * ********* wait  utility function ******************************
+         * timeToWait in milliseconds
+         * *************************************************************** */
+        wait: function (timeToWait) {
         startTime = Date.now();
         while ((Date.now() - startTime) < timeToWait) {
             // freeze, do nada
         }
-    },// end wait.
+    }, // end wait.
 
 
 
 
     /* **************************************************************
-    * ********* Pirate Game Over ******************************
-    * *************************************************************** */
+     * ********* Pirate Game Over ******************************
+     * *************************************************************** */
     PirateGameOver: function (callingScene, bVolcano) {
-        console.log("just entered PirateGameOver function");
+        //console.log("just entered PirateGameOver function");
 
         /* ------------------------------------------------------------------------------
          * NOTE: transition function does not exist in our version.It does in the latest but
@@ -1154,9 +1189,7 @@ PirateFunctionsPlugin.prototype = {
 
         this.gameOver = true;
 
-        } // end PirateGameOver
+    } // end PirateGameOver
 
 
-}// end plugin prototype
-
-
+} // end plugin prototype
